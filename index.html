@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA Library — New Organized Vault — Assets</title>
+  <style>
+    :root {
+      --navy:   #0D1B2A;
+      --navy2:  #12253a;
+      --navy3:  #1a3050;
+      --gold:   #FFD700;
+      --cyan:   #00E5FF;
+      --purple: #9B59B6;
+      --text:   #E8E8FF;
+      --muted:  #8899aa;
+      --card:   #152233;
+      --border: #1e3a5a;
+      --red:    #E74C3C;
+      --green:  #2ECC71;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    header {
+      background: linear-gradient(135deg, var(--navy2), var(--navy3));
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; position: sticky; top: 0; z-index: 100;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .logo { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; background: var(--navy3); }
+    .header-title h1 { font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
+    .header-title p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+
+    .discord-btn {
+      background: #5865F2; color: white; text-decoration: none; padding: 8px 16px;
+      border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+      display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;
+    }
+    .discord-btn:hover { opacity: 0.85; }
+
+    .stats-bar {
+      background: var(--navy2); border-bottom: 1px solid var(--border);
+      padding: 12px 24px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+    }
+    .stat-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); }
+    .stat-item span { color: var(--gold); font-weight: 600; }
+
+    main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    .search-section {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin-bottom: 24px;
+    }
+    .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .search-input {
+      flex: 1; min-width: 200px; background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--cyan); }
+    .search-input::placeholder { color: var(--muted); }
+
+    .search-btn {
+      background: var(--cyan); color: var(--navy); border: none; border-radius: 8px;
+      padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .search-btn:hover { opacity: 0.85; }
+
+    .clear-btn {
+      background: transparent; color: var(--muted); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .clear-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .filter-label { font-size: 0.8rem; color: var(--muted); }
+
+    .category-filter, .sort-filter {
+      background: var(--navy2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; outline: none;
+    }
+    .category-filter option { background: var(--navy2); }
+
+    .results-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .results-count { font-size: 0.85rem; color: var(--muted); }
+    .results-count span { color: var(--gold); font-weight: 600; }
+
+    .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
+
+    .pack-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer; display: flex; flex-direction: column;
+    }
+    .pack-card:hover { transform: translateY(-3px); border-color: var(--cyan); }
+
+    .card-image {
+      width: 100%; height: 160px; object-fit: cover; background: var(--navy3);
+      display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 2rem;
+    }
+    .card-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+    .card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+    .card-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+
+    .badge {
+      background: var(--navy3); border: 1px solid var(--border); border-radius: 4px;
+      padding: 2px 7px; font-size: 0.7rem; color: var(--muted);
+    }
+    .badge-category { border-color: var(--cyan); color: var(--cyan); }
+    .badge-credits { border-color: var(--gold); color: var(--gold); }
+
+    .card-desc {
+      font-size: 0.8rem; color: var(--muted); line-height: 1.5; flex: 1;
+      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+
+    .card-footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+    .btn-download {
+      flex: 1; background: var(--cyan); color: var(--navy); border: none; border-radius: 6px;
+      padding: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-decoration: none;
+      text-align: center; transition: opacity 0.2s; display: block;
+    }
+    .btn-download:hover { opacity: 0.85; }
+
+    .loading-state, .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+    .loading-spinner {
+      width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--cyan);
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; }
+
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+    .page-btn {
+      background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px;
+      padding: 8px 14px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+    }
+    .page-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
+    .page-btn.active { background: var(--cyan); color: var(--navy); border-color: var(--cyan); font-weight: 700; }
+    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      z-index: 200; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header { padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+    .modal-title { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+    .modal-close { background: transparent; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; padding: 4px; line-height: 1; }
+    .modal-close:hover { color: var(--text); }
+    .modal-image { width: 100%; max-height: 280px; object-fit: cover; margin-top: 16px; }
+    .modal-body { padding: 16px 20px 20px; }
+    .modal-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .modal-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-modal-download {
+      flex: 1; background: var(--cyan); color: var(--navy); border: none; border-radius: 8px;
+      padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: none;
+      text-align: center; display: block; transition: opacity 0.2s;
+    }
+    .btn-modal-download:hover { opacity: 0.85; }
+    .modal-info { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 20px 24px; text-align: center;
+      color: var(--muted); font-size: 0.8rem;
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .packs-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <img class="logo" src="" alt="NOVA" style="background:var(--navy3);" onerror="this.style.display='none'" />
+    <div class="header-title">
+      <h1>NOVA Library</h1>
+      <p>New Organized Vault — Assets · Minecraft Bedrock</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" class="discord-btn">
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="white">
+        <path d="M20.317 1.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23.077.077 0 0 0-.079-.036A19.496 19.496 0 0 0 3.677 1.492a.07.07 0 0 0-.032.027C.533 6.093-.32 10.555.099 14.961a.08.08 0 0 0 .031.055 19.9 19.9 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963a.075.075 0 0 0-.041-.104 13.107 13.107 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z" fill="white"/>
+      </svg>
+      Join Discord
+    </a>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">📦 Total Packs: <span id="stat-total">—</span></div>
+  <div class="stat-item">📂 Categories: <span>21</span></div>
+  <div class="stat-item">🆕 Last Added: <span id="stat-last">—</span></div>
+  <div class="stat-item">🔄 Updated: <span id="stat-updated">—</span></div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="search-section">
+    <div class="search-row">
+      <input class="search-input" id="searchInput" type="text" placeholder="🔍 Search packs, creators, categories..." autocomplete="off" />
+      <button class="search-btn" onclick="applyFilters()">Search</button>
+      <button class="clear-btn" onclick="clearFilters()">Clear</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Filter:</span>
+      <select class="category-filter" id="categoryFilter" onchange="applyFilters()">
+        <option value="">All Categories</option>
+        <option>PvP</option><option>Utility</option><option>Furniture</option>
+        <option>Horror</option><option>Anime</option><option>Shader</option>
+        <option>Structure</option><option>Weapon</option><option>Bosses</option>
+        <option>Vehicle</option><option>Visual</option><option>Survival</option>
+        <option>Client</option><option>GUI & UI</option><option>Adventure</option>
+        <option>Minigame</option><option>Food</option><option>Environment</option>
+        <option>Addon</option><option>World</option><option>Animation</option>
+      </select>
+      <select class="sort-filter" id="sortFilter" onchange="applyFilters()">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="name">Name A-Z</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="results-info">
+    <div class="results-count">Showing <span id="resultsCount">0</span> packs</div>
+  </div>
+
+  <div id="packsGrid" class="packs-grid">
+    <div class="loading-state" style="grid-column:1/-1">
+      <div class="loading-spinner"></div>
+      <p>Loading NOVA library...</p>
+    </div>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<!-- PACK MODAL -->
+<div class="modal-overlay" id="packModal" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Pack Name</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <img class="modal-image" id="modalImage" src="" alt="" style="display:none" />
+    <div class="modal-body">
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-actions">
+        <a class="btn-modal-download" id="modalDownload" href="#" target="_blank">🚀 Get It Now</a>
+      </div>
+      <div class="modal-info" id="modalInfo"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    🌌 <strong>NOVA</strong> — New Organized Vault — Assets &nbsp;|&nbsp;
+    Minecraft Bedrock Content Library &nbsp;|&nbsp;
+    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank">Join Our Discord</a>
+    &nbsp;|&nbsp; No ads. No shorteners. Direct downloads only.
+  </p>
+</footer>
+
+<script>
+// ── CONFIG ────────────────────────────────────
+const PACKS_URL = 'https://raw.githubusercontent.com/xameraman/nova-library/main/packs.json';
+const ITEMS_PER_PAGE = 20;
+
+// ── STATE ─────────────────────────────────────
+let allPacks = [];
+let filtered = [];
+let currentPage = 1;
+
+// ── LOAD PACKS ────────────────────────────────
+async function loadPacks() {
+  try {
+    const res = await fetch(PACKS_URL + '?t=' + Date.now());
+    allPacks = await res.json();
+    document.getElementById('stat-total').textContent = allPacks.length;
+    document.getElementById('stat-updated').textContent = new Date().toLocaleDateString();
+    if (allPacks.length > 0) {
+      document.getElementById('stat-last').textContent = allPacks[allPacks.length - 1]?.date_added || '—';
+    }
+    applyFilters();
+  } catch (err) {
+    console.error('Load error:', err);
+    document.getElementById('packsGrid').innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">❌</div>
+        <h3>Failed to load packs</h3>
+        <p>Please try refreshing the page.</p>
+      </div>`;
+  }
+}
+
+function applyFilters() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const category = document.getElementById('categoryFilter').value.toLowerCase();
+  const sort = document.getElementById('sortFilter').value;
+
+  filtered = allPacks.filter(p => {
+    const matchQuery = !query ||
+      (p.name || '').toLowerCase().includes(query) ||
+      (p.credits || '').toLowerCase().includes(query) ||
+      (p.description || '').toLowerCase().includes(query) ||
+      (p.category || '').toLowerCase().includes(query);
+    const matchCat = !category || (p.category || '').toLowerCase() === category;
+    return matchQuery && matchCat;
+  });
+
+  if (sort === 'newest') filtered = [...filtered].reverse();
+  else if (sort === 'name') filtered = [...filtered].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+  currentPage = 1;
+  document.getElementById('resultsCount').textContent = filtered.length;
+  renderPage();
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('categoryFilter').value = '';
+  document.getElementById('sortFilter').value = 'newest';
+  applyFilters();
+}
+
+function renderPage() {
+  const grid = document.getElementById('packsGrid');
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pagePacks = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  if (pagePacks.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">📭</div>
+        <h3>No packs found</h3>
+        <p>Try a different search or clear the filters.</p>
+      </div>`;
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = pagePacks.map((p, i) => `
+    <div class="pack-card" onclick="openModal(${start + i})">
+      <div class="card-image">
+        ${p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.parentElement.innerHTML='📦'" loading="lazy" />` : '📦'}
+      </div>
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(p.name)}</div>
+        <div class="card-meta">
+          <span class="badge badge-category">📂 ${escapeHtml(p.category || 'Unknown')}</span>
+          <span class="badge badge-credits">🎨 ${escapeHtml(p.credits || 'Unknown')}</span>
+        </div>
+        <div class="card-desc">${escapeHtml(p.description || 'No description available.')}</div>
+      </div>
+      <div class="card-footer">
+        <a class="btn-download" href="${escapeHtml(p.link)}" target="_blank" onclick="event.stopPropagation()">🚀 Get It Now</a>
+      </div>
+    </div>
+  `).join('');
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const total = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const pag = document.getElementById('pagination');
+  if (total <= 1) { pag.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>◀ Prev</button>`;
+  const range = 2;
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || (i >= currentPage - range && i <= currentPage + range)) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if (i === currentPage - range - 1 || i === currentPage + range + 1) {
+      html += `<span style="color:var(--muted);padding:0 4px">…</span>`;
+    }
+  }
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>Next ▶</button>`;
+  pag.innerHTML = html;
+}
+
+function goPage(p) {
+  const total = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  if (p < 1 || p > total) return;
+  currentPage = p;
+  renderPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openModal(index) {
+  const p = filtered[index];
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = p.name || 'Unknown Pack';
+  document.getElementById('modalDesc').textContent = p.description || 'No description available.';
+  document.getElementById('modalDownload').href = p.link || '#';
+  const img = document.getElementById('modalImage');
+  if (p.image) {
+    img.src = p.image; img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; };
+  } else { img.style.display = 'none'; }
+  document.getElementById('modalMeta').innerHTML = `
+    <span class="badge badge-category">📂 ${escapeHtml(p.category || 'Unknown')}</span>
+    <span class="badge badge-credits">🎨 ${escapeHtml(p.credits || 'Unknown')}</span>`;
+  document.getElementById('modalInfo').innerHTML = `Added by ${escapeHtml(p.added_by || 'Staff')} • ${escapeHtml(p.date_added || '')}`;
+  document.getElementById('packModal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('packModal') || !e)
+    document.getElementById('packModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
+loadPacks();
+</script>
+</body>
+</html>
