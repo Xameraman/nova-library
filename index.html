@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NOVA Library — New Organized Vault — Assets</title>
+  <title>NOVA Library — New Organized Vault of Assets</title>
   <style>
     :root {
       --navy:   #0D1B2A;
@@ -19,171 +19,572 @@
       --red:    #E74C3C;
       --green:  #2ECC71;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, var(--navy2), var(--navy3));
       border-bottom: 1px solid var(--border);
       padding: 20px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 16px; position: sticky; top: 0; z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-left { display: flex; align-items: center; gap: 14px; }
-    .logo { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; background: var(--navy3); }
-    .header-title h1 { font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
-    .header-title p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      object-fit: cover;
+      background: var(--navy3);
+    }
+
+    .header-title h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+
+    .header-title p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
     .header-right { display: flex; align-items: center; gap: 10px; }
 
     .discord-btn {
-      background: #5865F2; color: white; text-decoration: none; padding: 8px 16px;
-      border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-      display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;
+      background: #5865F2;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
     }
     .discord-btn:hover { opacity: 0.85; }
 
+    /* ── STATS BAR ── */
     .stats-bar {
-      background: var(--navy2); border-bottom: 1px solid var(--border);
-      padding: 12px 24px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+      background: var(--navy2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
     }
-    .stat-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
     .stat-item span { color: var(--gold); font-weight: 600; }
 
+    /* ── MAIN ── */
     main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 
+    /* ── SEARCH & FILTERS ── */
     .search-section {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 20px; margin-bottom: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
     }
-    .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
     .search-input {
-      flex: 1; min-width: 200px; background: var(--navy2); border: 1px solid var(--border);
-      border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.9rem;
-      outline: none; transition: border-color 0.2s;
+      flex: 1;
+      min-width: 200px;
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
     }
     .search-input:focus { border-color: var(--cyan); }
     .search-input::placeholder { color: var(--muted); }
 
     .search-btn {
-      background: var(--cyan); color: var(--navy); border: none; border-radius: 8px;
-      padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
       transition: opacity 0.2s;
     }
     .search-btn:hover { opacity: 0.85; }
 
     .clear-btn {
-      background: transparent; color: var(--muted); border: 1px solid var(--border);
-      border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 0.85rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 0.85rem;
       transition: all 0.2s;
     }
     .clear-btn:hover { border-color: var(--cyan); color: var(--cyan); }
 
-    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
     .filter-label { font-size: 0.8rem; color: var(--muted); }
 
-    .category-filter, .sort-filter {
-      background: var(--navy2); border: 1px solid var(--border); border-radius: 8px;
-      padding: 8px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; outline: none;
+    .category-filter {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      outline: none;
     }
     .category-filter option { background: var(--navy2); }
 
-    .results-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .sort-filter {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* ── RESULTS INFO ── */
+    .results-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     .results-count { font-size: 0.85rem; color: var(--muted); }
     .results-count span { color: var(--gold); font-weight: 600; }
 
-    .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
-
-    .pack-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      overflow: hidden; transition: transform 0.2s, border-color 0.2s;
-      cursor: pointer; display: flex; flex-direction: column;
+    /* ── GRID ── */
+    .packs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
     }
-    .pack-card:hover { transform: translateY(-3px); border-color: var(--cyan); }
+
+    /* ── PACK CARD ── */
+    .pack-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .pack-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--cyan);
+    }
 
     .card-image {
-      width: 100%; height: 160px; object-fit: cover; background: var(--navy3);
-      display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 2rem;
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: var(--navy3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 2rem;
     }
-    .card-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     .card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
-    .card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
-    .card-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
 
     .badge {
-      background: var(--navy3); border: 1px solid var(--border); border-radius: 4px;
-      padding: 2px 7px; font-size: 0.7rem; color: var(--muted);
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.7rem;
+      color: var(--muted);
     }
+
     .badge-category { border-color: var(--cyan); color: var(--cyan); }
     .badge-credits { border-color: var(--gold); color: var(--gold); }
 
     .card-desc {
-      font-size: 0.8rem; color: var(--muted); line-height: 1.5; flex: 1;
-      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
-    .card-footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+    .card-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
     .btn-download {
-      flex: 1; background: var(--cyan); color: var(--navy); border: none; border-radius: 6px;
-      padding: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-decoration: none;
-      text-align: center; transition: opacity 0.2s; display: block;
+      flex: 1;
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: opacity 0.2s;
+      display: block;
     }
     .btn-download:hover { opacity: 0.85; }
 
-    .loading-state, .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+    /* ── LOADING / EMPTY ── */
+    .loading-state, .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+
     .loading-spinner {
-      width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--cyan);
-      border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
     .empty-icon { font-size: 3rem; margin-bottom: 12px; }
     .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; }
 
-    .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
     .page-btn {
-      background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px;
-      padding: 8px 14px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
     }
     .page-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
     .page-btn.active { background: var(--cyan); color: var(--navy); border-color: var(--cyan); font-weight: 700; }
     .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
+    /* ── MODAL ── */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-      z-index: 200; align-items: center; justify-content: center; padding: 20px;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
     .modal-overlay.open { display: flex; }
+
     .modal {
-      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-      max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .modal-header { padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+
+    .modal-header {
+      padding: 20px 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
     .modal-title { font-size: 1.2rem; font-weight: 700; color: var(--text); }
-    .modal-close { background: transparent; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; padding: 4px; line-height: 1; }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
     .modal-close:hover { color: var(--text); }
-    .modal-image { width: 100%; max-height: 280px; object-fit: cover; margin-top: 16px; }
+
+    .modal-image {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      margin-top: 16px;
+    }
+
     .modal-body { padding: 16px 20px 20px; }
-    .modal-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .modal-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+
+    .modal-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
     .modal-actions { display: flex; gap: 10px; }
+
     .btn-modal-download {
-      flex: 1; background: var(--cyan); color: var(--navy); border: none; border-radius: 8px;
-      padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: none;
-      text-align: center; display: block; transition: opacity 0.2s;
+      flex: 1;
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      transition: opacity 0.2s;
     }
     .btn-modal-download:hover { opacity: 0.85; }
-    .modal-info { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); }
 
-    footer {
-      border-top: 1px solid var(--border); padding: 20px 24px; text-align: center;
-      color: var(--muted); font-size: 0.8rem;
+    .modal-info {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
     }
+
+    /* ── ARIA CHAT ── */
+    .aria-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--purple);
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      z-index: 150;
+      box-shadow: 0 4px 20px rgba(155,89,182,0.4);
+      transition: transform 0.2s;
+    }
+    .aria-toggle:hover { transform: scale(1.1); }
+
+    .aria-panel {
+      position: fixed;
+      bottom: 92px;
+      right: 24px;
+      width: 340px;
+      height: 460px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: none;
+      flex-direction: column;
+      z-index: 150;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .aria-panel.open { display: flex; }
+
+    .aria-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .aria-avatar {
+      width: 32px; height: 32px;
+      background: var(--purple);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .aria-name { font-weight: 700; font-size: 0.9rem; }
+    .aria-status { font-size: 0.7rem; color: var(--green); }
+
+    .aria-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .aria-msg {
+      max-width: 85%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .aria-msg.bot {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      border-radius: 10px 10px 10px 2px;
+    }
+
+    .aria-msg.user {
+      background: var(--purple);
+      align-self: flex-end;
+      border-radius: 10px 10px 2px 10px;
+    }
+
+    .aria-input-row {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .aria-input {
+      flex: 1;
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .aria-input:focus { border-color: var(--purple); }
+
+    .aria-send {
+      background: var(--purple);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .aria-send:hover { opacity: 0.85; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
     footer a { color: var(--cyan); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
+    /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       .packs-grid { grid-template-columns: 1fr; }
+      .aria-panel { width: calc(100vw - 32px); right: 16px; }
     }
   </style>
 </head>
@@ -192,17 +593,15 @@
 <!-- HEADER -->
 <header>
   <div class="header-left">
-    <img class="logo" src="" alt="NOVA" style="background:var(--navy3);" onerror="this.style.display='none'" />
+    <div class="logo" style="background:var(--navy3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🌌</div>
     <div class="header-title">
       <h1>NOVA Library</h1>
-      <p>New Organized Vault — Assets · Minecraft Bedrock</p>
+      <p>New Organized Vault of Assets — Minecraft Bedrock</p>
     </div>
   </div>
   <div class="header-right">
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" class="discord-btn">
-      <svg width="16" height="12" viewBox="0 0 24 18" fill="white">
-        <path d="M20.317 1.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23.077.077 0 0 0-.079-.036A19.496 19.496 0 0 0 3.677 1.492a.07.07 0 0 0-.032.027C.533 6.093-.32 10.555.099 14.961a.08.08 0 0 0 .031.055 19.9 19.9 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963a.075.075 0 0 0-.041-.104 13.107 13.107 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z" fill="white"/>
-      </svg>
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="white"><path d="M20.317 1.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23.077.077 0 0 0-.079-.036A19.496 19.496 0 0 0 3.677 1.492a.07.07 0 0 0-.032.027C.533 6.093-.32 10.555.099 14.961a.08.08 0 0 0 .031.055 19.9 19.9 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963a.075.075 0 0 0-.041-.104 13.107 13.107 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z"/></svg>
       Join Discord
     </a>
   </div>
@@ -218,6 +617,7 @@
 
 <!-- MAIN -->
 <main>
+  <!-- SEARCH -->
   <div class="search-section">
     <div class="search-row">
       <input class="search-input" id="searchInput" type="text" placeholder="🔍 Search packs, creators, categories..." autocomplete="off" />
@@ -244,6 +644,7 @@
     </div>
   </div>
 
+  <!-- RESULTS -->
   <div class="results-info">
     <div class="results-count">Showing <span id="resultsCount">0</span> packs</div>
   </div>
@@ -277,10 +678,30 @@
   </div>
 </div>
 
+<!-- ARIA CHAT -->
+<button class="aria-toggle" onclick="toggleAria()" title="Ask ARIA">🤖</button>
+
+<div class="aria-panel" id="ariaPanel">
+  <div class="aria-header">
+    <div class="aria-avatar">🤖</div>
+    <div>
+      <div class="aria-name">ARIA</div>
+      <div class="aria-status">● Online</div>
+    </div>
+  </div>
+  <div class="aria-messages" id="ariaMessages">
+    <div class="aria-msg bot">Hey! I'm ARIA, NOVA's helper. Ask me about categories, uploads, credits, or anything else about NOVA! 🌌</div>
+  </div>
+  <div class="aria-input-row">
+    <input class="aria-input" id="ariaInput" type="text" placeholder="Ask ARIA..." onkeydown="if(event.key==='Enter')sendAria()" />
+    <button class="aria-send" onclick="sendAria()">➤</button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <p>
-    🌌 <strong>NOVA</strong> — New Organized Vault — Assets &nbsp;|&nbsp;
+    🌌 <strong>NOVA</strong> — New Organized Vault of Assets &nbsp;|&nbsp;
     Minecraft Bedrock Content Library &nbsp;|&nbsp;
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank">Join Our Discord</a>
     &nbsp;|&nbsp; No ads. No shorteners. Direct downloads only.
@@ -290,12 +711,14 @@
 <script>
 // ── CONFIG ────────────────────────────────────
 const PACKS_URL = 'https://raw.githubusercontent.com/xameraman/nova-library/main/packs.json';
+const ARIA_URL  = 'https://xameraman-mia-assistant.hf.space/chat';
 const ITEMS_PER_PAGE = 20;
 
 // ── STATE ─────────────────────────────────────
 let allPacks = [];
 let filtered = [];
 let currentPage = 1;
+let ariaHistory = [];
 
 // ── LOAD PACKS ────────────────────────────────
 async function loadPacks() {
@@ -319,6 +742,7 @@ async function loadPacks() {
   }
 }
 
+// ── FILTER & SORT ─────────────────────────────
 function applyFilters() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
   const category = document.getElementById('categoryFilter').value.toLowerCase();
@@ -349,6 +773,7 @@ function clearFilters() {
   applyFilters();
 }
 
+// ── RENDER ────────────────────────────────────
 function renderPage() {
   const grid = document.getElementById('packsGrid');
   const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -393,6 +818,7 @@ function renderPagination() {
   if (total <= 1) { pag.innerHTML = ''; return; }
 
   let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>◀ Prev</button>`;
+
   const range = 2;
   for (let i = 1; i <= total; i++) {
     if (i === 1 || i === total || (i >= currentPage - range && i <= currentPage + range)) {
@@ -401,6 +827,7 @@ function renderPagination() {
       html += `<span style="color:var(--muted);padding:0 4px">…</span>`;
     }
   }
+
   html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>Next ▶</button>`;
   pag.innerHTML = html;
 }
@@ -413,35 +840,113 @@ function goPage(p) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ── MODAL ─────────────────────────────────────
 function openModal(index) {
   const p = filtered[index];
   if (!p) return;
+
   document.getElementById('modalTitle').textContent = p.name || 'Unknown Pack';
   document.getElementById('modalDesc').textContent = p.description || 'No description available.';
   document.getElementById('modalDownload').href = p.link || '#';
+
   const img = document.getElementById('modalImage');
   if (p.image) {
-    img.src = p.image; img.style.display = 'block';
+    img.src = p.image;
+    img.style.display = 'block';
     img.onerror = () => { img.style.display = 'none'; };
-  } else { img.style.display = 'none'; }
+  } else {
+    img.style.display = 'none';
+  }
+
   document.getElementById('modalMeta').innerHTML = `
     <span class="badge badge-category">📂 ${escapeHtml(p.category || 'Unknown')}</span>
-    <span class="badge badge-credits">🎨 ${escapeHtml(p.credits || 'Unknown')}</span>`;
-  document.getElementById('modalInfo').innerHTML = `Added by ${escapeHtml(p.added_by || 'Staff')} • ${escapeHtml(p.date_added || '')}`;
+    <span class="badge badge-credits">🎨 ${escapeHtml(p.credits || 'Unknown')}</span>
+  `;
+
+  document.getElementById('modalInfo').innerHTML = `
+    Added by ${escapeHtml(p.added_by || 'Staff')} • ${escapeHtml(p.date_added || '')}
+  `;
+
   document.getElementById('packModal').classList.add('open');
 }
 
 function closeModal(e) {
-  if (!e || e.target === document.getElementById('packModal') || !e)
+  if (!e || e.target === document.getElementById('packModal') || !e) {
     document.getElementById('packModal').classList.remove('open');
+  }
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── ARIA ──────────────────────────────────────
+function toggleAria() {
+  document.getElementById('ariaPanel').classList.toggle('open');
+}
+
+async function sendAria() {
+  const input = document.getElementById('ariaInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  addAriaMsg(msg, 'user');
+
+  const typing = addAriaMsg('...', 'bot');
+
+  try {
+    ariaHistory.push({ role: 'user', content: msg });
+
+    const res = await fetch(ARIA_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: msg,
+        history: ariaHistory.slice(-10),
+        source: 'nova-website'
+      })
+    });
+
+    const data = await res.json();
+    typing.remove();
+
+    const reply = data.response || "Sorry, I couldn't get a response right now. Try again!";
+    addAriaMsg(reply, 'bot');
+    ariaHistory.push({ role: 'assistant', content: reply });
+
+    if (ariaHistory.length > 20) ariaHistory = ariaHistory.slice(-20);
+
+  } catch (err) {
+    typing.remove();
+    addAriaMsg("Sorry, I'm having trouble connecting right now. Please try again later!", 'bot');
+  }
+}
+
+function addAriaMsg(text, role) {
+  const msgs = document.getElementById('ariaMessages');
+  const div = document.createElement('div');
+  div.className = `aria-msg ${role}`;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+// ── UTILS ─────────────────────────────────────
 function escapeHtml(str) {
   if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
-document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
+
+// Enter to search
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') applyFilters();
+});
+
+// ── INIT ──────────────────────────────────────
 loadPacks();
 </script>
 </body>
