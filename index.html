@@ -607,7 +607,7 @@ function render() {
         <div class="card-title">${esc(p.name)}</div>
         <div class="card-tags">
           <span class="tag tag-cat">📂 ${esc(p.category||'Unknown')}</span>
-          <span class="tag tag-cred">🎨 ${esc(p.credits||'Unknown')}</span>
+          <span class="tag tag-cred">🎨 Devs: ${esc(p.credits||'Unknown')}</span>
         </div>
         <div class="card-desc">${esc(p.description||'No description available.')}</div>
       </div>
@@ -654,7 +654,7 @@ function openModal(idx) {
   document.getElementById('mLink').href = p.link || '#';
   document.getElementById('mTags').innerHTML = `
     <span class="tag tag-cat">📂 ${esc(p.category||'Unknown')}</span>
-    <span class="tag tag-cred">🎨 ${esc(p.credits||'Unknown')}</span>
+    <span class="tag tag-cred">🎨 Devs: ${esc(p.credits||'Unknown')}</span>
   `;
   document.getElementById('mMeta').textContent = `Added by ${p.added_by||'Staff'} • ${p.date_added||''}`;
   const img = document.getElementById('mImg');
