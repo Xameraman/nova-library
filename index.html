@@ -4,29 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NOVA Library</title>
-
-  <!--
-    NOVA Library — Frontend
-    - Change the site name here:
-      const SITE_TITLE = "NOVA Library";
-    - Invite link updated to: https://discord.gg/ThgxvPtUjZ
-    - Items per page set to 15 (change ITEMS_PER_PAGE below)
-  -->
-
   <style>
     :root{
-      --bg:#0b1220;
+      --bg:#07101a;
       --card:#0f1724;
       --muted:#9aa4b2;
       --accent:#1abc9c;
-      --accent-2:#2ecc71;
       --glass: rgba(255,255,255,0.03);
       --glass-2: rgba(255,255,255,0.02);
       --radius:12px;
-      --max-width:1200px;
+      --max-width:1100px;
       --transition:200ms cubic-bezier(.2,.9,.3,1);
       --shadow: 0 6px 18px rgba(2,6,23,0.6);
-      --card-shadow: 0 8px 30px rgba(2,6,23,0.65);
       --text:#e6eef6;
     }
 
@@ -43,34 +32,27 @@
     .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
 
     .controls{display:flex;gap:10px;align-items:center}
-    .search{display:flex;align-items:center;background:var(--glass);padding:8px;border-radius:10px;gap:8px;box-shadow:var(--card-shadow);min-width:320px}
+    .search{display:flex;align-items:center;background:var(--glass);padding:8px;border-radius:10px;gap:8px;box-shadow:var(--shadow);min-width:320px}
     .search input{background:transparent;border:0;outline:0;color:var(--text);font-size:14px;width:100%}
-    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;padding:8px 12px;border-radius:10px;color:#021617;font-weight:700;cursor:pointer;transition:transform var(--transition)}
+    .btn{background:linear-gradient(90deg,var(--accent),#2ecc71);border:0;padding:8px 12px;border-radius:10px;color:#021617;font-weight:700;cursor:pointer;transition:transform var(--transition)}
     .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);font-weight:600}
     .btn:active{transform:translateY(1px)}
 
-    .top-actions{display:flex;gap:8px;align-items:center}
-    .small{font-size:13px;padding:6px 8px;border-radius:8px}
-
-    /* layout */
-    .main{display:grid;grid-template-columns: 1fr 320px;gap:18px}
+    .main{display:grid;grid-template-columns:1fr 320px;gap:18px}
     @media (max-width:980px){ .main{grid-template-columns:1fr} .sidebar{order:2} }
 
-    /* sidebar */
-    .sidebar{background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--card-shadow);height:fit-content}
+    .sidebar{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.65);height:fit-content}
     .sidebar h4{margin:0 0 8px 0;font-size:13px;color:var(--muted)}
     .cat-list{display:flex;flex-wrap:wrap;gap:8px}
     .cat-item{background:var(--glass-2);padding:8px 10px;border-radius:10px;font-size:13px;color:var(--text);cursor:pointer;border:1px solid transparent;transition:all var(--transition)}
     .cat-item.active{background:linear-gradient(90deg,#0f3b2f,#0b2f2a);border-color:rgba(255,255,255,0.04)}
     .cat-item:hover{transform:translateY(-3px)}
 
-    /* grid controls */
     .grid-controls{display:flex;gap:8px;align-items:center;margin:12px 0}
     .grid-toggle{display:flex;gap:6px}
     .grid-toggle button{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
     .grid-toggle button.active{background:var(--accent);color:#021617;border-color:transparent}
 
-    /* results */
     .results{background:transparent;padding:6px;border-radius:12px;min-height:200px}
     .grid{display:grid;gap:12px;transition:all var(--transition)}
     .grid.list{grid-template-columns:1fr}
@@ -90,15 +72,12 @@
     .card .actions{display:flex;gap:8px;align-items:center;margin-left:auto}
     .link-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--text);text-decoration:none;font-weight:700}
 
-    /* pagination */
     .pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:18px}
     .pager button{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:var(--text);cursor:pointer}
     .pager .current{background:var(--accent);color:#021617;border-color:transparent}
 
-    /* empty state */
     .empty{padding:40px;border-radius:12px;background:var(--card);text-align:center;color:var(--muted)}
 
-    /* footer */
     footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
     a.invite{color:var(--accent);font-weight:700;text-decoration:none}
   </style>
@@ -159,9 +138,7 @@
 
       <aside class="sidebar">
         <h4>Categories</h4>
-        <div class="cat-list" id="catList">
-          <!-- categories injected here -->
-        </div>
+        <div class="cat-list" id="catList"></div>
 
         <div style="height:12px"></div>
         <h4>Quick Links</h4>
@@ -179,18 +156,15 @@
   </div>
 
   <script>
-    // -------------------------
-    // Configurable constants
-    // -------------------------
-    const SITE_TITLE = "NOVA Library"; // change this to your new server/site name
-    const SITE_SUBTITLE = "NOVA — Nexus Of Verified Assets"; // change subtitle if needed
+    // Configuration
+    const SITE_TITLE = "NOVA Library";
+    const SITE_SUBTITLE = "NOVA — Nexus Of Verified Assets";
     const INVITE_LINK = "https://discord.gg/ThgxvPtUjZ";
-    const PACKS_JSON_URL = "https://raw.githubusercontent.com/Xameraman/nova-library/main/packs.json"; // keep or change to your raw JSON URL
-    const ITEMS_PER_PAGE = 15; // changed to 15 as requested
-    const DEFAULT_VIEW = "compact"; // 'list' | 'compact' | 'large'
+    const PACKS_JSON_URL = "https://raw.githubusercontent.com/Xameraman/nova-library/main/packs.json";
+    const ITEMS_PER_PAGE = 10; // restored to original
+    const DEFAULT_VIEW = "compact";
     const CATEGORY_ORDER = ["All","PvP","Utility","Furniture","Horror","Anime","Shader","Structure","Weapon","Bosses","Vehicle","Visual","Survival","Client","GUI & UI","Adventure","Minigame","Food","Environment","Addon","World","Animation","Skins"];
 
-    // color map (client-side fallback)
     const CATEGORY_COLORS = {
       'pvp':'#E74C3C','utility':'#95A5A6','furniture':'#8B4513','horror':'#2C3E50','anime':'#FF69B4',
       'shader':'#9B59B6','structure':'#D4AC0D','weapon':'#616A6B','bosses':'#922B21','vehicle':'#2980B9',
@@ -199,9 +173,7 @@
       'animation':'#FF1493','skins':'#F39C12'
     };
 
-    // -------------------------
     // State
-    // -------------------------
     let packs = [];
     let filtered = [];
     let currentPage = 1;
@@ -210,9 +182,7 @@
     let currentQuery = "";
     let currentSort = "new";
 
-    // -------------------------
     // DOM refs
-    // -------------------------
     const siteTitleEl = document.getElementById('siteTitle');
     const siteSubtitleEl = document.getElementById('siteSubtitle');
     const discordInviteEls = [document.getElementById('discordInvite'), document.getElementById('discordInvite2')];
@@ -225,12 +195,10 @@
     const gridToggle = document.getElementById('gridToggle');
     const sortSelect = document.getElementById('sortSelect');
 
-    // initialize UI
     siteTitleEl.textContent = SITE_TITLE;
     siteSubtitleEl.textContent = SITE_SUBTITLE;
     discordInviteEls.forEach(el => { if (el) el.href = INVITE_LINK; });
 
-    // build categories
     function renderCategories(){
       catListEl.innerHTML = "";
       CATEGORY_ORDER.forEach(cat => {
@@ -249,15 +217,12 @@
       });
     }
 
-    // fetch packs.json
     async function fetchPacks(){
       try {
         const res = await fetch(PACKS_JSON_URL, {cache: "no-store"});
         if (!res.ok) throw new Error('Failed to fetch packs.json');
         const data = await res.json();
-        // Expecting an array of pack objects
         packs = Array.isArray(data) ? data : (data.results || []);
-        // Normalize fields
         packs = packs.map(p => ({
           name: p.name || p.title || 'Untitled',
           description: p.description || p.desc || '',
@@ -275,15 +240,12 @@
       }
     }
 
-    // filter, sort, paginate
     function applyFilters(){
-      // filter by category
       filtered = packs.filter(p => {
         if (currentCategory === "All") return true;
         return (p.category || '').toLowerCase() === currentCategory.toLowerCase();
       });
 
-      // search query
       if (currentQuery && currentQuery.trim().length){
         const q = currentQuery.toLowerCase();
         filtered = filtered.filter(p =>
@@ -293,7 +255,6 @@
         );
       }
 
-      // sort
       if (currentSort === 'new'){
         filtered.sort((a,b) => {
           const da = new Date(a.date_added || 0).getTime();
@@ -303,7 +264,6 @@
       } else if (currentSort === 'alpha'){
         filtered.sort((a,b) => (a.name||'').localeCompare(b.name||''));
       } else if (currentSort === 'popular'){
-        // best-effort: packs with support or image first
         filtered.sort((a,b) => {
           const sa = (a.support ? 1 : 0) + (a.image ? 1 : 0);
           const sb = (b.support ? 1 : 0) + (b.image ? 1 : 0);
@@ -322,7 +282,6 @@
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
       const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
 
-      // render grid
       gridEl.className = 'grid ' + currentView;
       gridEl.innerHTML = '';
       if (!pageItems.length){
@@ -387,7 +346,6 @@
             actions.appendChild(s);
           }
 
-          // color accent bar
           const color = CATEGORY_COLORS[(p.category||'').toLowerCase()] || '#0d1b2a';
           const accent = document.createElement('div');
           accent.style.width = '6px';
@@ -397,7 +355,6 @@
           accent.style.marginRight = '8px';
           accent.style.flexShrink = '0';
 
-          // layout: accent + thumb + meta + actions
           const left = document.createElement('div');
           left.style.display = 'flex';
           left.style.alignItems = 'flex-start';
@@ -413,7 +370,6 @@
         });
       }
 
-      // render pager
       renderPager(pages, total);
     }
 
@@ -432,7 +388,6 @@
 
       pagerEl.appendChild(prev);
 
-      // show up to 7 page buttons centered around current
       const range = 3;
       const start = Math.max(1, currentPage - range);
       const end = Math.min(pages, currentPage + range);
@@ -446,7 +401,6 @@
 
       pagerEl.appendChild(next);
 
-      // summary
       const info = document.createElement('div');
       info.style.marginLeft = '12px';
       info.style.color = 'var(--muted)';
@@ -455,12 +409,10 @@
       pagerEl.appendChild(info);
     }
 
-    // helpers
     function isValidLink(u){
       try { const url = new URL(u); return url.protocol === 'http:' || url.protocol === 'https:'; } catch { return false; }
     }
 
-    // events
     searchBtn.addEventListener('click', () => {
       currentQuery = searchInput.value || '';
       currentPage = 1;
@@ -471,7 +423,8 @@
     browseAllBtn.addEventListener('click', () => {
       currentCategory = "All";
       document.querySelectorAll('.cat-item').forEach(n => n.classList.remove('active'));
-      document.querySelector('.cat-item[data-val="All"]').classList.add('active');
+      const el = document.querySelector('.cat-item[data-val="All"]');
+      if (el) el.classList.add('active');
       currentPage = 1;
       applyFilters();
     });
@@ -491,17 +444,12 @@
       applyFilters();
     });
 
-    // initial render
     renderCategories();
     fetchPacks();
 
-    // keyboard shortcuts (optional)
     document.addEventListener('keydown', (e) => {
       if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
     });
-
-    // responsive improvements: lazy image loading
-    // (images are loaded by browser via <img> src; for large libraries consider IntersectionObserver)
   </script>
 </body>
 </html>
