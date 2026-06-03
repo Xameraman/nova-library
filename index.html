@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NOVA Library — New Organized Vault of Assets</title>
-  <meta name="description" content="Browse Minecraft Bedrock packs, addons, worlds and more. NOVA — Direct downloads, proper credits, always." />
+  <title>NOVA — Nexus of Verified Assets</title>
+  <meta name="description" content="NOVA — Nexus of Verified Assets. Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
   <style>
     :root {
       --navy:   #0D1B2A;
@@ -33,9 +32,14 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
 
-    /* ── SKELETON LOADER ── */
     .skeleton {
       background: linear-gradient(90deg, var(--navy2) 25%, var(--navy3) 50%, var(--navy2) 75%);
       background-size: 200% 100%;
@@ -53,11 +57,9 @@
     .sk-footer { padding: 10px 14px; border-top: 1px solid var(--border); }
     .sk-btn { height: 32px; border-radius: 6px; }
 
-    /* ── LOAD BAR ── */
     .load-bar { height: 3px; background: var(--border); }
     .load-bar-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); width: 0%; transition: width 0.4s ease; }
 
-    /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, var(--navy2), var(--navy3));
       border-bottom: 2px solid var(--gold);
@@ -85,7 +87,6 @@
     }
     .server-icon:hover { transform: scale(1.08); }
 
-    /* Aurora text - KEPT */
     .aurora-text {
       font-size: 1.35rem;
       font-weight: 800;
@@ -102,21 +103,45 @@
     .header-title p { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 8px; }
 
-    .discord-btn { background: #5865F2; color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; transition: opacity 0.2s; display: inline-block; }
+    .discord-btn {
+      background: #5865F2;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: opacity 0.2s;
+      display: inline-block;
+    }
     .discord-btn:hover { opacity: 0.85; }
 
-    .theme-btn { background: var(--navy3); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+    .theme-btn {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
     .theme-btn:hover { border-color: var(--cyan); }
 
-    /* ── STATS BAR ── */
-    .stats-bar { background: var(--navy2); border-bottom: 1px solid var(--border); padding: 8px 24px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+    .stats-bar {
+      background: var(--navy2);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 24px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
     .stat { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--muted); }
     .stat b { color: var(--gold); }
 
-    /* ── MAIN ── */
     main { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
 
-    /* ── SEARCH ── */
     .search-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
     .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
 
@@ -134,15 +159,34 @@
     .search-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,229,255,0.1); }
     .search-input::placeholder { color: var(--muted); }
 
-    .btn-search { background: var(--cyan); color: var(--navy); border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: opacity 0.2s; }
+    .btn-search {
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: opacity 0.2s;
+    }
     .btn-search:hover { opacity: 0.85; }
-    .btn-clear { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; font-size: 0.83rem; transition: all 0.2s; }
+
+    .btn-clear {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 0.83rem;
+      transition: all 0.2s;
+    }
     .btn-clear:hover { border-color: var(--red); color: var(--red); }
 
     .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .filter-label { font-size: 0.75rem; color: var(--muted); }
 
-    /* Navigation category list */
     .cat-nav-wrap { position: relative; }
     .cat-nav-btn {
       background: var(--navy2);
@@ -194,31 +238,55 @@
     .cat-nav-item:hover { background: var(--navy3); color: var(--text); }
     .cat-nav-item.selected { background: var(--cyan); color: var(--navy); font-weight: 700; }
 
-    select { background: var(--navy2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-size: 0.82rem; cursor: pointer; outline: none; transition: border-color 0.2s; }
+    select {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 0.82rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
     select:focus { border-color: var(--cyan); }
     select option { background: var(--navy2); }
 
-    /* ── VIEW BAR ── */
     .view-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
     .results-count { font-size: 0.8rem; color: var(--muted); }
     .results-count b { color: var(--gold); }
     .search-status { font-size: 0.72rem; color: var(--cyan); }
 
     .view-btns { display: flex; gap: 6px; }
-    .view-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; transition: all 0.15s; }
+    .view-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.15s;
+    }
     .view-btn.active { background: var(--cyan); color: var(--navy); border-color: var(--cyan); }
 
-    /* ── RECENTLY VIEWED ── */
     .recent-section { margin-bottom: 16px; }
     .recent-title { font-size: 0.78rem; color: var(--muted); margin-bottom: 7px; }
     .recent-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .recent-chip { background: var(--navy3); border: 1px solid var(--border); color: var(--muted); border-radius: 20px; padding: 4px 12px; font-size: 0.72rem; cursor: pointer; transition: all 0.2s; }
+    .recent-chip {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .recent-chip:hover { border-color: var(--cyan); color: var(--cyan); }
 
-    /* ── GRID ── */
     .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 28px; }
 
-    /* ── IMAGE VIEW ── */
     .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 28px; }
     .image-card { position: relative; border-radius: 10px; overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--navy3); }
     .image-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
@@ -227,7 +295,6 @@
     .image-card:hover .image-card-overlay { opacity: 1; }
     .image-card-name { font-size: 0.73rem; font-weight: 700; color: white; }
 
-    /* ── PACK CARD ── */
     .pack-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -249,32 +316,105 @@
     .tag { border-radius: 4px; padding: 2px 6px; font-size: 0.66rem; border: 1px solid; }
     .tag-cat { border-color: var(--cyan); color: var(--cyan); }
     .tag-cred { border-color: var(--gold); color: var(--gold); }
-    .card-desc { font-size: 0.77rem; color: var(--muted); line-height: 1.5; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .card-footer { padding: 9px 14px; border-top: 1px solid var(--border); display: flex; gap: 6px; }
-    .btn-dl { flex: 1; background: var(--cyan); color: var(--navy); border: none; border-radius: 6px; padding: 7px; font-weight: 700; font-size: 0.78rem; cursor: pointer; text-decoration: none; text-align: center; display: block; transition: opacity 0.2s; }
+    .card-desc {
+      font-size: 0.77rem;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .card-footer {
+      padding: 9px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-actions { display: flex; gap: 6px; }
+    .btn-dl {
+      flex: 1;
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 6px;
+      padding: 7px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      transition: opacity 0.2s;
+    }
     .btn-dl:hover { opacity: 0.85; }
-    .btn-copy { background: var(--navy3); border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 7px 10px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+
+    .btn-support {
+      width: 100%;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 7px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      transition: opacity 0.2s;
+    }
+    .btn-support:hover { opacity: 0.9; }
+
+    .btn-copy {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .btn-copy:hover { border-color: var(--gold); color: var(--gold); }
     .btn-copy.copied { background: var(--green); color: white; border-color: var(--green); }
 
-    /* ── STATES ── */
     .loading, .empty { text-align: center; padding: 80px 20px; color: var(--muted); grid-column: 1 / -1; }
     .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 14px; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
     .empty h3 { color: var(--text); margin-bottom: 4px; }
 
-    /* ── PAGINATION ── */
     .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 40px; flex-wrap: wrap; }
     .pg-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.8rem; transition: all 0.15s; }
     .pg-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
     .pg-btn.active { background: var(--cyan); color: var(--navy); border-color: var(--cyan); font-weight: 700; }
     .pg-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* ── MODAL ── */
-    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
     .overlay.open { display: flex; }
-    .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px; max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto; animation: modalIn 0.2s ease; }
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalIn 0.2s ease;
+    }
     @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .modal-head { padding: 18px 18px 0; display: flex; justify-content: space-between; align-items: flex-start; }
     .modal-name { font-size: 1.1rem; font-weight: 700; }
@@ -284,24 +424,91 @@
     .modal-body { padding: 14px 18px 18px; }
     .modal-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
     .modal-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
-    .modal-actions { display: flex; gap: 8px; margin-bottom: 10px; }
-    .btn-modal-dl { flex: 1; display: block; background: var(--cyan); color: var(--navy); border: none; border-radius: 8px; padding: 11px; font-weight: 700; font-size: 0.88rem; cursor: pointer; text-decoration: none; text-align: center; transition: opacity 0.2s; }
+    .modal-actions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .modal-main-actions { display: flex; gap: 8px; }
+
+    .btn-modal-dl {
+      flex: 1;
+      display: block;
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
     .btn-modal-dl:hover { opacity: 0.85; }
-    .btn-modal-share { background: var(--navy3); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 11px 14px; font-size: 0.83rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+
+    .btn-modal-support {
+      display: block;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
+    .btn-modal-support:hover { opacity: 0.9; }
+
+    .btn-modal-share {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
     .btn-modal-share:hover { border-color: var(--gold); color: var(--gold); }
     .btn-modal-share.shared { background: var(--green); color: white; border-color: var(--green); }
+
     .modal-meta { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--muted); }
 
-    /* ── TOAST ── */
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card); border: 1px solid var(--cyan); color: var(--text); padding: 10px 20px; border-radius: 8px; font-size: 0.82rem; z-index: 300; transition: transform 0.3s ease; box-shadow: 0 4px 20px rgba(0,229,255,0.2); }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--card);
+      border: 1px solid var(--cyan);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      z-index: 300;
+      transition: transform 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,229,255,0.2);
+    }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── FOOTER ── */
-    footer { border-top: 1px solid var(--border); padding: 16px 24px; text-align: center; font-size: 0.76rem; color: var(--muted); }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 16px 24px;
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
     footer a { color: var(--cyan); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    @media (max-width: 580px) { .packs-grid { grid-template-columns: 1fr; } .image-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) {
+      .packs-grid { grid-template-columns: 1fr; }
+      .image-grid { grid-template-columns: repeat(2, 1fr); }
+      .modal-main-actions { flex-direction: column; }
+      .card-actions { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -310,18 +517,15 @@
 
 <header>
   <div class="header-left">
-    <!--
-      REPLACE src WITH YOUR NOVA SERVER ICON URL
-    -->
     <img class="server-icon" src="https://via.placeholder.com/44/0D1B2A/FFD700?text=N" alt="NOVA" onerror="this.style.display='none'" />
     <div class="header-title">
-      <div class="aurora-text">NOVA LIBRARY</div>
-      <p>New Organized Vault of Assets — Minecraft Bedrock</p>
+      <div class="aurora-text">NOVA</div>
+      <p>Nexus of Verified Assets — Minecraft Bedrock Archive</p>
     </div>
   </div>
   <div class="header-right">
     <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
-    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" class="discord-btn">Join Discord</a>
+    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join the Server</a>
   </div>
 </header>
 
@@ -329,20 +533,18 @@
 
 <div class="stats-bar">
   <div class="stat">📦 <b id="sTot">—</b> Packs</div>
-  <div class="stat">📂 <b>22</b> Categories</div>
+  <div class="stat">📂 <b>23</b> Categories</div>
   <div class="stat">🆕 <b id="sLast">—</b></div>
   <div class="stat">📄 <b id="sPages">—</b> Pages</div>
   <div class="stat">🔄 <b id="sSynced">—</b></div>
 </div>
 
 <main>
-  <!-- Recently Viewed -->
   <div class="recent-section" id="recentSection" style="display:none">
     <div class="recent-title">🕐 Recently Viewed:</div>
     <div class="recent-chips" id="recentChips"></div>
   </div>
 
-  <!-- Search -->
   <div class="search-box">
     <div class="search-row">
       <input class="search-input" id="q" type="text" placeholder="🔍 Search packs, creators, categories..." autocomplete="off" />
@@ -352,7 +554,6 @@
     <div class="filter-row">
       <span class="filter-label">Filter:</span>
 
-      <!-- Navigation Category List -->
       <div class="cat-nav-wrap">
         <button class="cat-nav-btn" id="catNavBtn" onclick="toggleCatNav()">
           <span id="catNavLabel">🌌 All Categories</span>
@@ -406,7 +607,6 @@
   <div class="pagination" id="pag"></div>
 </main>
 
-<!-- MODAL -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-head">
@@ -418,8 +618,11 @@
       <div class="modal-tags" id="mTags"></div>
       <div class="modal-desc" id="mDesc"></div>
       <div class="modal-actions">
-        <a class="btn-modal-dl" id="mLink" href="#" target="_blank">🚀 Get It Now</a>
-        <button class="btn-modal-share" id="mShare" onclick="shareCurrentPack()">🔗 Copy Link</button>
+        <a class="btn-modal-support" id="mSupport" href="#" target="_blank" rel="noopener noreferrer" style="display:none">💖 Support the Creator</a>
+        <div class="modal-main-actions">
+          <a class="btn-modal-dl" id="mLink" href="#" target="_blank" rel="noopener noreferrer">🚀 Get It Now</a>
+          <button class="btn-modal-share" id="mShare" onclick="shareCurrentPack()">🔗 Copy Link</button>
+        </div>
       </div>
       <div class="modal-meta" id="mMeta"></div>
     </div>
@@ -427,8 +630,8 @@
 </div>
 
 <footer>
-  🌌 <strong>NOVA</strong> — New Organized Vault of Assets &nbsp;|&nbsp;
-  <a href="https://discord.gg/ThgxvPtUjZ" target="_blank">Join Discord</a>
+  🌌 <strong>NOVA</strong> — Nexus of Verified Assets &nbsp;|&nbsp;
+  <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer">Join the Server</a>
   &nbsp;|&nbsp; No ads. No shorteners. Direct downloads only.
 </footer>
 
@@ -446,7 +649,6 @@ let searchDebounce = null;
 
 try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 
-// ── THEME ──────────────────────────────────
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
@@ -455,10 +657,8 @@ function toggleTheme() {
   try { localStorage.setItem('nova_theme', isDark ? 'light' : 'dark'); } catch {}
 }
 
-// ── LOAD BAR ──────────────────────────────
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
 
-// ── LOAD PACKS ────────────────────────────
 async function loadAllPacks() {
   setBar(10);
   try {
@@ -498,7 +698,6 @@ async function loadAllPacks() {
   return true;
 }
 
-// ── CATEGORY NAV ──────────────────────────
 function toggleCatNav() {
   document.getElementById('catNavBtn').classList.toggle('open');
   document.getElementById('catNavList').classList.toggle('open');
@@ -513,7 +712,6 @@ function selectCat(val, label) {
   applyFilters();
 }
 
-// ── FILTERS ───────────────────────────────
 function onSearchInput() {
   clearTimeout(searchDebounce);
   document.getElementById('searchStatus').textContent = '⏳';
@@ -529,13 +727,18 @@ function applyFilters() {
   const cat = currentCat.toLowerCase();
 
   filtered = allPacks.filter(p => {
-    const mq = !q || (p.name||'').toLowerCase().includes(q) || (p.credits||'').toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q);
-    const mc = !cat || (p.category||'').toLowerCase() === cat;
+    const mq = !q ||
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.credits || '').toLowerCase().includes(q) ||
+      (p.description || '').toLowerCase().includes(q) ||
+      (p.category || '').toLowerCase().includes(q);
+    const mc = !cat || (p.category || '').toLowerCase() === cat;
     return mq && mc;
   });
 
   if (srt === 'newest') filtered = [...filtered].reverse();
-  else if (srt === 'az') filtered = [...filtered].sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  else if (srt === 'oldest') filtered = [...filtered];
+  else if (srt === 'az') filtered = [...filtered].sort((a,b) => (a.name || '').localeCompare(b.name || ''));
 
   page = 1;
   document.getElementById('rCount').textContent = filtered.length;
@@ -548,7 +751,6 @@ function clearAll() {
   selectCat('', '🌌 All Categories');
 }
 
-// ── VIEW ──────────────────────────────────
 function setView(v) {
   currentView = v;
   document.getElementById('grid').style.display = v === 'grid' ? 'grid' : 'none';
@@ -558,7 +760,6 @@ function setView(v) {
   render();
 }
 
-// ── SKELETON ──────────────────────────────
 function showSkeletons() {
   document.getElementById('grid').innerHTML = Array(8).fill(`
     <div class="skeleton-card">
@@ -573,7 +774,6 @@ function showSkeletons() {
     </div>`).join('');
 }
 
-// ── RECENTLY VIEWED ───────────────────────
 function addRecent(pack) {
   recentlyViewed = recentlyViewed.filter(r => r.name !== pack.name);
   recentlyViewed.unshift({ name: pack.name });
@@ -583,10 +783,13 @@ function addRecent(pack) {
 }
 
 function renderRecent() {
-  if (!recentlyViewed.length) { document.getElementById('recentSection').style.display = 'none'; return; }
+  if (!recentlyViewed.length) {
+    document.getElementById('recentSection').style.display = 'none';
+    return;
+  }
   document.getElementById('recentSection').style.display = 'block';
   document.getElementById('recentChips').innerHTML = recentlyViewed.map(r =>
-    `<span class="recent-chip" onclick="openByName('${esc(r.name)}')">${esc(r.name)}</span>`
+    `<span class="recent-chip" onclick='openByName(${JSON.stringify(r.name)})'>${esc(r.name)}</span>`
   ).join('');
 }
 
@@ -599,7 +802,6 @@ function openByName(name) {
   }
 }
 
-// ── RENDER ────────────────────────────────
 function render() {
   const start = (page - 1) * PER_PAGE;
   const slice = filtered.slice(start, start + PER_PAGE);
@@ -617,6 +819,11 @@ function render() {
       const card = document.createElement('div');
       card.className = 'pack-card';
       card.onclick = () => openModal(start + i);
+
+      const supportBtn = p.support_link
+        ? `<a class="btn-support" href="${esc(p.support_link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">💖 Support the Creator</a>`
+        : '';
+
       card.innerHTML = `
         <div class="card-img">
           ${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.parentElement.innerHTML='📦'" />` : '📦'}
@@ -624,14 +831,17 @@ function render() {
         <div class="card-body">
           <div class="card-title">${esc(p.name)}</div>
           <div class="card-tags">
-            <span class="tag tag-cat">📂 ${esc(p.category||'Unknown')}</span>
-            <span class="tag tag-cred">🎨 Devs: ${esc(p.credits||'Unknown')}</span>
+            <span class="tag tag-cat">📂 ${esc(p.category || 'Unknown')}</span>
+            <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
           </div>
-          <div class="card-desc">${esc(p.description||'No description.')}</div>
+          <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
         <div class="card-footer">
-          <a class="btn-dl" href="${esc(p.link)}" target="_blank" onclick="event.stopPropagation()">🚀 Get It Now</a>
-          <button class="btn-copy" onclick="event.stopPropagation();copyLink('${esc(p.link)}',this)" title="Copy link">🔗</button>
+          ${supportBtn}
+          <div class="card-actions">
+            <a class="btn-dl" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🚀 Get It Now</a>
+            <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
+          </div>
         </div>`;
       frag.appendChild(card);
     });
@@ -643,13 +853,17 @@ function render() {
     const imgs = grid.querySelectorAll('img[data-src]');
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries, obs) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.src = e.target.dataset.src; obs.unobserve(e.target); }});
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.src = e.target.dataset.src;
+            obs.unobserve(e.target);
+          }
+        });
       }, { rootMargin: '200px' });
       imgs.forEach(img => io.observe(img));
     } else {
       imgs.forEach(img => { img.src = img.dataset.src; });
     }
-
   } else {
     document.getElementById('imageGrid').innerHTML = slice.map((p, i) => `
       <div class="image-card" onclick="openModal(${start + i})">
@@ -665,16 +879,16 @@ function renderPag() {
   const total = Math.ceil(filtered.length / PER_PAGE);
   const pag = document.getElementById('pag');
   if (total <= 1) { pag.innerHTML = ''; return; }
-  let h = `<button class="pg-btn" onclick="go(${page-1})" ${page===1?'disabled':''}>◀</button>`;
+  let h = `<button class="pg-btn" onclick="go(${page - 1})" ${page === 1 ? 'disabled' : ''}>◀</button>`;
   const rng = 2;
   for (let i = 1; i <= total; i++) {
-    if (i===1||i===total||(i>=page-rng&&i<=page+rng)) {
-      h += `<button class="pg-btn ${i===page?'active':''}" onclick="go(${i})">${i}</button>`;
-    } else if (i===page-rng-1||i===page+rng+1) {
+    if (i === 1 || i === total || (i >= page - rng && i <= page + rng)) {
+      h += `<button class="pg-btn ${i === page ? 'active' : ''}" onclick="go(${i})">${i}</button>`;
+    } else if (i === page - rng - 1 || i === page + rng + 1) {
       h += `<span style="color:var(--muted);padding:0 3px">…</span>`;
     }
   }
-  h += `<button class="pg-btn" onclick="go(${page+1})" ${page===total?'disabled':''}>▶</button>`;
+  h += `<button class="pg-btn" onclick="go(${page + 1})" ${page === total ? 'disabled' : ''}>▶</button>`;
   pag.innerHTML = h;
 }
 
@@ -686,7 +900,6 @@ function go(p) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── MODAL ─────────────────────────────────
 function openModal(idx) {
   openModalDirect(filtered[idx]);
 }
@@ -695,29 +908,56 @@ function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p;
   addRecent(p);
+
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
   document.getElementById('mTags').innerHTML = `
-    <span class="tag tag-cat">📂 ${esc(p.category||'Unknown')}</span>
-    <span class="tag tag-cred">🎨 Devs: ${esc(p.credits||'Unknown')}</span>`;
-  document.getElementById('mMeta').textContent = `Added by ${p.added_by||'Staff'} • ${p.date_added||''}`;
+    <span class="tag tag-cat">📂 ${esc(p.category || 'Unknown')}</span>
+    <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>`;
+
+  const support = document.getElementById('mSupport');
+  if (p.support_link) {
+    support.href = p.support_link;
+    support.style.display = 'block';
+  } else {
+    support.style.display = 'none';
+  }
+
+  document.getElementById('mMeta').textContent = `Added by ${p.added_by || 'Staff'} • ${p.date_added || ''}`;
   document.getElementById('mShare').textContent = '🔗 Copy Link';
   document.getElementById('mShare').classList.remove('shared');
+
   const img = document.getElementById('mImg');
-  if (p.image) { img.src = p.image; img.style.display = 'block'; img.onerror = () => { img.style.display = 'none'; }; }
-  else { img.style.display = 'none'; }
+  if (p.image) {
+    img.src = p.image;
+    img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; };
+  } else {
+    img.style.display = 'none';
+  }
+
   document.getElementById('overlay').classList.add('open');
 }
 
 function shareCurrentPack() {
   if (!currentModalPack) return;
-  const text = `📦 ${currentModalPack.name}\n🎨 Devs: ${currentModalPack.credits}\n🔗 ${currentModalPack.link}\n\n🌐 Browse NOVA Library: ${NOVA_URL}`;
+
+  const text =
+`📦 ${currentModalPack.name}
+🎨 Devs: ${currentModalPack.credits || 'Unknown'}
+${currentModalPack.support_link ? `💖 Support the Creator: ${currentModalPack.support_link}\n` : ''}🔗 ${currentModalPack.link || ''}
+
+🌐 Browse NOVA — Nexus of Verified Assets: ${NOVA_URL}`;
+
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('mShare');
     btn.textContent = '✅ Copied!';
     btn.classList.add('shared');
-    setTimeout(() => { btn.textContent = '🔗 Copy Link'; btn.classList.remove('shared'); }, 2000);
+    setTimeout(() => {
+      btn.textContent = '🔗 Copy Link';
+      btn.classList.remove('shared');
+    }, 2000);
   });
 }
 
@@ -725,7 +965,10 @@ function copyLink(link, btn) {
   navigator.clipboard.writeText(link).then(() => {
     btn.textContent = '✅';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '🔗'; btn.classList.remove('copied'); }, 1500);
+    setTimeout(() => {
+      btn.textContent = '🔗';
+      btn.classList.remove('copied');
+    }, 1500);
   });
 }
 
@@ -743,7 +986,11 @@ function showToast(msg) {
 }
 
 function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
@@ -758,16 +1005,24 @@ document.addEventListener('click', e => {
   }
 });
 
-// ── INIT ──────────────────────────────────
 async function init() {
-  try { const t = localStorage.getItem('nova_theme'); if (t) { document.documentElement.setAttribute('data-theme', t); document.querySelector('.theme-btn').textContent = t === 'dark' ? '🌙' : '☀️'; }} catch {}
+  try {
+    const t = localStorage.getItem('nova_theme');
+    if (t) {
+      document.documentElement.setAttribute('data-theme', t);
+      document.querySelector('.theme-btn').textContent = t === 'dark' ? '🌙' : '☀️';
+    }
+  } catch {}
+
   renderRecent();
   showSkeletons();
+
   const ok = await loadAllPacks();
   if (!ok) {
     document.getElementById('grid').innerHTML = `<div class="empty"><div class="empty-icon">❌</div><h3>Failed to load</h3><p>Please refresh the page.</p></div>`;
     return;
   }
+
   applyFilters();
 }
 
