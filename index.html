@@ -517,7 +517,7 @@
 
 <header>
   <div class="header-left">
-    <img class="server-icon" src="https://via.placeholder.com/44/0D1B2A/FFD700?text=N" alt="NOVA" onerror="this.style.display='none'" />
+    <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="NOVA" onerror="this.style.display='none'" />
     <div class="header-title">
       <div class="aurora-text">NOVA</div>
       <p>Nexus of Verified Assets — Minecraft Bedrock Archive</p>
@@ -533,7 +533,7 @@
 
 <div class="stats-bar">
   <div class="stat">📦 <b id="sTot">—</b> Packs</div>
-  <div class="stat">📂 <b>23</b> Categories</div>
+  <div class="stat">📂 <b>22</b> Categories</div>
   <div class="stat">🆕 <b id="sLast">—</b></div>
   <div class="stat">📄 <b id="sPages">—</b> Pages</div>
   <div class="stat">🔄 <b id="sSynced">—</b></div>
@@ -561,6 +561,7 @@
         </button>
         <div class="cat-nav-list" id="catNavList">
           <div class="cat-nav-item selected" data-val="" onclick="selectCat('','🌌 All Categories')">🌌 All Categories</div>
+          <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💖 Featured')">💖 Featured</div>
           <div class="cat-nav-item" data-val="PvP" onclick="selectCat('PvP','⚔️ PvP')">⚔️ PvP</div>
           <div class="cat-nav-item" data-val="Utility" onclick="selectCat('Utility','🔧 Utility')">🔧 Utility</div>
           <div class="cat-nav-item" data-val="Furniture" onclick="selectCat('Furniture','🛋️ Furniture')">🛋️ Furniture</div>
@@ -721,10 +722,16 @@ function onSearchInput() {
   }, 300);
 }
 
+function isFeaturedPack(p) {
+  const supportVal = String(p.support_link || p.support || '').trim().toLowerCase();
+  return supportVal !== '' && supportVal !== 'none';
+}
+
 function applyFilters() {
   const q = document.getElementById('q').value.toLowerCase().trim();
   const srt = document.getElementById('sortFilter').value;
-  const cat = currentCat.toLowerCase();
+  const featuredOnly = currentCat === '__featured__';
+  const cat = featuredOnly ? '' : currentCat.toLowerCase();
 
   filtered = allPacks.filter(p => {
     const mq = !q ||
@@ -733,7 +740,8 @@ function applyFilters() {
       (p.description || '').toLowerCase().includes(q) ||
       (p.category || '').toLowerCase().includes(q);
     const mc = !cat || (p.category || '').toLowerCase() === cat;
-    return mq && mc;
+    const mf = !featuredOnly || isFeaturedPack(p);
+    return mq && mc && mf;
   });
 
   if (srt === 'newest') filtered = [...filtered].reverse();
@@ -820,8 +828,9 @@ function render() {
       card.className = 'pack-card';
       card.onclick = () => openModal(start + i);
 
-      const supportBtn = p.support_link
-        ? `<a class="btn-support" href="${esc(p.support_link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">💖 Support the Creator</a>`
+      const supportVal = String(p.support_link || p.support || '').trim();
+      const supportBtn = (supportVal && supportVal.toLowerCase() !== 'none')
+        ? `<a class="btn-support" href="${esc(supportVal)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">💖 Support the Creator</a>`
         : '';
 
       card.innerHTML = `
@@ -917,8 +926,9 @@ function openModalDirect(p) {
     <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
   const support = document.getElementById('mSupport');
-  if (p.support_link) {
-    support.href = p.support_link;
+  const supportVal = String(p.support_link || p.support || '').trim();
+  if (supportVal && supportVal.toLowerCase() !== 'none') {
+    support.href = supportVal;
     support.style.display = 'block';
   } else {
     support.style.display = 'none';
@@ -943,10 +953,15 @@ function openModalDirect(p) {
 function shareCurrentPack() {
   if (!currentModalPack) return;
 
+  const supportVal = String(currentModalPack.support_link || currentModalPack.support || '').trim();
+  const supportLine = supportVal && supportVal.toLowerCase() !== 'none'
+    ? `💖 Support the Creator: ${supportVal}\n`
+    : '';
+
   const text =
 `📦 ${currentModalPack.name}
 🎨 Devs: ${currentModalPack.credits || 'Unknown'}
-${currentModalPack.support_link ? `💖 Support the Creator: ${currentModalPack.support_link}\n` : ''}🔗 ${currentModalPack.link || ''}
+${supportLine}🔗 ${currentModalPack.link || ''}
 
 🌐 Browse NOVA — Nexus of Verified Assets: ${NOVA_URL}`;
 
