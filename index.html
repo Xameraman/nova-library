@@ -688,6 +688,8 @@
 <script>
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
+const APPS_SCRIPT_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+const APPS_SCRIPT_KEY = 'PASTE_YOUR_SECRET_KEY_HERE';
 const PER_PAGE = 20;
 
 let allPacks = [], filtered = [], page = 1;
@@ -708,6 +710,18 @@ function toggleTheme() {
 }
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
+
+function trackPackView(pack) {
+  try {
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) return;
+    const url = new URL(APPS_SCRIPT_URL);
+    url.searchParams.set('key', APPS_SCRIPT_KEY);
+    url.searchParams.set('action', 'view');
+    url.searchParams.set('name', pack.name || '');
+    const ping = new Image();
+    ping.src = url.toString();
+  } catch {}
+}
 
 async function loadAllPacks() {
   setBar(10);
@@ -980,6 +994,7 @@ function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p;
   addRecent(p);
+  trackPackView(p);
 
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
