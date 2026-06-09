@@ -641,6 +641,11 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
+/* ──────────────── View‑ping constants ──────────────── */
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbx2oa0Qg5k9czqlo9Kw2syMfoD_DVXZ-DZdFWTDSsLU90P9o5Xt0rLnBvP_zmMa2Qk2Nw/exec';
+const VIEW_PING_KEY = '3rWm&3%4BHcZv^SyRhHm%Ypjxw^^5Ay#4X^vec9R77#f2XVS5*aYJerRn8Tr#2Tb';
+/* ──────────────────────────────────────────────────── */
+
 let allPacks = [], filtered = [], page = 1;
 let currentView = 'grid';
 let currentCat = '';
@@ -659,6 +664,21 @@ function toggleTheme() {
 }
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
+
+/* ──────────────── View‑ping helper ──────────────── */
+async function pingPackView(pack) {
+  try {
+    if (!VIEW_PING_URL || !VIEW_PING_KEY) return;
+    if (!pack || (!pack.id && !pack.name)) return;     // ← guard added
+    const id = encodeURIComponent(String(pack.id || ''));
+    const name = encodeURIComponent(String(pack.name || ''));
+    const url = `${VIEW_PING_URL}?key=${encodeURIComponent(VIEW_PING_KEY)}&action=view&id=${id}&name=${name}&source=web`;
+    await fetch(url, { method: 'GET', mode: 'no-cors' });
+  } catch (err) {
+    console.warn('View ping failed:', err);
+  }
+}
+/* ─────────────────────────────────────────────────── */
 
 async function loadAllPacks() {
   setBar(10);
@@ -917,6 +937,7 @@ function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p;
   addRecent(p);
+  pingPackView(p);                     // ← view‑date ping
 
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
