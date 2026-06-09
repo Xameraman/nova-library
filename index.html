@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NOVA Library — Nexus of Verified Assets</title>
-  <meta name="description" content="NOVA Library — Nexus of Verified Assets. Browse verified Minecraft Bedrock assets, packs, addons, worlds, skins, and more with direct downloads and proper credits." />
+  <title>NOVA — Nexus of Verified Assets</title>
+  <meta name="description" content="NOVA — Nexus of Verified Assets. Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
   <style>
     :root {
       --navy:   #0D1B2A;
@@ -290,7 +290,6 @@
     .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 28px; }
     .image-card { position: relative; border-radius: 10px; overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--navy3); }
     .image-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-    .image-badge { position: absolute; top: 8px; left: 8px; background: linear-gradient(90deg, var(--purple), var(--gold)); color: #fff; padding: 3px 7px; border-radius: 999px; font-size: 0.58rem; font-weight: 800; z-index: 2; text-transform: uppercase; }
     .image-card:hover img { transform: scale(1.05); }
     .image-card-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 20px 8px 8px; opacity: 0; transition: opacity 0.3s; }
     .image-card:hover .image-card-overlay { opacity: 1; }
@@ -309,23 +308,8 @@
     }
     .pack-card:hover { transform: translateY(-3px); border-color: var(--cyan); box-shadow: 0 6px 20px rgba(0,229,255,0.1); }
 
-    .card-img { width: 100%; height: 150px; background: var(--navy3); display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; flex-shrink: 0; position: relative; }
+    .card-img { width: 100%; height: 150px; background: var(--navy3); display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; flex-shrink: 0; }
     .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .featured-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: linear-gradient(90deg, var(--purple), var(--gold));
-      color: #fff;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 0.62rem;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      z-index: 2;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.22);
-      text-transform: uppercase;
-    }
     .card-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; }
     .card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 7px; line-height: 1.3; }
     .card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 7px; }
@@ -383,23 +367,6 @@
       transition: opacity 0.2s;
     }
     .btn-support:hover { opacity: 0.9; }
-
-    .btn-archive {
-      width: 100%;
-      background: var(--gold);
-      color: var(--navy);
-      border: none;
-      border-radius: 6px;
-      padding: 7px;
-      font-weight: 700;
-      font-size: 0.78rem;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      display: block;
-      transition: opacity 0.2s;
-    }
-    .btn-archive:hover { opacity: 0.9; }
 
     .btn-copy {
       background: var(--navy3);
@@ -459,21 +426,6 @@
     .modal-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
     .modal-actions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
     .modal-main-actions { display: flex; gap: 8px; }
-    .btn-modal-archive {
-      display: block;
-      background: var(--gold);
-      color: var(--navy);
-      border: none;
-      border-radius: 8px;
-      padding: 11px;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      transition: opacity 0.2s;
-    }
-    .btn-modal-archive:hover { opacity: 0.9; }
 
     .btn-modal-dl {
       flex: 1;
@@ -567,8 +519,8 @@
   <div class="header-left">
     <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="NOVA" onerror="this.style.display='none'" />
     <div class="header-title">
-      <div class="aurora-text">NOVA LIBRARY</div>
-      <p>Nexus of Verified Assets — Minecraft Bedrock Assets</p>
+      <div class="aurora-text">NOVA</div>
+      <p>Nexus of Verified Assets — Minecraft Bedrock Archive</p>
     </div>
   </div>
   <div class="header-right">
@@ -668,7 +620,6 @@
       <div class="modal-desc" id="mDesc"></div>
       <div class="modal-actions">
         <a class="btn-modal-support" id="mSupport" href="#" target="_blank" rel="noopener noreferrer" style="display:none">💖 Support the Creator</a>
-        <a class="btn-modal-archive" id="mArchive" href="#" target="_blank" rel="noopener noreferrer" style="display:none">🗃️ Download Archive</a>
         <div class="modal-main-actions">
           <a class="btn-modal-dl" id="mLink" href="#" target="_blank" rel="noopener noreferrer">🚀 Get It Now</a>
           <button class="btn-modal-share" id="mShare" onclick="shareCurrentPack()">🔗 Copy Link</button>
@@ -680,7 +631,7 @@
 </div>
 
 <footer>
-  🌌 <strong>NOVA Library</strong> — Nexus of Verified Assets &nbsp;|&nbsp;
+  🌌 <strong>NOVA</strong> — Nexus of Verified Assets &nbsp;|&nbsp;
   <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer">Join the Server</a>
   &nbsp;|&nbsp; No ads. No shorteners. Direct downloads only.
 </footer>
@@ -688,8 +639,6 @@
 <script>
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
-const APPS_SCRIPT_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
-const APPS_SCRIPT_KEY = 'PASTE_YOUR_SECRET_KEY_HERE';
 const PER_PAGE = 20;
 
 let allPacks = [], filtered = [], page = 1;
@@ -710,18 +659,6 @@ function toggleTheme() {
 }
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
-
-function trackPackView(pack) {
-  try {
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) return;
-    const url = new URL(APPS_SCRIPT_URL);
-    url.searchParams.set('key', APPS_SCRIPT_KEY);
-    url.searchParams.set('action', 'view');
-    url.searchParams.set('name', pack.name || '');
-    const ping = new Image();
-    ping.src = url.toString();
-  } catch {}
-}
 
 async function loadAllPacks() {
   setBar(10);
@@ -892,20 +829,12 @@ function render() {
       card.onclick = () => openModal(start + i);
 
       const supportVal = String(p.support_link || p.support || '').trim();
-      const archiveVal = String(p.archive_link || p.archive || '').trim();
-      const featuredBadge = (supportVal && supportVal.toLowerCase() !== 'none')
-        ? `<div class="featured-badge">Featured</div>`
-        : '';
       const supportBtn = (supportVal && supportVal.toLowerCase() !== 'none')
         ? `<a class="btn-support" href="${esc(supportVal)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">💖 Support the Creator</a>`
-        : '';
-      const archiveBtn = (archiveVal && archiveVal.toLowerCase() !== 'none')
-        ? `<a class="btn-archive" href="${esc(archiveVal)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🗃️ Download Archive</a>`
         : '';
 
       card.innerHTML = `
         <div class="card-img">
-          ${featuredBadge}
           ${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.parentElement.innerHTML='📦'" />` : '📦'}
         </div>
         <div class="card-body">
@@ -918,7 +847,6 @@ function render() {
         </div>
         <div class="card-footer">
           ${supportBtn}
-          ${archiveBtn}
           <div class="card-actions">
             <a class="btn-dl" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🚀 Get It Now</a>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
@@ -946,16 +874,11 @@ function render() {
       imgs.forEach(img => { img.src = img.dataset.src; });
     }
   } else {
-    document.getElementById('imageGrid').innerHTML = slice.map((p, i) => {
-      const supportVal = String(p.support_link || p.support || '').trim();
-      const badge = (supportVal && supportVal.toLowerCase() !== 'none') ? '<div class="image-badge">Featured</div>' : '';
-      return `
+    document.getElementById('imageGrid').innerHTML = slice.map((p, i) => `
       <div class="image-card" onclick="openModal(${start + i})">
-        ${badge}
         ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" />` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem">📦</div>'}
         <div class="image-card-overlay"><div class="image-card-name">${esc(p.name)}</div></div>
-      </div>`;
-    }).join('');
+      </div>`).join('');
   }
 
   renderPag();
@@ -994,7 +917,6 @@ function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p;
   addRecent(p);
-  trackPackView(p);
 
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
@@ -1041,7 +963,7 @@ function shareCurrentPack() {
 🎨 Devs: ${currentModalPack.credits || 'Unknown'}
 ${supportLine}🔗 ${currentModalPack.link || ''}
 
-🌐 Browse NOVA Library: ${NOVA_URL}`;
+🌐 Browse NOVA — Nexus of Verified Assets: ${NOVA_URL}`;
 
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('mShare');
