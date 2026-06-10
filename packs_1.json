@@ -1,6 +1,6 @@
 [
   {
-    "id": 2,
+    "id": 1,
     "name": "Titanium Add-on",
     "link": "https://www.curseforge.com/minecraft-bedrock/addons/titanium-add-on",
     "support_link": "https://discord.gg/r6ym9cfcKw",
@@ -11,8 +11,7 @@
     "image": "https://i.ibb.co/Kx7mYqND/8e8487fea62b.png",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-05-27T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-08T16:00:00.000Z"
   },
   {
     "id": 2,
@@ -26,8 +25,7 @@
     "image": "https://i.ibb.co/70Lgtcf/9833403f5571.png",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-05-30T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-09T16:00:00.000Z"
   },
   {
     "id": 3,
@@ -41,8 +39,7 @@
     "image": "https://i.ibb.co/hRvVVzjD/44f74ccd8477.png",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-05-30T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-09T16:00:00.000Z"
   },
   {
     "id": 4,
@@ -56,8 +53,7 @@
     "image": "https://i.ibb.co/PZhrVnPw/bcac940e3280.png",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-05-30T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-09T16:00:00.000Z"
   },
   {
     "id": 5,
@@ -71,8 +67,7 @@
     "image": "https://i.ibb.co/QvCqLD1Z/3762db478a20.jpg",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-05-30T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-09T16:00:00.000Z"
   },
   {
     "id": 6,
@@ -86,8 +81,7 @@
     "image": "https://i.ibb.co/bRQVVpgQ/a65c10b01f33.png",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-06-02T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-09T16:00:00.000Z"
   },
   {
     "id": 7,
@@ -101,7 +95,20 @@
     "image": "https://i.ibb.co/d0JshZx8/78850fea7d1b.png",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-06-06T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-06-09T16:00:00.000Z"
+  },
+  {
+    "id": 8,
+    "name": "Bedrock UI+",
+    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/bedrock-ui-plus-b69-2/gallery",
+    "support_link": "",
+    "archive_link": "",
+    "category": "GUI & UI",
+    "credits": "Bruhh69",
+    "description": "A brand new ui Overhauled from hud+, this ui improves a lots of ui screens, also have so many features that Will helps you in gameplay, such as survival, PVP, etc.",
+    "image": "https://i.ibb.co/NgSyKFsW/333cbadf7f39.png",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-09T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
