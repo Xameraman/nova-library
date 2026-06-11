@@ -533,7 +533,7 @@
     <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="NOVA" onerror="this.style.display='none'" />
     <div class="header-title">
       <div class="aurora-text">NOVA</div>
-      <p>Nexus of Verified Assets — Minecraft Bedrock Archive</p>
+      <p>Nexus of Verified Assets. — Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
     </div>
   </div>
   <div class="header-right">
@@ -635,7 +635,7 @@
       <div class="modal-actions">
         <a class="btn-modal-support" id="mSupport" href="#" target="_blank" rel="noopener noreferrer" style="display:none">💖 Support the Creator</a>
         <div class="modal-main-actions">
-          <a class="btn-modal-dl" id="mLink" href="#" target="_blank" rel="noopener noreferrer">🚀 Get It Now</a>
+          <a class="btn-modal-dl" id="mLink" href="#" target="_blank" rel="noopener noreferrer">🚀 Download Now</a>
           <button class="btn-modal-share" id="mShare" onclick="shareCurrentPack()">🔗 Copy Link</button>
         </div>
       </div>
@@ -883,7 +883,7 @@ function render() {
         <div class="card-footer">
           ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💖 Support the Creator</button>` : ''}
           <div class="card-actions">
-            <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Get It Now</button>
+            <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Download Now</button>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
           </div>
         </div>`;
