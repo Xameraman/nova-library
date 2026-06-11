@@ -575,7 +575,7 @@
         </button>
         <div class="cat-nav-list" id="catNavList">
           <div class="cat-nav-item selected" data-val="" onclick="selectCat('','🌌 All Categories')">🌌 All Categories</div>
-          <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💖 Featured')">💖 Featured</div>
+          <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💝 Featured')">💝 Featured</div>
           <div class="cat-nav-item" data-val="PvP" onclick="selectCat('PvP','⚔️ PvP')">⚔️ PvP</div>
           <div class="cat-nav-item" data-val="Utility" onclick="selectCat('Utility','🔧 Utility')">🔧 Utility</div>
           <div class="cat-nav-item" data-val="Furniture" onclick="selectCat('Furniture','🛋️ Furniture')">🛋️ Furniture</div>
@@ -633,7 +633,7 @@
       <div class="modal-tags" id="mTags"></div>
       <div class="modal-desc" id="mDesc"></div>
       <div class="modal-actions">
-        <a class="btn-modal-support" id="mSupport" href="#" target="_blank" rel="noopener noreferrer" style="display:none">💖 Support the Creator</a>
+        <a class="btn-modal-support" id="mSupport" href="#" target="_blank" rel="noopener noreferrer" style="display:none">💝 Support the Creator</a>
         <div class="modal-main-actions">
           <a class="btn-modal-dl" id="mLink" href="#" target="_blank" rel="noopener noreferrer">🚀 Download Now</a>
           <button class="btn-modal-share" id="mShare" onclick="shareCurrentPack()">🔗 Copy Link</button>
@@ -881,7 +881,7 @@ function render() {
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
         <div class="card-footer">
-          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💖 Support the Creator</button>` : ''}
+          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💝 Support the Creator</button>` : ''}
           <div class="card-actions">
             <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Download Now</button>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
@@ -991,7 +991,7 @@ function shareCurrentPack() {
 
   const supportVal = String(currentModalPack.support_link || currentModalPack.support || '').trim();
   const supportLine = supportVal && supportVal.toLowerCase() !== 'none'
-    ? `💖 Support the Creator: ${supportVal}\n`
+    ? `💝 Support the Creator: ${supportVal}\n`
     : '';
 
   const text =
