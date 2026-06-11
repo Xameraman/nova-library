@@ -329,6 +329,7 @@
     .tag { border-radius: 4px; padding: 2px 6px; font-size: 0.66rem; border: 1px solid; }
     .tag-cat { border-color: var(--cyan); color: var(--cyan); }
     .tag-cred { border-color: var(--gold); color: var(--gold); }
+    .tag-secondary { border-color: var(--purple); color: var(--purple); }
     .card-desc {
       font-size: 0.77rem;
       color: var(--muted);
@@ -547,7 +548,7 @@
 
 <div class="stats-bar">
   <div class="stat">📦 <b id="sTot">—</b> Packs</div>
-  <div class="stat">📂 <b>22</b> Categories</div>
+  <div class="stat">📂 <b>23</b> Categories</div>
   <div class="stat">🆕 <b id="sLast">—</b></div>
   <div class="stat">📄 <b id="sPages">—</b> Pages</div>
   <div class="stat">🔄 <b id="sSynced">—</b></div>
@@ -598,6 +599,7 @@
           <div class="cat-nav-item" data-val="World" onclick="selectCat('World','🌍 World')">🌍 World</div>
           <div class="cat-nav-item" data-val="Animation" onclick="selectCat('Animation','🎬 Animation')">🎬 Animation</div>
           <div class="cat-nav-item" data-val="Skins" onclick="selectCat('Skins','🎨 Skins')">🎨 Skins</div>
+          <div class="cat-nav-item" data-val="⚡ Fps Booster" onclick="selectCat('⚡ Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
         </div>
       </div>
 
@@ -774,7 +776,8 @@ function applyFilters() {
       (p.name || '').toLowerCase().includes(q) ||
       (p.credits || '').toLowerCase().includes(q) ||
       (p.description || '').toLowerCase().includes(q) ||
-      (p.category || '').toLowerCase().includes(q);
+      (p.category || '').toLowerCase().includes(q) ||
+      (p.secondary_tag || '').toLowerCase().includes(q);
     const mc = !cat || (p.category || '').toLowerCase() === cat;
     const mf = !featuredOnly || isFeaturedPack(p);
     return mq && mc && mf;
@@ -867,6 +870,7 @@ function render() {
 
       const supportVal = String(p.support_link || p.support || '').trim();
       const hasSupport = supportVal !== '' && supportVal.toLowerCase() !== 'none';
+      const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
 
       card.innerHTML = `
         <div class="card-img">
@@ -876,6 +880,7 @@ function render() {
           <div class="card-title">${esc(p.name)}</div>
           <div class="card-tags">
             <span class="tag tag-cat">📂 ${esc(p.category || 'Unknown')}</span>
+            <span class="tag tag-secondary">🏷️ ${esc(secondaryTag || 'Unknown')}</span>
             <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
           </div>
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
@@ -957,8 +962,10 @@ function openModalDirect(p) {
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
+  const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
   document.getElementById('mTags').innerHTML = `
     <span class="tag tag-cat">📂 ${esc(p.category || 'Unknown')}</span>
+    <span class="tag tag-secondary">🏷️ ${esc(secondaryTag || 'Unknown')}</span>
     <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
   const support = document.getElementById('mSupport');
