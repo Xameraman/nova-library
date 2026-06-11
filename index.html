@@ -117,8 +117,8 @@
     .discord-btn:hover { opacity: 0.85; }
 
     .guides-btn {
-      background: var(--cyan);
-      color: var(--navy);
+      background: #2ECC71;
+      color: white;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 8px;
@@ -538,8 +538,8 @@
   </div>
   <div class="header-right">
     <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
-    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join the Server</a>
     <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📚 Guides</a>
+    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join the Server</a>
   </div>
 </header>
 
@@ -646,6 +646,8 @@
 
 <footer>
   🌌 <strong>NOVA</strong> — Nexus of Verified Assets &nbsp;|&nbsp;
+  <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer">📚 Guides</a>
+  &nbsp;|&nbsp;
   <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer">Join the Server</a>
   &nbsp;|&nbsp; No ads. No shorteners. Direct downloads only.
 </footer>
@@ -683,7 +685,7 @@ function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%
 async function pingPackView(pack) {
   try {
     if (!VIEW_PING_URL || !VIEW_PING_KEY) return;
-    if (!pack || (!pack.id && !pack.name)) return;     // ← guard added
+    if (!pack || (!pack.id && !pack.name)) return;
     const id = encodeURIComponent(String(pack.id || ''));
     const name = encodeURIComponent(String(pack.name || ''));
     const url = `${VIEW_PING_URL}?key=${encodeURIComponent(VIEW_PING_KEY)}&action=view&id=${id}&name=${name}&source=web`;
@@ -860,12 +862,11 @@ function render() {
     slice.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'pack-card';
-      card.onclick = () => openModal(start + i);
+      const absIdx = start + i;
+      card.onclick = () => openModal(absIdx);
 
       const supportVal = String(p.support_link || p.support || '').trim();
-      const supportBtn = (supportVal && supportVal.toLowerCase() !== 'none')
-        ? `<a class="btn-support" href="${esc(supportVal)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">💖 Support the Creator</a>`
-        : '';
+      const hasSupport = supportVal !== '' && supportVal.toLowerCase() !== 'none';
 
       card.innerHTML = `
         <div class="card-img">
@@ -880,9 +881,9 @@ function render() {
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
         <div class="card-footer">
-          ${supportBtn}
+          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💖 Support the Creator</button>` : ''}
           <div class="card-actions">
-            <a class="btn-dl" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🚀 Get It Now</a>
+            <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Get It Now</button>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
           </div>
         </div>`;
