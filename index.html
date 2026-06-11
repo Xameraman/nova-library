@@ -116,6 +116,19 @@
     }
     .discord-btn:hover { opacity: 0.85; }
 
+    .guides-btn {
+      background: var(--cyan);
+      color: var(--navy);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: opacity 0.2s;
+      display: inline-block;
+    }
+    .guides-btn:hover { opacity: 0.85; }
+
     .theme-btn {
       background: var(--navy3);
       border: 1px solid var(--border);
@@ -526,6 +539,7 @@
   <div class="header-right">
     <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join the Server</a>
+    <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📚 Guides</a>
   </div>
 </header>
 
@@ -669,7 +683,7 @@ function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%
 async function pingPackView(pack) {
   try {
     if (!VIEW_PING_URL || !VIEW_PING_KEY) return;
-    if (!pack || (!pack.id && !pack.name)) return;
+    if (!pack || (!pack.id && !pack.name)) return;     // ← guard added
     const id = encodeURIComponent(String(pack.id || ''));
     const name = encodeURIComponent(String(pack.name || ''));
     const url = `${VIEW_PING_URL}?key=${encodeURIComponent(VIEW_PING_KEY)}&action=view&id=${id}&name=${name}&source=web`;
@@ -846,11 +860,12 @@ function render() {
     slice.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'pack-card';
-      const absIdx = start + i;
-      card.onclick = () => openModal(absIdx);
+      card.onclick = () => openModal(start + i);
 
       const supportVal = String(p.support_link || p.support || '').trim();
-      const hasSupport = supportVal !== '' && supportVal.toLowerCase() !== 'none';
+      const supportBtn = (supportVal && supportVal.toLowerCase() !== 'none')
+        ? `<a class="btn-support" href="${esc(supportVal)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">💖 Support the Creator</a>`
+        : '';
 
       card.innerHTML = `
         <div class="card-img">
@@ -865,9 +880,9 @@ function render() {
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
         <div class="card-footer">
-          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💖 Support the Creator</button>` : ''}
+          ${supportBtn}
           <div class="card-actions">
-            <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Get It Now</button>
+            <a class="btn-dl" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🚀 Get It Now</a>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
           </div>
         </div>`;
