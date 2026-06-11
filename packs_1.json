@@ -67,7 +67,7 @@
     "image": "https://i.ibb.co/QvCqLD1Z/3762db478a20.jpg",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-05-30T16:00:00.000Z",
-    "last_viewed": "2026-06-09T16:00:00.000Z"
+    "last_viewed": "2026-06-10T16:00:00.000Z"
   },
   {
     "id": 6,
@@ -166,5 +166,19 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-10T16:00:00.000Z",
     "last_viewed": "2026-06-10T16:00:00.000Z"
+  },
+  {
+    "id": 13,
+    "name": "No Particles Pack",
+    "link": "https://mcpedl.com/no-particles-pack/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Client",
+    "credits": "aizhuMC",
+    "description": "This resource pack removes most particles in Minecraft to create a cleaner and less distracting gameplay experience.",
+    "image": "https://i.ibb.co/xK1GR3dY/b0752d9fcb3a.jpg",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-11T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
