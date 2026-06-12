@@ -659,10 +659,8 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
-/* ──────────────── View‑ping constants ──────────────── */
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbx2oa0Qg5k9czqlo9Kw2syMfoD_DVXZ-DZdFWTDSsLU90P9o5Xt0rLnBvP_zmMa2Qk2Nw/exec';
 const VIEW_PING_KEY = '3rWm&3%4BHcZv^SyRhHm%Ypjxw^^5Ay#4X^vec9R77#f2XVS5*aYJerRn8Tr#2Tb';
-/* ──────────────────────────────────────────────────── */
 
 let allPacks = [], filtered = [], page = 1;
 let currentView = 'grid';
@@ -683,7 +681,6 @@ function toggleTheme() {
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
 
-/* ──────────────── View‑ping helper ──────────────── */
 async function pingPackView(pack) {
   try {
     if (!VIEW_PING_URL || !VIEW_PING_KEY) return;
@@ -692,11 +689,8 @@ async function pingPackView(pack) {
     const name = encodeURIComponent(String(pack.name || ''));
     const url = `${VIEW_PING_URL}?key=${encodeURIComponent(VIEW_PING_KEY)}&action=view&id=${id}&name=${name}&source=web`;
     await fetch(url, { method: 'GET', mode: 'no-cors' });
-  } catch (err) {
-    console.warn('View ping failed:', err);
-  }
+  } catch (err) { console.warn('View ping failed:', err); }
 }
-/* ─────────────────────────────────────────────────── */
 
 async function loadAllPacks() {
   setBar(10);
@@ -871,6 +865,9 @@ function render() {
       const supportVal = String(p.support_link || p.support || '').trim();
       const hasSupport = supportVal !== '' && supportVal.toLowerCase() !== 'none';
       const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
+      const category = String(p.category || 'Unknown').trim();
+      // *** Duplicate prevention: show secondary tag only if it differs (case-insensitive) ***
+      const showSec = secondaryTag && secondaryTag.toLowerCase() !== category.toLowerCase();
 
       card.innerHTML = `
         <div class="card-img">
@@ -879,8 +876,8 @@ function render() {
         <div class="card-body">
           <div class="card-title">${esc(p.name)}</div>
           <div class="card-tags">
-            <span class="tag tag-cat">📂 ${esc(p.category || 'Unknown')}</span>
-            <span class="tag tag-secondary">🏷️ ${esc(secondaryTag || 'Unknown')}</span>
+            <span class="tag tag-cat">📂 ${esc(category)}</span>
+            ${showSec ? `<span class="tag tag-secondary">🏷️ ${esc(secondaryTag)}</span>` : ''}
             <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
           </div>
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
@@ -957,15 +954,20 @@ function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p;
   addRecent(p);
-  pingPackView(p);                     // ← view‑date ping
+  pingPackView(p);
 
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
+
   const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
+  const category = String(p.category || 'Unknown').trim();
+  // *** Duplicate prevention in modal ***
+  const showSec = secondaryTag && secondaryTag.toLowerCase() !== category.toLowerCase();
+
   document.getElementById('mTags').innerHTML = `
-    <span class="tag tag-cat">📂 ${esc(p.category || 'Unknown')}</span>
-    <span class="tag tag-secondary">🏷️ ${esc(secondaryTag || 'Unknown')}</span>
+    <span class="tag tag-cat">📂 ${esc(category)}</span>
+    ${showSec ? `<span class="tag tag-secondary">🏷️ ${esc(secondaryTag)}</span>` : ''}
     <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
   const support = document.getElementById('mSupport');
