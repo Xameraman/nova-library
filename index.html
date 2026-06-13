@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NOVA — Nexus of Verified Assets</title>
-  <meta name="description" content="NOVA — Nexus of Verified Assets. Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
+  <title>Nova's Library — Nexus of Verified Assets</title>
+  <meta name="description" content="Nova's Library — Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
   <style>
     :root {
       --navy:   #0D1B2A;
@@ -19,6 +19,7 @@
       --border: #1e3a5a;
       --green:  #2ECC71;
       --red:    #E74C3C;
+      --imageby: #E67E22;  /* new tag color */
     }
 
     [data-theme="light"] {
@@ -330,6 +331,7 @@
     .tag-cat { border-color: var(--cyan); color: var(--cyan); }
     .tag-cred { border-color: var(--gold); color: var(--gold); }
     .tag-secondary { border-color: var(--purple); color: var(--purple); }
+    .tag-imageby { border-color: var(--imageby); color: var(--imageby); }
     .card-desc {
       font-size: 0.77rem;
       color: var(--muted);
@@ -531,10 +533,10 @@
 
 <header>
   <div class="header-left">
-    <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="NOVA" onerror="this.style.display='none'" />
+    <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="Nova" onerror="this.style.display='none'" />
     <div class="header-title">
-      <div class="aurora-text">NOVA</div>
-      <p>Nexus of Verified Assets. — Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
+      <div class="aurora-text">Nova's Library</div>
+      <p>Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
     </div>
   </div>
   <div class="header-right">
@@ -599,7 +601,7 @@
           <div class="cat-nav-item" data-val="World" onclick="selectCat('World','🌍 World')">🌍 World</div>
           <div class="cat-nav-item" data-val="Animation" onclick="selectCat('Animation','🎬 Animation')">🎬 Animation</div>
           <div class="cat-nav-item" data-val="Skins" onclick="selectCat('Skins','🎨 Skins')">🎨 Skins</div>
-          <div class="cat-nav-item" data-val="Fps Booster" onclick="selectCat('⚡ Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
+          <div class="cat-nav-item" data-val="⚡ Fps Booster" onclick="selectCat('⚡ Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
         </div>
       </div>
 
@@ -647,7 +649,7 @@
 </div>
 
 <footer>
-  🌌 <strong>NOVA</strong> — Nexus of Verified Assets &nbsp;|&nbsp;
+  🌌 <strong>Nova's Library</strong> — Nexus of Verified Assets &nbsp;|&nbsp;
   <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer">📚 Guides</a>
   &nbsp;|&nbsp;
   <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer">Join the Server</a>
@@ -771,7 +773,8 @@ function applyFilters() {
       (p.credits || '').toLowerCase().includes(q) ||
       (p.description || '').toLowerCase().includes(q) ||
       (p.category || '').toLowerCase().includes(q) ||
-      (p.secondary_tag || '').toLowerCase().includes(q);
+      (p.secondary_tag || '').toLowerCase().includes(q) ||
+      (p.image_credit || '').toLowerCase().includes(q);  // searchable image credit
     const mc = !cat || (p.category || '').toLowerCase() === cat;
     const mf = !featuredOnly || isFeaturedPack(p);
     return mq && mc && mf;
@@ -866,8 +869,8 @@ function render() {
       const hasSupport = supportVal !== '' && supportVal.toLowerCase() !== 'none';
       const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
       const category = String(p.category || 'Unknown').trim();
-      // *** Duplicate prevention: show secondary tag only if it differs (case-insensitive) ***
       const showSec = secondaryTag && secondaryTag.toLowerCase() !== category.toLowerCase();
+      const imageCredit = String(p.image_credit || '').trim();
 
       card.innerHTML = `
         <div class="card-img">
@@ -879,6 +882,7 @@ function render() {
             <span class="tag tag-cat">📂 ${esc(category)}</span>
             ${showSec ? `<span class="tag tag-secondary">🏷️ ${esc(secondaryTag)}</span>` : ''}
             <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
+            ${imageCredit ? `<span class="tag tag-imageby">🖼️ Image By: ${esc(imageCredit)}</span>` : ''}
           </div>
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
@@ -962,13 +966,14 @@ function openModalDirect(p) {
 
   const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
   const category = String(p.category || 'Unknown').trim();
-  // *** Duplicate prevention in modal ***
   const showSec = secondaryTag && secondaryTag.toLowerCase() !== category.toLowerCase();
+  const imageCredit = String(p.image_credit || '').trim();
 
   document.getElementById('mTags').innerHTML = `
     <span class="tag tag-cat">📂 ${esc(category)}</span>
     ${showSec ? `<span class="tag tag-secondary">🏷️ ${esc(secondaryTag)}</span>` : ''}
-    <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>`;
+    <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
+    ${imageCredit ? `<span class="tag tag-imageby">🖼️ Image By: ${esc(imageCredit)}</span>` : ''}`;
 
   const support = document.getElementById('mSupport');
   const supportVal = String(p.support_link || p.support || '').trim();
@@ -1008,7 +1013,7 @@ function shareCurrentPack() {
 🎨 Devs: ${currentModalPack.credits || 'Unknown'}
 ${supportLine}🔗 ${currentModalPack.link || ''}
 
-🌐 Browse NOVA — Nexus of Verified Assets: ${NOVA_URL}`;
+🌐 Browse Nova's Library — Nexus of Verified Assets: ${NOVA_URL}`;
 
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('mShare');
