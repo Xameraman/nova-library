@@ -13,7 +13,7 @@
     "image_credit": "",
     "added_by": "2026-05-27T16:00:00.000Z",
     "date_added": "2026-06-10T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 2,
@@ -29,7 +29,7 @@
     "image_credit": "",
     "added_by": "2026-05-30T16:00:00.000Z",
     "date_added": "2026-06-09T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 3,
@@ -45,7 +45,7 @@
     "image_credit": "",
     "added_by": "2026-05-30T16:00:00.000Z",
     "date_added": "2026-06-11T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 4,
@@ -61,7 +61,7 @@
     "image_credit": "",
     "added_by": "2026-05-30T16:00:00.000Z",
     "date_added": "2026-06-11T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 5,
@@ -77,7 +77,7 @@
     "image_credit": "",
     "added_by": "2026-05-30T16:00:00.000Z",
     "date_added": "2026-06-10T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 6,
@@ -93,7 +93,7 @@
     "image_credit": "",
     "added_by": "2026-06-02T16:00:00.000Z",
     "date_added": "2026-06-11T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 7,
@@ -109,7 +109,7 @@
     "image_credit": "",
     "added_by": "2026-06-06T16:00:00.000Z",
     "date_added": "2026-06-10T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 8,
@@ -125,7 +125,7 @@
     "image_credit": "",
     "added_by": "2026-06-09T16:00:00.000Z",
     "date_added": "2026-06-11T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 9,
@@ -141,7 +141,7 @@
     "image_credit": "",
     "added_by": "2026-06-09T16:00:00.000Z",
     "date_added": "2026-06-10T16:00:00.000Z",
-    "last_viewed": "2026-06-12T16:00:00.000Z"
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 10,
@@ -157,7 +157,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-12T16:00:00.000Z"
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 12,
@@ -173,7 +173,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-12T16:00:00.000Z"
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 13,
@@ -189,7 +189,7 @@
     "image_credit": "PURE MCPE",
     "added_by": "xameraman5022",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-12T16:00:00.000Z"
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 14,
@@ -205,7 +205,7 @@
     "image_credit": "",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-12T16:00:00.000Z"
+    "last_viewed": "2026-06-13T16:00:00.000Z"
   },
   {
     "id": 15,
@@ -221,6 +221,22 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-12T16:00:00.000Z",
+    "last_viewed": "2026-06-13T16:00:00.000Z"
+  },
+  {
+    "id": 16,
+    "name": "Cape Physics Resource Pack",
+    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/cape-physics-resource-pack",
+    "support_link": "https://discord.gg/bd5rEZxUNh",
+    "archive_link": "",
+    "category": "Animation",
+    "secondary_tag": "Texture Pack",
+    "credits": "T1M0THY",
+    "description": "This resource pack ONLY modifies the cape animation and does not add capes. Meaning you have to equip the Pan Cape, Mojang Cape, Cherry Blossom cape or any capes that are already in the game.",
+    "image": "https://i.ibb.co/ynqk9TtT/24f32d004ab1.png",
+    "image_credit": "",
+    "added_by": "lost_in_oblivion.",
+    "date_added": "2026-06-13T16:00:00.000Z",
     "last_viewed": ""
   }
 ]
