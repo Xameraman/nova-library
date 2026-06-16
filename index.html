@@ -582,6 +582,7 @@
           <span id="catNavLabel">🌌 All Categories</span>
           <span class="arrow">▼</span>
         </button>
+        <!-- ── FIXED CATEGORY DROPDOWN (plain data-val, no emojis) ── -->
         <div class="cat-nav-list" id="catNavList">
           <div class="cat-nav-item selected" data-val="" onclick="selectCat('','🌌 All Categories')">🌌 All Categories</div>
           <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💝 Featured')">💝 Featured</div>
@@ -607,11 +608,10 @@
           <div class="cat-nav-item" data-val="World" onclick="selectCat('World','🌍 World')">🌍 World</div>
           <div class="cat-nav-item" data-val="Animation" onclick="selectCat('Animation','🎬 Animation')">🎬 Animation</div>
           <div class="cat-nav-item" data-val="Skins" onclick="selectCat('Skins','🎨 Skins')">🎨 Skins</div>
-          <div class="cat-nav-item" data-val="⚡ Fps Booster" onclick="selectCat('⚡ Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
+          <div class="cat-nav-item" data-val="Fps Booster" onclick="selectCat('Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
         </div>
       </div>
 
-      <!-- NEW: Secondary Tag filter dropdown -->
       <select id="secondaryTagFilter" onchange="applyFilters()">
         <option value="">All Secondary Tags</option>
         <option value="Texture Pack">Texture Pack</option>
