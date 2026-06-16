@@ -19,7 +19,7 @@
       --border: #1e3a5a;
       --green:  #2ECC71;
       --red:    #E74C3C;
-      --imageby: #E67E22;  /* new tag color */
+      --imageby: #E67E22;
     }
 
     [data-theme="light"] {
@@ -436,7 +436,6 @@
     .modal-name { font-size: 1.1rem; font-weight: 700; }
     .modal-x { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; }
     .modal-x:hover { color: var(--text); }
-    /* ── MODAL IMAGE FIX ── natural size, no cropping */
     .modal-img {
       display: none;
       width: 100%;
@@ -612,6 +611,15 @@
         </div>
       </div>
 
+      <!-- NEW: Secondary Tag filter dropdown -->
+      <select id="secondaryTagFilter" onchange="applyFilters()">
+        <option value="">All Secondary Tags</option>
+        <option value="Texture Pack">Texture Pack</option>
+        <option value="Addon">Addon</option>
+        <option value="World">World</option>
+        <option value="Skins">Skins</option>
+      </select>
+
       <select id="sortFilter" onchange="applyFilters()">
         <option value="newest">Newest First</option>
         <option value="oldest">Oldest First</option>
@@ -773,6 +781,7 @@ function applyFilters() {
   const srt = document.getElementById('sortFilter').value;
   const featuredOnly = currentCat === '__featured__';
   const cat = featuredOnly ? '' : currentCat.toLowerCase();
+  const secondaryTag = document.getElementById('secondaryTagFilter').value.toLowerCase().trim();
 
   filtered = allPacks.filter(p => {
     const mq = !q ||
@@ -781,10 +790,11 @@ function applyFilters() {
       (p.description || '').toLowerCase().includes(q) ||
       (p.category || '').toLowerCase().includes(q) ||
       (p.secondary_tag || '').toLowerCase().includes(q) ||
-      (p.image_credit || '').toLowerCase().includes(q);  // searchable image credit
+      (p.image_credit || '').toLowerCase().includes(q);
     const mc = !cat || (p.category || '').toLowerCase() === cat;
+    const mt = !secondaryTag || (p.secondary_tag || '').toLowerCase() === secondaryTag;
     const mf = !featuredOnly || isFeaturedPack(p);
-    return mq && mc && mf;
+    return mq && mc && mt && mf;
   });
 
   if (srt === 'newest') filtered = [...filtered].reverse();
@@ -799,6 +809,7 @@ function applyFilters() {
 function clearAll() {
   document.getElementById('q').value = '';
   document.getElementById('sortFilter').value = 'newest';
+  document.getElementById('secondaryTagFilter').value = '';
   selectCat('', '🌌 All Categories');
 }
 
