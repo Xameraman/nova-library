@@ -157,7 +157,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-13T16:00:00.000Z"
+    "last_viewed": "2026-06-15T16:00:00.000Z"
   },
   {
     "id": 12,
@@ -189,7 +189,7 @@
     "image_credit": "PURE MCPE",
     "added_by": "xameraman5022",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-13T16:00:00.000Z"
+    "last_viewed": "2026-06-15T16:00:00.000Z"
   },
   {
     "id": 14,
@@ -254,5 +254,21 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-15T16:00:00.000Z",
     "last_viewed": "2026-06-15T16:00:00.000Z"
+  },
+  {
+    "id": 18,
+    "name": "Amixi Practice",
+    "link": "https://mcpedl.com/amixi-practice/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "PvP",
+    "secondary_tag": "World",
+    "credits": "hippox1",
+    "description": "This is Amixi Practice, a practice map which contains most of the stuff you need to train and improve.",
+    "image": "https://i.ibb.co/ZpJwqy4s/7368aead2721.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-15T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
