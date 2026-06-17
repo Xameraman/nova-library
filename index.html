@@ -386,9 +386,9 @@
 
     .btn-archive {
       width: 100%;
-      background: #1e3a5a;
-      color: var(--text);
-      border: 1px solid var(--border);
+      background: #FFD700;        /* Yellow */
+      color: #0D1B2A;            /* Dark navy text */
+      border: none;
       border-radius: 6px;
       padding: 7px;
       font-weight: 700;
@@ -498,6 +498,22 @@
       transition: opacity 0.2s;
     }
     .btn-modal-support:hover { opacity: 0.9; }
+
+    .btn-modal-archive {
+      display: block;
+      background: #FFD700;      /* Yellow */
+      color: #0D1B2A;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
+    .btn-modal-archive:hover { opacity: 0.9; }
 
     .btn-modal-share {
       background: var(--navy3);
@@ -669,6 +685,7 @@
       <div class="modal-desc" id="mDesc"></div>
       <div class="modal-actions">
         <a class="btn-modal-support" id="mSupport" href="#" target="_blank" rel="noopener noreferrer" style="display:none">💝 Support the Creator</a>
+        <a class="btn-modal-archive" id="mArchive" href="#" target="_blank" rel="noopener noreferrer" style="display:none">🗃️ Download Archive</a>
         <div class="modal-main-actions">
           <a class="btn-modal-dl" id="mLink" href="#" target="_blank" rel="noopener noreferrer">🚀 Download Now</a>
           <button class="btn-modal-share" id="mShare" onclick="shareCurrentPack()">🔗 Copy Link</button>
@@ -692,8 +709,8 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
-// New view-ping URL (no key required)
-const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
+// Main script URL (now handles view pings without key)
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbzbHGChQRyj-aKkgPq0g5m136a6PgCIp7qYRc7kreAEKxk_LOIpDqTMPkkcFPWErdl4/exec';
 
 let allPacks = [], filtered = [], page = 1;
 let currentView = 'grid';
@@ -924,7 +941,7 @@ function render() {
         </div>
         <div class="card-footer">
           ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); window.open('${esc(supportVal)}', '_blank')">💝 Support the Creator</button>` : ''}
-          ${hasArchive ? `<button class="btn-archive" onclick="event.stopPropagation(); window.open('${esc(archiveVal)}', '_blank')">🗃️ Download Archive</button>` : ''}
+          ${hasArchive ? `<button class="btn-archive" onclick="event.stopPropagation(); openModal(${absIdx})">🗃️ Download Archive</button>` : ''}
           <div class="card-actions">
             <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Download Now</button>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
@@ -1012,6 +1029,7 @@ function openModalDirect(p) {
     <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
     ${imageCredit ? `<span class="tag tag-imageby">🖼️ Image By: ${esc(imageCredit)}</span>` : ''}`;
 
+  // Support button
   const support = document.getElementById('mSupport');
   const supportVal = String(p.support_link || p.support || '').trim();
   if (supportVal && supportVal.toLowerCase() !== 'none') {
@@ -1019,6 +1037,16 @@ function openModalDirect(p) {
     support.style.display = 'block';
   } else {
     support.style.display = 'none';
+  }
+
+  // Archive button (yellow, inside modal)
+  const archive = document.getElementById('mArchive');
+  const archiveVal = String(p.archive_link || p.archive || '').trim();
+  if (archiveVal && archiveVal.toLowerCase() !== 'none') {
+    archive.href = archiveVal;
+    archive.style.display = 'block';
+  } else {
+    archive.style.display = 'none';
   }
 
   document.getElementById('mMeta').textContent = `Added by ${p.added_by || 'Staff'} • ${p.date_added || ''}`;
