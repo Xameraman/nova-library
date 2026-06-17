@@ -582,6 +582,7 @@
           <span id="catNavLabel">🌌 All Categories</span>
           <span class="arrow">▼</span>
         </button>
+        <!-- ── FIXED CATEGORY DROPDOWN (plain data-val, no emojis) ── -->
         <div class="cat-nav-list" id="catNavList">
           <div class="cat-nav-item selected" data-val="" onclick="selectCat('','🌌 All Categories')">🌌 All Categories</div>
           <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💝 Featured')">💝 Featured</div>
@@ -675,8 +676,8 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
-// Cloudflare Worker proxy – no secret key exposed in browser
-const VIEW_PING_URL = 'https://nova-ping.stanleymanaloto12345.workers.dev/ping';
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbx2oa0Qg5k9czqlo9Kw2syMfoD_DVXZ-DZdFWTDSsLU90P9o5Xt0rLnBvP_zmMa2Qk2Nw/exec';
+const VIEW_PING_KEY = '3rWm&3%4BHcZv^SyRhHm%Ypjxw^^5Ay#4X^vec9R77#f2XVS5*aYJerRn8Tr#2Tb';
 
 let allPacks = [], filtered = [], page = 1;
 let currentView = 'grid';
@@ -699,12 +700,13 @@ function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%
 
 async function pingPackView(pack) {
   try {
+    if (!VIEW_PING_URL || !VIEW_PING_KEY) return;
     if (!pack || (!pack.id && !pack.name)) return;
     const id = encodeURIComponent(String(pack.id || ''));
     const name = encodeURIComponent(String(pack.name || ''));
-    const url = `${VIEW_PING_URL}?action=view&id=${id}&name=${name}&source=web`;
+    const url = `${VIEW_PING_URL}?key=${encodeURIComponent(VIEW_PING_KEY)}&action=view&id=${id}&name=${name}&source=web`;
     await fetch(url, { method: 'GET', mode: 'no-cors' });
-  } catch (err) { /* ignore view ping errors */ }
+  } catch (err) { console.warn('View ping failed:', err); }
 }
 
 async function loadAllPacks() {
