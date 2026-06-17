@@ -384,6 +384,23 @@
     }
     .btn-support:hover { opacity: 0.9; }
 
+    .btn-archive {
+      width: 100%;
+      background: #1e3a5a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      transition: opacity 0.2s;
+    }
+    .btn-archive:hover { opacity: 0.9; }
+
     .btn-copy {
       background: var(--navy3);
       border: 1px solid var(--border);
@@ -582,7 +599,6 @@
           <span id="catNavLabel">🌌 All Categories</span>
           <span class="arrow">▼</span>
         </button>
-        <!-- ── FIXED CATEGORY DROPDOWN (plain data-val, no emojis) ── -->
         <div class="cat-nav-list" id="catNavList">
           <div class="cat-nav-item selected" data-val="" onclick="selectCat('','🌌 All Categories')">🌌 All Categories</div>
           <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💝 Featured')">💝 Featured</div>
@@ -676,8 +692,8 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
-const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbzilzN491iX0KSF0hUkSENO5Er0zgB3__NVF6_WaTl7GcBfdYWXIOk-fdIGr1VI-i54Yg/exec';
-const VIEW_PING_KEY = '3rWm&3%4BHcZv^SyRhHm%Ypjxw^^5Ay#4X^vec9R77#f2XVS5*aYJerRn8Tr#2Tb';
+// New view-ping URL (no key required)
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 
 let allPacks = [], filtered = [], page = 1;
 let currentView = 'grid';
@@ -700,11 +716,11 @@ function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%
 
 async function pingPackView(pack) {
   try {
-    if (!VIEW_PING_URL || !VIEW_PING_KEY) return;
+    if (!VIEW_PING_URL) return;
     if (!pack || (!pack.id && !pack.name)) return;
     const id = encodeURIComponent(String(pack.id || ''));
     const name = encodeURIComponent(String(pack.name || ''));
-    const url = `${VIEW_PING_URL}?key=${encodeURIComponent(VIEW_PING_KEY)}&action=view&id=${id}&name=${name}&source=web`;
+    const url = `${VIEW_PING_URL}?action=view&id=${id}&name=${name}&source=web`;
     await fetch(url, { method: 'GET', mode: 'no-cors' });
   } catch (err) { console.warn('View ping failed:', err); }
 }
@@ -884,7 +900,9 @@ function render() {
       card.onclick = () => openModal(absIdx);
 
       const supportVal = String(p.support_link || p.support || '').trim();
+      const archiveVal = String(p.archive_link || p.archive || '').trim();
       const hasSupport = supportVal !== '' && supportVal.toLowerCase() !== 'none';
+      const hasArchive = archiveVal !== '' && archiveVal.toLowerCase() !== 'none';
       const secondaryTag = String(p.secondary_tag || p.secondaryTag || '').trim();
       const category = String(p.category || 'Unknown').trim();
       const showSec = secondaryTag && secondaryTag.toLowerCase() !== category.toLowerCase();
@@ -905,7 +923,8 @@ function render() {
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
         <div class="card-footer">
-          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💝 Support the Creator</button>` : ''}
+          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); window.open('${esc(supportVal)}', '_blank')">💝 Support the Creator</button>` : ''}
+          ${hasArchive ? `<button class="btn-archive" onclick="event.stopPropagation(); window.open('${esc(archiveVal)}', '_blank')">🗃️ Download Archive</button>` : ''}
           <div class="card-actions">
             <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Download Now</button>
             <button class="btn-copy" onclick="event.stopPropagation();copyLink(${JSON.stringify(p.link || '')},this)" title="Copy link">🔗</button>
