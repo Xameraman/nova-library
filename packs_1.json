@@ -109,7 +109,7 @@
     "image_credit": "",
     "added_by": "2026-06-06T16:00:00.000Z",
     "date_added": "2026-06-10T16:00:00.000Z",
-    "last_viewed": "2026-06-13T16:00:00.000Z"
+    "last_viewed": "2026-06-17T16:00:00.000Z"
   },
   {
     "id": 8,
@@ -301,6 +301,22 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-16T16:00:00.000Z",
+    "last_viewed": ""
+  },
+  {
+    "id": 21,
+    "name": "Enhanced 16x - FPS Booster And Better Visuals",
+    "link": "https://mcpedl.com/enhanced-16x",
+    "support_link": "",
+    "archive_link": "",
+    "category": "PvP",
+    "secondary_tag": "Texture Pack",
+    "credits": "Shadow666ZX",
+    "description": "Enhanced 16x is a Optimised FPS booster texture pack with enhancing textures of essential items.It removes background features to optimize game and visuals.",
+    "image": "https://i.ibb.co/q3Wyf50y/8f40bca09ea0.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-17T16:00:00.000Z",
     "last_viewed": ""
   }
 ]
