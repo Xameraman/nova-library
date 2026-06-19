@@ -125,7 +125,7 @@
     "image_credit": "",
     "added_by": "2026-06-09T16:00:00.000Z",
     "date_added": "2026-06-11T16:00:00.000Z",
-    "last_viewed": "2026-06-14T16:00:00.000Z"
+    "last_viewed": "2026-06-18T16:00:00.000Z"
   },
   {
     "id": 9,
@@ -173,7 +173,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-13T16:00:00.000Z"
+    "last_viewed": "2026-06-18T16:00:00.000Z"
   },
   {
     "id": 13,
@@ -237,7 +237,7 @@
     "image_credit": "",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-06-13T16:00:00.000Z",
-    "last_viewed": "2026-06-16T16:00:00.000Z"
+    "last_viewed": "2026-06-18T16:00:00.000Z"
   },
   {
     "id": 17,
@@ -414,5 +414,21 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-18T16:00:00.000Z",
     "last_viewed": "2026-06-18T16:00:00.000Z"
+  },
+  {
+    "id": 28,
+    "name": "Cute Turtle Helmet",
+    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/cute-turtle-helmet",
+    "support_link": "https://youtube.com/@ree994v",
+    "archive_link": "",
+    "category": "Visual",
+    "secondary_tag": "Texture Pack",
+    "credits": "ree994v",
+    "description": "Turn your turtle shell into a cute turtle with jiggle physics",
+    "image": "https://i.ibb.co/B2KTQYt7/5d8eaad3c815.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-19T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
