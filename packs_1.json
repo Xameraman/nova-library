@@ -157,7 +157,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-15T16:00:00.000Z"
+    "last_viewed": "2026-06-18T16:00:00.000Z"
   },
   {
     "id": 12,
@@ -253,7 +253,7 @@
     "image_credit": "SDkillingGOP",
     "added_by": "xameraman5022",
     "date_added": "2026-06-15T16:00:00.000Z",
-    "last_viewed": "2026-06-16T16:00:00.000Z"
+    "last_viewed": "2026-06-18T16:00:00.000Z"
   },
   {
     "id": 18,
@@ -269,7 +269,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-15T16:00:00.000Z",
-    "last_viewed": "2026-06-16T16:00:00.000Z"
+    "last_viewed": "2026-06-18T16:00:00.000Z"
   },
   {
     "id": 19,
@@ -366,5 +366,21 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-17T16:00:00.000Z",
     "last_viewed": "2026-06-17T16:00:00.000Z"
+  },
+  {
+    "id": 25,
+    "name": "BlueMods Optimization",
+    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/bluemods-optimization",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Fps Booster",
+    "secondary_tag": "Texture Pack",
+    "credits": "BlueMods",
+    "description": "Want more FPS and a cleaner look? This pack removes annoying particles, gives you a sleek dark interface, and cleans up world generation. Great for low-end PCs and mobile or if you just hate visual clutter. Game feels way smoother.",
+    "image": "https://i.ibb.co/HfSGHfgp/9b9f651d4bfb.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-18T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
