@@ -386,8 +386,8 @@
 
     .btn-archive {
       width: 100%;
-      background: #FFD700;        /* Yellow */
-      color: #0D1B2A;            /* Dark navy text */
+      background: #FFD700;
+      color: #0D1B2A;
       border: none;
       border-radius: 6px;
       padding: 7px;
@@ -501,7 +501,7 @@
 
     .btn-modal-archive {
       display: block;
-      background: #FFD700;      /* Yellow */
+      background: #FFD700;
       color: #0D1B2A;
       border: none;
       border-radius: 8px;
@@ -709,7 +709,7 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
-// Main script URL (now handles view pings without key)
+// Main script URL (view pings without key)
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbzbHGChQRyj-aKkgPq0g5m136a6PgCIp7qYRc7kreAEKxk_LOIpDqTMPkkcFPWErdl4/exec';
 
 let allPacks = [], filtered = [], page = 1;
@@ -771,8 +771,16 @@ async function loadAllPacks() {
   }
 
   if (allPacks.length > 0) {
-    const last = [...allPacks].reverse().find(p => p.date_added);
-    document.getElementById('sLast').textContent = last?.date_added || '—';
+    // Find the newest date_added and show it formatted
+    const dates = allPacks.map(p => p.date_added).filter(Boolean);
+    if (dates.length) {
+      const newest = dates.reduce((a, b) => (a > b ? a : b));
+      // Format ISO date to YYYY-MM-DD for display
+      const formatted = newest.slice(0, 10); // "2026-06-20"
+      document.getElementById('sLast').textContent = formatted;
+    } else {
+      document.getElementById('sLast').textContent = '—';
+    }
     document.getElementById('sTot').textContent = allPacks.length;
   }
 
@@ -830,9 +838,14 @@ function applyFilters() {
     return mq && mc && mt && mf;
   });
 
-  if (srt === 'newest') filtered = [...filtered].reverse();
-  else if (srt === 'oldest') filtered = [...filtered];
-  else if (srt === 'az') filtered = [...filtered].sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+  // ⚠️ FIXED: sort properly by date_added
+  if (srt === 'newest') {
+    filtered.sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
+  } else if (srt === 'oldest') {
+    filtered.sort((a, b) => (a.date_added || '').localeCompare(b.date_added || ''));
+  } else if (srt === 'az') {
+    filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  }
 
   page = 1;
   document.getElementById('rCount').textContent = filtered.length;
