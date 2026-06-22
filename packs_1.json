@@ -13,7 +13,7 @@
     "image_credit": "",
     "added_by": "2026-05-27T16:00:00.000Z",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-20T16:00:00.000Z"
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 2,
@@ -157,7 +157,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-18T16:00:00.000Z"
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 12,
@@ -317,7 +317,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-17T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 22,
@@ -397,7 +397,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-18T16:00:00.000Z",
-    "last_viewed": "2026-06-18T16:00:00.000Z"
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 27,
@@ -493,7 +493,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-19T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 33,
@@ -525,7 +525,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-20T16:00:00.000Z"
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 35,
@@ -557,7 +557,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-20T16:00:00.000Z"
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 37,
@@ -573,7 +573,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 38,
@@ -589,7 +589,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 39,
@@ -605,7 +605,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 40,
@@ -621,7 +621,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 41,
@@ -634,6 +634,22 @@
     "credits": "Xameraman5022",
     "description": "Conquer the absolute worst hazard the Nether has to offer. Navigating the massive, boiling oceans of the Underworld has historically been a blind death sentence. The moment your head slips beneath the surface, the game engine traps you in a thick, suffocating orange wall of blindness.",
     "image": "https://i.ibb.co/m56XBMQj/6106e530d0e6.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-21T16:00:00.000Z",
+    "last_viewed": "2026-06-21T16:00:00.000Z"
+  },
+  {
+    "id": 42,
+    "name": "Animated Menu: Summer Pause",
+    "link": "https://mcpedl.com/animated-menu-summer-pause/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "GUI & UI",
+    "secondary_tag": "Texture Pack",
+    "credits": "Buxy",
+    "description": "Take a break from the heat with the Summer Pause resource pack. Transform your main menu into a nostalgic, sun-drenched sanctuary that captures the essence of a quiet afternoon.",
+    "image": "https://i.ibb.co/n813m55s/be676b0e73a4.gif",
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
