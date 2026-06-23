@@ -173,7 +173,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-12T16:00:00.000Z",
-    "last_viewed": "2026-06-18T16:00:00.000Z"
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 13,
@@ -429,7 +429,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-19T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-22T16:00:00.000Z"
   },
   {
     "id": 29,
@@ -653,7 +653,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 43,
@@ -669,7 +669,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 44,
@@ -685,7 +685,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 45,
@@ -701,7 +701,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-21T16:00:00.000Z"
   },
   {
     "id": 46,
@@ -717,6 +717,22 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
+    "last_viewed": "2026-06-21T16:00:00.000Z"
+  },
+  {
+    "id": 47,
+    "name": "Survival Overhaul",
+    "link": "https://mcpedl.com/survival-overhaul/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Utility",
+    "secondary_tag": "Texture Pack",
+    "credits": "HoneyStudios",
+    "description": "Survival Overhaul is a complete resource pack designed to improve every aspect of survival gameplay in Minecraft Bedrock. Instead of stacking multiple packs, this single pack combines essential survival features into one clean, polished experience.",
+    "image": "https://i.ibb.co/BVpzjDXx/633f111f6cc9.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-22T16:00:00.000Z",
     "last_viewed": ""
   }
 ]
