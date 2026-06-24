@@ -153,6 +153,7 @@
       cursor: pointer;
       font-size: 0.85rem;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .theme-btn:hover { border-color: var(--cyan); }
 
@@ -587,17 +588,18 @@
 <header>
   <div class="header-left">
     <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="Nova" onerror="this.style.display='none'" />
+    <!-- Sun/Moon theme toggle moved here -->
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     <div class="header-title">
       <div class="aurora-text">Nova's Library</div>
       <p>Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
     </div>
   </div>
   <div class="header-right">
-    <!-- Golden Partnerships button (first) -->
-    <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="partnership-btn">💼 Partnerships</a>
-    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
-    <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📚 Guides</a>
-    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join the Server</a>
+    <!-- Renamed buttons -->
+    <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="partnership-btn">💼 Partners</a>
+    <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📚 Nova Guides</a>
+    <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join Nova 🌌</a>
   </div>
 </header>
 
@@ -787,16 +789,14 @@ async function loadAllPacks() {
   }
 
   if (allPacks.length > 0) {
-    // Find the newest date_added and show it in the user's local timezone
+    // Show newest date in user's local timezone
     const dates = allPacks.map(p => p.date_added).filter(Boolean);
     if (dates.length) {
       const newestStr = dates.reduce((a, b) => (a > b ? a : b));
-      // Parse ISO date and format using toLocaleDateString (local time)
       const d = new Date(newestStr);
       if (!isNaN(d.getTime())) {
         document.getElementById('sLast').textContent = d.toLocaleDateString();
       } else {
-        // fallback to raw slice if invalid
         document.getElementById('sLast').textContent = newestStr.slice(0, 10);
       }
     } else {
