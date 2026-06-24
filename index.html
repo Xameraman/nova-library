@@ -130,6 +130,20 @@
     }
     .guides-btn:hover { opacity: 0.85; }
 
+    .partnership-btn {
+      background: #FFD700;
+      color: #0D1B2A;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: opacity 0.2s;
+      display: inline-block;
+      border: 1px solid var(--border);
+    }
+    .partnership-btn:hover { opacity: 0.9; }
+
     .theme-btn {
       background: var(--navy3);
       border: 1px solid var(--border);
@@ -579,6 +593,8 @@
     </div>
   </div>
   <div class="header-right">
+    <!-- Golden Partnerships button (first) -->
+    <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="partnership-btn">💼 Partnerships</a>
     <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📚 Guides</a>
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">Join the Server</a>
@@ -771,13 +787,18 @@ async function loadAllPacks() {
   }
 
   if (allPacks.length > 0) {
-    // Find the newest date_added and show it formatted
+    // Find the newest date_added and show it in the user's local timezone
     const dates = allPacks.map(p => p.date_added).filter(Boolean);
     if (dates.length) {
-      const newest = dates.reduce((a, b) => (a > b ? a : b));
-      // Format ISO date to YYYY-MM-DD for display
-      const formatted = newest.slice(0, 10); // "2026-06-20"
-      document.getElementById('sLast').textContent = formatted;
+      const newestStr = dates.reduce((a, b) => (a > b ? a : b));
+      // Parse ISO date and format using toLocaleDateString (local time)
+      const d = new Date(newestStr);
+      if (!isNaN(d.getTime())) {
+        document.getElementById('sLast').textContent = d.toLocaleDateString();
+      } else {
+        // fallback to raw slice if invalid
+        document.getElementById('sLast').textContent = newestStr.slice(0, 10);
+      }
     } else {
       document.getElementById('sLast').textContent = '—';
     }
@@ -838,7 +859,7 @@ function applyFilters() {
     return mq && mc && mt && mf;
   });
 
-  // ⚠️ FIXED: sort properly by date_added
+  // Sort properly by date_added
   if (srt === 'newest') {
     filtered.sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
   } else if (srt === 'oldest') {
