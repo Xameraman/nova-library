@@ -13,7 +13,7 @@
     "image_credit": "",
     "added_by": "2026-05-27T16:00:00.000Z",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-21T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 2,
@@ -29,7 +29,7 @@
     "image_credit": "",
     "added_by": "2026-05-30T16:00:00.000Z",
     "date_added": "2026-06-09T16:00:00.000Z",
-    "last_viewed": "2026-06-18T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 3,
@@ -157,7 +157,7 @@
     "image_credit": "",
     "added_by": "2026-06-11T16:00:00.000Z",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-21T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 12,
@@ -237,7 +237,7 @@
     "image_credit": "",
     "added_by": "lost_in_oblivion.",
     "date_added": "2026-06-13T16:00:00.000Z",
-    "last_viewed": "2026-06-23T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 17,
@@ -349,7 +349,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-17T16:00:00.000Z",
-    "last_viewed": "2026-06-18T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 24,
@@ -493,7 +493,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-19T16:00:00.000Z",
-    "last_viewed": "2026-06-21T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 33,
@@ -573,7 +573,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-23T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 38,
@@ -653,7 +653,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": "2026-06-23T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 43,
@@ -669,7 +669,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": "2026-06-21T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 44,
@@ -701,7 +701,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": "2026-06-21T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 46,
@@ -765,7 +765,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-22T16:00:00.000Z",
-    "last_viewed": "2026-06-23T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 50,
@@ -781,7 +781,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-23T16:00:00.000Z",
-    "last_viewed": "2026-06-23T16:00:00.000Z"
+    "last_viewed": "2026-06-24T16:00:00.000Z"
   },
   {
     "id": 51,
@@ -813,6 +813,22 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-23T16:00:00.000Z",
+    "last_viewed": "2026-06-24T16:00:00.000Z"
+  },
+  {
+    "id": 53,
+    "name": "No Dupe Bundles",
+    "link": "https://www.curseforge.com/minecraft-bedrock/addons/no-dupe-bundles",
+    "support_link": "https://discord.gg/bluemods-anticheat-913049851531522078",
+    "archive_link": "",
+    "category": "Utility",
+    "secondary_tag": "Utility",
+    "credits": "BlueModsYT",
+    "description": "Are you tired seeing your players dupe such as bundles?, No worrys we have a solution for it by download this pack.",
+    "image": "https://i.ibb.co/b0qdnkT/3698153f1d49.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-24T16:00:00.000Z",
     "last_viewed": ""
   }
 ]
