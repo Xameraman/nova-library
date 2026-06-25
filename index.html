@@ -588,7 +588,6 @@
 <header>
   <div class="header-left">
     <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="Nova" onerror="this.style.display='none'" />
-    <!-- Sun/Moon theme toggle moved here -->
     <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     <div class="header-title">
       <div class="aurora-text">Nova's Library</div>
@@ -596,7 +595,6 @@
     </div>
   </div>
   <div class="header-right">
-    <!-- Renamed buttons -->
     <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="partnership-btn">🤝 Our Partners</a>
     <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📖 Guides</a>
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">💬 Nova Community</a>
@@ -727,7 +725,6 @@ const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const PER_PAGE = 20;
 
-// Main script URL (view pings without key)
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbzbHGChQRyj-aKkgPq0g5m136a6PgCIp7qYRc7kreAEKxk_LOIpDqTMPkkcFPWErdl4/exec';
 
 let allPacks = [], filtered = [], page = 1;
@@ -789,7 +786,6 @@ async function loadAllPacks() {
   }
 
   if (allPacks.length > 0) {
-    // Show newest date in user's local timezone
     const dates = allPacks.map(p => p.date_added).filter(Boolean);
     if (dates.length) {
       const newestStr = dates.reduce((a, b) => (a > b ? a : b));
@@ -859,7 +855,6 @@ function applyFilters() {
     return mq && mc && mt && mf;
   });
 
-  // Sort properly by date_added
   if (srt === 'newest') {
     filtered.sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
   } else if (srt === 'oldest') {
@@ -974,7 +969,7 @@ function render() {
           <div class="card-desc">${esc(p.description || 'No description.')}</div>
         </div>
         <div class="card-footer">
-          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); window.open('${esc(supportVal)}', '_blank')">💝 Support the Creator</button>` : ''}
+          ${hasSupport ? `<button class="btn-support" onclick="event.stopPropagation(); openModal(${absIdx})">💝 Support the Creator</button>` : ''}
           ${hasArchive ? `<button class="btn-archive" onclick="event.stopPropagation(); openModal(${absIdx})">🗃️ Download Archive</button>` : ''}
           <div class="card-actions">
             <button class="btn-dl" onclick="event.stopPropagation(); openModal(${absIdx})">🚀 Download Now</button>
@@ -1063,7 +1058,6 @@ function openModalDirect(p) {
     <span class="tag tag-cred">🎨 Devs: ${esc(p.credits || 'Unknown')}</span>
     ${imageCredit ? `<span class="tag tag-imageby">🖼️ Image By: ${esc(imageCredit)}</span>` : ''}`;
 
-  // Support button
   const support = document.getElementById('mSupport');
   const supportVal = String(p.support_link || p.support || '').trim();
   if (supportVal && supportVal.toLowerCase() !== 'none') {
@@ -1073,7 +1067,6 @@ function openModalDirect(p) {
     support.style.display = 'none';
   }
 
-  // Archive button (yellow, inside modal)
   const archive = document.getElementById('mArchive');
   const archiveVal = String(p.archive_link || p.archive || '').trim();
   if (archiveVal && archiveVal.toLowerCase() !== 'none') {
