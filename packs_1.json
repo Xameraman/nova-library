@@ -830,5 +830,21 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-24T16:00:00.000Z",
     "last_viewed": "2026-06-24T16:00:00.000Z"
+  },
+  {
+    "id": 54,
+    "name": "Shield Checker",
+    "link": "https://mcpedl.com/shield-checker/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "PvP",
+    "secondary_tag": "PvP",
+    "credits": "praxelic",
+    "description": "lightweight resource pack for Minecraft Bedrock Edition that gives your shield a visual status indicator, letting you instantly see whether your shield is active or on cooldown.",
+    "image": "https://i.ibb.co/ym7JQVHt/17d971c84bae.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-24T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
