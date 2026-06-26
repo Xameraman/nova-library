@@ -797,7 +797,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-23T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-25T16:00:00.000Z"
   },
   {
     "id": 52,
@@ -845,7 +845,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-24T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-25T16:00:00.000Z"
   },
   {
     "id": 55,
@@ -874,6 +874,22 @@
     "credits": "Mod MCPE",
     "description": "This Resource packs Adds Custom Smooth Font which looks clear and smooth and fits The Classic Minecraft Ui.",
     "image": "https://i.ibb.co/YBQ8Fm3F/1a60efc23329.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-25T16:00:00.000Z",
+    "last_viewed": "2026-06-25T16:00:00.000Z"
+  },
+  {
+    "id": 57,
+    "name": "Paddings Remover",
+    "link": "https://mcpedl.com/paddings-remover/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "GUI & UI",
+    "secondary_tag": "Texture Pack",
+    "credits": "Itzriyo157",
+    "description": "In the v1.21.100 update, Mojang tried adjusting the spacing of the selectors on Settings screen. However, the distance between the selectors was too wide, which many players disliked. That's why I'm making this a temporary fix until Mojang fixes it.",
+    "image": "https://i.ibb.co/LDd92CDm/2fb34932c017.jpg",
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-25T16:00:00.000Z",
