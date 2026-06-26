@@ -855,8 +855,16 @@ function applyFilters() {
     return mq && mc && mt && mf;
   });
 
+  // Sort: newest first, then by ID descending if dates are equal
   if (srt === 'newest') {
-    filtered.sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
+    filtered.sort((a, b) => {
+      const dateA = a.date_added || '';
+      const dateB = b.date_added || '';
+      const dateComp = dateB.localeCompare(dateA);
+      if (dateComp !== 0) return dateComp;
+      // same date – higher ID first
+      return (Number(b.id) || 0) - (Number(a.id) || 0);
+    });
   } else if (srt === 'oldest') {
     filtered.sort((a, b) => (a.date_added || '').localeCompare(b.date_added || ''));
   } else if (srt === 'az') {
