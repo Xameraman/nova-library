@@ -29,7 +29,7 @@
     "image_credit": "",
     "added_by": "2026-05-30T16:00:00.000Z",
     "date_added": "2026-06-09T16:00:00.000Z",
-    "last_viewed": "2026-06-24T16:00:00.000Z"
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 3,
@@ -141,7 +141,7 @@
     "image_credit": "",
     "added_by": "2026-06-09T16:00:00.000Z",
     "date_added": "2026-06-10T16:00:00.000Z",
-    "last_viewed": "2026-06-13T16:00:00.000Z"
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 10,
@@ -525,7 +525,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-06-24T16:00:00.000Z"
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 35,
@@ -653,7 +653,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": "2026-06-24T16:00:00.000Z"
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 43,
@@ -717,7 +717,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
-    "last_viewed": "2026-06-21T16:00:00.000Z"
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 47,
@@ -989,7 +989,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-25T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 64,
@@ -1005,7 +1005,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-25T16:00:00.000Z",
-    "last_viewed": "2026-06-25T16:00:00.000Z"
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 65,
@@ -1021,6 +1021,22 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-25T16:00:00.000Z",
+    "last_viewed": "2026-06-26T16:00:00.000Z"
+  },
+  {
+    "id": 66,
+    "name": "Survival Suburban House #50",
+    "link": "https://mcpedl.com/survival-jst-house-50/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Horror",
+    "secondary_tag": "World",
+    "credits": "JSTCreations",
+    "description": "sharing a collection of houses that are fully playable in survival mode. Each one is themed according to its surrounding biome—so stay tuned for a variety of unique and exciting builds in future uploads!",
+    "image": "https://i.ibb.co/V0MGwHm3/fa307398d5e2.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-26T16:00:00.000Z",
     "last_viewed": ""
   }
 ]
