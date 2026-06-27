@@ -1117,7 +1117,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 72,
@@ -1165,7 +1165,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
-    "last_viewed": ""
+    "last_viewed": "2026-06-26T16:00:00.000Z"
   },
   {
     "id": 75,
@@ -1210,6 +1210,22 @@
     "credits": "real_tlgm",
     "description": "Adds some magical screen properties and tweaks to the in-game Minecraft Settings Screen to get Camera Perspective toggle on HUD, FOV slider and Quick Toggle, and more!",
     "image": "https://i.ibb.co/3Hyj5Lx/c57154a9e1ae.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-26T16:00:00.000Z",
+    "last_viewed": "2026-06-26T16:00:00.000Z"
+  },
+  {
+    "id": 78,
+    "name": "Edds' VeinCapitator",
+    "link": "https://mcpedl.com/edds-veincapitator-2/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Utility",
+    "secondary_tag": "Texture Pack",
+    "credits": "Alien Edds",
+    "description": "Have you wanted to be able to chop down trees in one break? Or maybe, you want to mine coal, but it would take too long? Say no more! with Edds' VeinCapitator you can do both! (up to a 1000 block limit) This comes with vein miner and tree capitator!",
+    "image": "https://i.ibb.co/whVrRs59/b8ad011d9660.png",
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
