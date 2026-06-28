@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nova's Library — Nexus of Verified Assets</title>
   <meta name="description" content="Nova's Library — Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
+  <!-- Google Font for search bar only -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --navy:   #0D1B2A;
@@ -20,6 +24,8 @@
       --green:  #2ECC71;
       --red:    #E74C3C;
       --imageby: #E67E22;
+      --surprise-bg: #FF6F61;
+      --surprise-text: #fff;
     }
 
     [data-theme="light"] {
@@ -30,6 +36,8 @@
       --muted:  #5a7090;
       --card:   #ffffff;
       --border: #c0d0e0;
+      --surprise-bg: #E74C3C;
+      --surprise-text: #fff;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -131,8 +139,8 @@
     .guides-btn:hover { opacity: 0.85; }
 
     .partnership-btn {
-      background: #FFD700;
-      color: #0D1B2A;
+      background: #2C3E50;
+      color: white;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 8px;
@@ -172,7 +180,7 @@
     main { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
 
     .search-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
-    .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
 
     .search-input {
       flex: 1; min-width: 200px;
@@ -182,11 +190,12 @@
       padding: 10px 14px;
       color: var(--text);
       font-size: 0.88rem;
+      font-family: 'Nunito', 'Segoe UI', sans-serif;   /* <-- custom font only here */
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .search-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,229,255,0.1); }
-    .search-input::placeholder { color: var(--muted); }
+    .search-input::placeholder { color: var(--muted); font-style: italic; }
 
     .btn-search {
       background: var(--cyan);
@@ -200,6 +209,20 @@
       transition: opacity 0.2s;
     }
     .btn-search:hover { opacity: 0.85; }
+
+    .btn-surprise {
+      background: var(--surprise-bg);
+      color: var(--surprise-text);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: opacity 0.2s;
+      background-image: linear-gradient(135deg, #FF6F61, #FF9F4B);
+    }
+    .btn-surprise:hover { opacity: 0.9; }
 
     .btn-clear {
       background: transparent;
@@ -619,8 +642,9 @@
 
   <div class="search-box">
     <div class="search-row">
-      <input class="search-input" id="q" type="text" placeholder="🔍 Search packs, creators, categories..." autocomplete="off" />
-      <button class="btn-search" onclick="applyFilters()">Search</button>
+      <input class="search-input" id="q" type="text" placeholder="🔍 Search Nova's Library" autocomplete="off" />
+      <button class="btn-search" onclick="applyFilters()">🔍 Search</button>
+      <button class="btn-surprise" onclick="surpriseMe()">🎉 Surprise Me</button>
       <button class="btn-clear" onclick="clearAll()">✕ Clear</button>
     </div>
     <div class="filter-row">
@@ -733,6 +757,22 @@ let currentCat = '';
 let currentModalPack = null;
 let recentlyViewed = [];
 let searchDebounce = null;
+let typingAnimationId = null;
+let typingPaused = false;
+
+// Updated placeholder phrases with your chosen emojis
+const PLACEHOLDER_PHRASES = [
+  "🔍 Search Nova's Library",
+  "🎯 Find your next favorite pack…",
+  "🛡️ 100% Creator Trusted!",
+  "🚀 No ads. No shorteners. Just downloads.",
+  "🤝 Meet Other Creators Inside Nova!",
+  "✨ Not finding your creations? Join Nova to get it added!",
+  "🧭 Looking for something specific?",
+  "✅ Browse verified packs & addons",
+  "💎 Discover hidden gems today",
+  "❤️ Support creators. Download directly."
+];
 
 try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 
@@ -803,9 +843,66 @@ async function loadAllPacks() {
 
   setBar(100);
   setTimeout(() => setBar(0), 500);
+  startTypingAnimation();
   return true;
 }
 
+// ─── TYPING ANIMATION (unchanged logic) ─────────
+function startTypingAnimation() {
+  const input = document.getElementById('q');
+  if (!input) return;
+
+  let currentIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let phrase = PLACEHOLDER_PHRASES[currentIndex];
+
+  function type() {
+    if (typingPaused || document.activeElement === input) return;
+
+    if (!isDeleting) {
+      input.placeholder = phrase.substring(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === phrase.length) {
+        isDeleting = true;
+        setTimeout(type, 2500);
+        return;
+      }
+      setTimeout(type, 60);
+    } else {
+      input.placeholder = phrase.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        isDeleting = false;
+        currentIndex = (currentIndex + 1) % PLACEHOLDER_PHRASES.length;
+        phrase = PLACEHOLDER_PHRASES[currentIndex];
+        setTimeout(type, 400);
+        return;
+      }
+      setTimeout(type, 30);
+    }
+  }
+
+  if (typingAnimationId) clearTimeout(typingAnimationId);
+  typingAnimationId = setTimeout(type, 300);
+}
+
+document.getElementById('q').addEventListener('focus', () => { typingPaused = true; });
+document.getElementById('q').addEventListener('blur', () => {
+  typingPaused = false;
+  if (typingAnimationId) clearTimeout(typingAnimationId);
+  startTypingAnimation();
+});
+
+// ── SURPRISE ME ────────────────────────────────
+function surpriseMe() {
+  if (!allPacks || allPacks.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * allPacks.length);
+  const randomPack = allPacks[randomIndex];
+  openModalDirect(randomPack);
+}
+
+// ── REST OF THE SCRIPTS (unchanged) ────────────
 function toggleCatNav() {
   document.getElementById('catNavBtn').classList.toggle('open');
   document.getElementById('catNavList').classList.toggle('open');
@@ -855,14 +952,12 @@ function applyFilters() {
     return mq && mc && mt && mf;
   });
 
-  // Sort: newest first, then by ID descending if dates are equal
   if (srt === 'newest') {
     filtered.sort((a, b) => {
       const dateA = a.date_added || '';
       const dateB = b.date_added || '';
       const dateComp = dateB.localeCompare(dateA);
       if (dateComp !== 0) return dateComp;
-      // same date – higher ID first
       return (Number(b.id) || 0) - (Number(a.id) || 0);
     });
   } else if (srt === 'oldest') {
