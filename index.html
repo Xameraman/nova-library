@@ -138,19 +138,21 @@
     }
     .guides-btn:hover { opacity: 0.85; }
 
+    /* ── Partnership button – premium gradient ── */
     .partnership-btn {
-      background: #2C3E50;
-      color: white;
+      background: linear-gradient(135deg, #FFD700, #9B59B6);
+      color: #0D1B2A;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 8px;
       font-size: 0.82rem;
       font-weight: 700;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, transform 0.2s;
       display: inline-block;
-      border: 1px solid var(--border);
+      border: none;
+      box-shadow: 0 2px 8px rgba(255,215,0,0.3);
     }
-    .partnership-btn:hover { opacity: 0.9; }
+    .partnership-btn:hover { opacity: 0.95; transform: translateY(-1px); }
 
     .theme-btn {
       background: var(--navy3);
@@ -190,7 +192,7 @@
       padding: 10px 14px;
       color: var(--text);
       font-size: 0.88rem;
-      font-family: 'Nunito', 'Segoe UI', sans-serif;   /* <-- custom font only here */
+      font-family: 'Nunito', 'Segoe UI', sans-serif;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
@@ -618,6 +620,7 @@
     </div>
   </div>
   <div class="header-right">
+    <!-- Premium gradient button -->
     <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="partnership-btn">🤝 Our Partners</a>
     <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📖 Guides</a>
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">💬 Nova Community</a>
@@ -847,7 +850,7 @@ async function loadAllPacks() {
   return true;
 }
 
-// ─── TYPING ANIMATION (unchanged logic) ─────────
+// ─── TYPING ANIMATION ──────────────────────────
 function startTypingAnimation() {
   const input = document.getElementById('q');
   if (!input) return;
