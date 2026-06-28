@@ -138,10 +138,10 @@
     }
     .guides-btn:hover { opacity: 0.85; }
 
-    /* ── Partnership button – premium gradient ── */
+    /* ── Partnership button – Magenta Burst ── */
     .partnership-btn {
-      background: linear-gradient(135deg, #FFD700, #9B59B6);
-      color: #0D1B2A;
+      background: linear-gradient(135deg, #C2185B, #7B1FA2);
+      color: white;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 8px;
@@ -150,7 +150,7 @@
       transition: opacity 0.2s, transform 0.2s;
       display: inline-block;
       border: none;
-      box-shadow: 0 2px 8px rgba(255,215,0,0.3);
+      box-shadow: 0 2px 8px rgba(194,24,91,0.3);
     }
     .partnership-btn:hover { opacity: 0.95; transform: translateY(-1px); }
 
@@ -620,7 +620,7 @@
     </div>
   </div>
   <div class="header-right">
-    <!-- Premium gradient button -->
+    <!-- Magenta Burst gradient button -->
     <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="partnership-btn">🤝 Our Partners</a>
     <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" rel="noopener noreferrer" class="guides-btn">📖 Guides</a>
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" rel="noopener noreferrer" class="discord-btn">💬 Nova Community</a>
@@ -905,7 +905,7 @@ function surpriseMe() {
   openModalDirect(randomPack);
 }
 
-// ── REST OF THE SCRIPTS (unchanged) ────────────
+// ── REST OF THE SCRIPTS (unchanged except modal scroll lock) ──
 function toggleCatNav() {
   document.getElementById('catNavBtn').classList.toggle('open');
   document.getElementById('catNavList').classList.toggle('open');
@@ -1196,6 +1196,8 @@ function openModalDirect(p) {
   }
 
   document.getElementById('overlay').classList.add('open');
+  // Lock background scroll
+  document.body.style.overflow = 'hidden';
 }
 
 function shareCurrentPack() {
@@ -1238,6 +1240,8 @@ function copyLink(link, btn) {
 function closeModal(e) {
   if (!e || e.target === document.getElementById('overlay')) {
     document.getElementById('overlay').classList.remove('open');
+    // Unlock background scroll
+    document.body.style.overflow = '';
   }
 }
 
