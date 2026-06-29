@@ -93,7 +93,7 @@
     "image_credit": "",
     "added_by": "2026-06-02T16:00:00.000Z",
     "date_added": "2026-06-11T16:00:00.000Z",
-    "last_viewed": "2026-06-13T16:00:00.000Z"
+    "last_viewed": "2026-06-28T16:00:00.000Z"
   },
   {
     "id": 7,
@@ -1390,5 +1390,21 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
     "last_viewed": "2026-06-28T16:00:00.000Z"
+  },
+  {
+    "id": 89,
+    "name": "Java Attack Cooldown Indicator",
+    "link": "https://mcpedl.com/java-attack-cooldown-indicator/",
+    "support_link": "https://discord.gg/ZqBkcStcSK",
+    "archive_link": "",
+    "category": "PvP",
+    "secondary_tag": "PvP",
+    "credits": "oSkullo",
+    "description": "shows java style attack cooldown Indicator (no bugs)",
+    "image": "https://i.ibb.co/YBmnHNTJ/81a7f813ceaf.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-28T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
