@@ -317,7 +317,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-17T16:00:00.000Z",
-    "last_viewed": "2026-06-26T16:00:00.000Z"
+    "last_viewed": "2026-06-28T16:00:00.000Z"
   },
   {
     "id": 22,
@@ -1422,5 +1422,21 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
     "last_viewed": "2026-06-28T16:00:00.000Z"
+  },
+  {
+    "id": 91,
+    "name": "Improved BossBars",
+    "link": "https://mcpedl.com/improved-bossbars/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "GUI & UI",
+    "secondary_tag": "GUI & UI",
+    "credits": "CraftStudio",
+    "description": "Improved BossBars is a clean, high-quality UI resource pack that upgrades the look of boss health bars in Minecraft. It features custom-designed boss bars for the Ender Dragon, Wither, and Pillager Raid",
+    "image": "https://i.ibb.co/qFCPYkDS/032ec9a0cb30.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-06-28T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
