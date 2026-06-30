@@ -7,370 +7,373 @@
 (function () {
   'use strict';
 
-  /* -----------------------------------------------
-   | 1. Theme definitions (colours + decorations)
-   ----------------------------------------------- */
+  const STORAGE_THEME = 'nova_event_theme';
+  const STORAGE_FULL = 'nova_event_full';
+
   const THEMES = {
     none: {
       name: 'None (use base theme)',
       emoji: '🎨',
-      // no overrides – returns empty string
-      css: () => '',
-      decorations: false
+      vars: {},
+      decorations: []
     },
+
     christmas: {
       name: '🎄 Christmas',
       emoji: '🎄',
-      css: () => `
-        /* Christmas colour overrides */
-        :root {
-          --gold: #B22222;        /* deep red */
-          --cyan: #2E8B57;       /* forest green */
-          --purple: #FFD700;     /* gold */
-          --surprise-bg: #B22222;
-          --surprise-text: #fff;
-        }
-        /* Snowflake background (full effects only) */
-        .nova-snowflakes {
-          position: fixed; top:0; left:0; width:100%; height:100%;
-          pointer-events: none; z-index: 9999;
-          background: transparent;
-        }
-      `,
-      decorations: true,
-      fullCSS: () => `
-        @keyframes snow {
-          0% { transform: translateY(-10vh) rotate(0deg); opacity:1; }
-          100% { transform: translateY(110vh) rotate(360deg); opacity:0; }
-        }
-        .snowflake {
-          position: absolute;
-          color: #fff;
-          font-size: 1.5rem;
-          user-select: none;
-          animation: snow linear infinite;
-        }
-      `
+      vars: {
+        '--gold': '#D7263D',
+        '--cyan': '#2E8B57',
+        '--purple': '#FFD700',
+        '--surprise-bg': '#D7263D',
+        '--surprise-text': '#ffffff'
+      },
+      decorations: ['❄️', '🎄', '✨']
     },
+
     halloween: {
       name: '🎃 Halloween',
       emoji: '🎃',
-      css: () => `
-        :root {
-          --gold: #FF6600;       /* orange */
-          --cyan: #800080;      /* purple */
-          --purple: #000000;
-          --surprise-bg: #FF6600;
-        }
-      `,
-      decorations: true,
-      fullCSS: () => `
-        @keyframes float {
-          0% { transform: translateY(0) rotate(0deg); opacity:1; }
-          100% { transform: translateY(-110vh) rotate(360deg); opacity:0; }
-        }
-        .bat {
-          position: absolute;
-          font-size: 2rem;
-          animation: float linear infinite;
-        }
-        .pumpkin {
-          position: absolute;
-          font-size: 2rem;
-          animation: float linear infinite;
-        }
-      `
+      vars: {
+        '--gold': '#FF7A18',
+        '--cyan': '#7B2CBF',
+        '--purple': '#1B1B1B',
+        '--surprise-bg': '#FF7A18',
+        '--surprise-text': '#ffffff'
+      },
+      decorations: ['🎃', '🦇', '👻']
     },
+
     easter: {
       name: '🐣 Easter',
       emoji: '🐣',
-      css: () => `
-        :root {
-          --gold: #FFB6C1;       /* light pink */
-          --cyan: #DDA0DD;      /* plum */
-          --purple: #FFD700;    /* gold */
-          --surprise-bg: #FFB6C1;
-        }
-      `,
-      decorations: true,
-      fullCSS: () => `
-        @keyframes hop {
-          0% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-          100% { transform: translateY(0); }
-        }
-        .easter-egg {
-          position: absolute;
-          font-size: 2rem;
-          animation: hop 2s ease-in-out infinite;
-        }
-      `
+      vars: {
+        '--gold': '#FFB6C1',
+        '--cyan': '#DDA0DD',
+        '--purple': '#FFF6CC',
+        '--surprise-bg': '#FFB6C1',
+        '--surprise-text': '#2b2b2b'
+      },
+      decorations: ['🥚', '🐣', '🌸']
     },
+
     newyear: {
       name: '🎆 New Year',
       emoji: '🎆',
-      css: () => `
-        :root {
-          --gold: #FFD700;
-          --cyan: #C0C0C0;      /* silver */
-          --purple: #000000;
-          --surprise-bg: #FFD700;
-        }
-      `,
-      decorations: true,
-      fullCSS: () => `
-        @keyframes firework {
-          0% { transform: scale(0); opacity:1; }
-          100% { transform: scale(1.5); opacity:0; }
-        }
-        .firework {
-          position: absolute;
-          width: 8px; height: 8px;
-          background: gold;
-          border-radius: 50%;
-          animation: firework 1.5s ease-out infinite;
-        }
-      `
+      vars: {
+        '--gold': '#FFD700',
+        '--cyan': '#C0C0C0',
+        '--purple': '#121212',
+        '--surprise-bg': '#FFD700',
+        '--surprise-text': '#121212'
+      },
+      decorations: ['🎆', '✨', '🎇']
     },
+
     valentine: {
       name: '❤️ Valentine’s Day',
       emoji: '❤️',
-      css: () => `
-        :root {
-          --gold: #FF1493;       /* deep pink */
-          --cyan: #FF69B4;      /* hot pink */
-          --purple: #FFFFFF;
-          --surprise-bg: #FF1493;
-        }
-      `,
-      decorations: true,
-      fullCSS: () => `
-        @keyframes heartFloat {
-          0% { transform: translateY(0) scale(1); opacity:1; }
-          100% { transform: translateY(-100vh) scale(0.5); opacity:0; }
-        }
-        .heart {
-          position: absolute;
-          color: #ff4d6d;
-          font-size: 2rem;
-          animation: heartFloat 4s linear infinite;
-        }
-      `
+      vars: {
+        '--gold': '#FF4D8D',
+        '--cyan': '#FF7EB6',
+        '--purple': '#FFF0F6',
+        '--surprise-bg': '#FF4D8D',
+        '--surprise-text': '#ffffff'
+      },
+      decorations: ['❤️', '💘', '💕']
     },
+
     patrick: {
       name: '☘️ St. Patrick’s Day',
       emoji: '☘️',
-      css: () => `
-        :root {
-          --gold: #228B22;       /* forest green */
-          --cyan: #FFD700;      /* gold */
-          --purple: #FFFFFF;
-          --surprise-bg: #228B22;
-        }
-      `,
-      decorations: true,
-      fullCSS: () => `
-        @keyframes cloverSpin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        .clover {
-          position: absolute;
-          font-size: 2rem;
-          animation: cloverSpin 3s linear infinite;
-        }
-      `
+      vars: {
+        '--gold': '#1F9D55',
+        '--cyan': '#FFD700',
+        '--purple': '#F4FFF8',
+        '--surprise-bg': '#1F9D55',
+        '--surprise-text': '#ffffff'
+      },
+      decorations: ['☘️', '🍀', '✨']
     }
-    // Add more themes here following the same structure
   };
 
-  /* -----------------------------------------------
-   | 2. State & helpers
-   ----------------------------------------------- */
-  let currentEventTheme = localStorage.getItem('nova_event_theme') || 'none';
-  let fullEffects = localStorage.getItem('nova_event_full') === 'true';
-  let activeStyleTag = null;
-  let activeDecoContainer = null;
+  const state = {
+    currentTheme: localStorage.getItem(STORAGE_THEME) || 'none',
+    fullEffects: localStorage.getItem(STORAGE_FULL) === 'true',
+    styleTag: null,
+    decoStyleTag: null,
+    decoContainer: null,
+    observer: null
+  };
 
-  function removeActiveTheme() {
-    if (activeStyleTag) {
-      activeStyleTag.remove();
-      activeStyleTag = null;
-    }
-    if (activeDecoContainer) {
-      activeDecoContainer.remove();
-      activeDecoContainer = null;
-    }
-  }
+  const ALL_VARS = [...new Set(
+    Object.values(THEMES).flatMap(t => Object.keys(t.vars || {}))
+  )];
 
-  function applyTheme(themeKey, withFull) {
-    removeActiveTheme();
-    if (themeKey === 'none' || !THEMES[themeKey]) return;
-
-    const theme = THEMES[themeKey];
-    // Inject colour overrides
-    const style = document.createElement('style');
-    style.id = 'nova-event-theme';
-    style.textContent = theme.css();
-    document.head.appendChild(style);
-    activeStyleTag = style;
-
-    // Full effects (decorations) only if enabled AND theme supports it
-    if (withFull && theme.decorations && theme.fullCSS) {
-      // inject animations
-      const fullStyle = document.createElement('style');
-      fullStyle.id = 'nova-event-full';
-      fullStyle.textContent = theme.fullCSS();
-      document.head.appendChild(fullStyle);
-
-      // create container for decorative elements
-      const container = document.createElement('div');
-      container.id = 'nova-deco-container';
-      container.style.position = 'fixed';
-      container.style.top = '0';
-      container.style.left = '0';
-      container.style.width = '100%';
-      container.style.height = '100%';
-      container.style.pointerEvents = 'none';
-      container.style.zIndex = '9998';
-      document.body.appendChild(container);
-      activeDecoContainer = container;
-
-      // spawn decorations
-      spawnDecorations(themeKey, container);
-    }
-  }
-
-  /* -----------------------------------------------
-   | 3. Decoration spawners
-   ----------------------------------------------- */
-  function spawnDecorations(themeKey, container) {
-    const count = 20; // number of elements
-    const frag = document.createDocumentFragment();
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement('div');
-      el.style.left = Math.random() * 100 + '%';
-      el.style.animationDelay = Math.random() * 5 + 's';
-      el.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5-10s
-
-      switch (themeKey) {
-        case 'christmas':
-          el.className = 'snowflake';
-          el.textContent = '❄️';
-          break;
-        case 'halloween':
-          el.className = Math.random() > 0.5 ? 'bat' : 'pumpkin';
-          el.textContent = Math.random() > 0.5 ? '🦇' : '🎃';
-          break;
-        case 'easter':
-          el.className = 'easter-egg';
-          el.textContent = '🥚';
-          break;
-        case 'newyear':
-          el.className = 'firework';
-          el.style.background = ['#FFD700','#FF6B6B','#4ECDC4','#FFE66D'][Math.floor(Math.random()*4)];
-          break;
-        case 'valentine':
-          el.className = 'heart';
-          el.textContent = '❤️';
-          break;
-        case 'patrick':
-          el.className = 'clover';
-          el.textContent = '🍀';
-          break;
-        default:
-          continue;
-      }
-      frag.appendChild(el);
-    }
-    container.appendChild(frag);
-  }
-
-  /* -----------------------------------------------
-   | 4. Auto‑detect event based on date
-   ----------------------------------------------- */
   function getAutoEvent() {
     const now = new Date();
-    const m = now.getMonth() + 1, d = now.getDate();
-    // Rough date ranges (adjust as you like)
+    const m = now.getMonth() + 1;
+    const d = now.getDate();
+
     if (m === 12 && d >= 20) return 'christmas';
     if (m === 1 && d <= 3) return 'newyear';
     if (m === 10 && d >= 25) return 'halloween';
     if (m === 3 && d >= 15 && d <= 17) return 'patrick';
-    if (m === 4 && d >= 1 && d <= 20) return 'easter'; // approximate
+    if (m === 4 && d >= 1 && d <= 20) return 'easter';
     if (m === 2 && d >= 10 && d <= 18) return 'valentine';
     return 'none';
   }
 
-  /* -----------------------------------------------
-   | 5. Build settings UI for event themes
-   ----------------------------------------------- */
-  function injectSettingsUI() {
-    // Wait for settings modal to exist
-    const checkExist = setInterval(() => {
-      const settingsBody = document.querySelector('#settingsOverlay .modal-body');
-      if (!settingsBody) return;
-      clearInterval(checkExist);
+  function removeThemeEffects() {
+    if (state.styleTag) {
+      state.styleTag.remove();
+      state.styleTag = null;
+    }
+    if (state.decoStyleTag) {
+      state.decoStyleTag.remove();
+      state.decoStyleTag = null;
+    }
+    if (state.decoContainer) {
+      state.decoContainer.remove();
+      state.decoContainer = null;
+    }
+    if (state.observer) {
+      state.observer.disconnect();
+      state.observer = null;
+    }
 
-      // Insert event theme section before the infinite scroll toggle
-      const section = document.createElement('div');
-      section.className = 'settings-section';
-      section.innerHTML = `
-        <h4>🎨 Event Theme</h4>
-        <select id="eventThemeSelect" style="width:100%; margin-bottom:8px;">
-          ${Object.entries(THEMES).map(([key, t]) =>
-            `<option value="${key}" ${key === currentEventTheme ? 'selected' : ''}>${t.emoji} ${t.name}</option>`
-          ).join('')}
-        </select>
-        <label class="toggle-label" style="margin-bottom:8px;">
-          <input type="checkbox" id="fullEffectsToggle" ${fullEffects ? 'checked' : ''}>
-          <span>✨ Full visual effects (may cause lag on slow devices)</span>
-        </label>
-        <p style="font-size:0.75rem; color:var(--muted);">
-          💡 <em>Auto‑detect chooses the nearest holiday. You can override it here.</em>
-        </p>
-      `;
+    const root = document.documentElement;
+    ALL_VARS.forEach(v => root.style.removeProperty(v));
+    root.removeAttribute('data-nova-event-theme');
+  }
 
-      // Insert before the infinite scroll toggle section
-      const infiniteSection = [...settingsBody.querySelectorAll('.settings-section')].pop();
-      settingsBody.insertBefore(section, infiniteSection);
+  function applyVars(vars) {
+    const root = document.documentElement;
+    ALL_VARS.forEach(v => root.style.removeProperty(v));
 
-      // Event listeners
-      document.getElementById('eventThemeSelect').addEventListener('change', function () {
-        currentEventTheme = this.value;
-        localStorage.setItem('nova_event_theme', currentEventTheme);
-        applyTheme(currentEventTheme, fullEffects);
-      });
+    for (const [key, value] of Object.entries(vars || {})) {
+      root.style.setProperty(key, value);
+    }
+  }
 
-      document.getElementById('fullEffectsToggle').addEventListener('change', function () {
-        fullEffects = this.checked;
-        localStorage.setItem('nova_event_full', fullEffects);
-        // Reapply theme (will add/remove decorations accordingly)
-        applyTheme(currentEventTheme, fullEffects);
-      });
+  function spawnDecorations(themeKey, container) {
+    const theme = THEMES[themeKey];
+    if (!theme || !theme.decorations || !theme.decorations.length) return;
 
-      // If auto theme is 'none' but user hasn't set one, use auto
-      if (currentEventTheme === 'none' && !localStorage.getItem('nova_event_theme')) {
-        const auto = getAutoEvent();
-        if (auto !== 'none') {
-          currentEventTheme = auto;
-          document.getElementById('eventThemeSelect').value = auto;
-          localStorage.setItem('nova_event_theme', auto);
-        }
+    const count = 18;
+    const frag = document.createDocumentFragment();
+
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      const symbol = theme.decorations[Math.floor(Math.random() * theme.decorations.length)];
+
+      el.className = 'nova-theme-deco';
+      el.textContent = symbol;
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-10vh';
+      el.style.fontSize = (Math.random() * 0.9 + 0.9) + 'rem';
+      el.style.animationDelay = (Math.random() * 4) + 's';
+      el.style.animationDuration = (Math.random() * 5 + 6) + 's';
+      el.style.opacity = String(Math.random() * 0.5 + 0.45);
+      el.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      frag.appendChild(el);
+    }
+
+    container.appendChild(frag);
+  }
+
+  function ensureDecorationStyles() {
+    if (state.decoStyleTag) return;
+
+    const style = document.createElement('style');
+    style.id = 'nova-event-deco-style';
+    style.textContent = `
+      @keyframes novaFloatDown {
+        0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+        10%  { opacity: 1; }
+        100% { transform: translateY(110vh) translateX(16px) rotate(360deg); opacity: 0; }
       }
 
-      // Apply initial theme
-      applyTheme(currentEventTheme, fullEffects);
-    }, 300);
+      @keyframes novaFloatUp {
+        0%   { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+        10%  { opacity: 1; }
+        100% { transform: translateY(-20vh) translateX(-16px) rotate(-360deg); opacity: 0; }
+      }
+
+      .nova-theme-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9998;
+        overflow: hidden;
+      }
+
+      .nova-theme-deco {
+        position: absolute;
+        user-select: none;
+        pointer-events: none;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+        animation-name: novaFloatDown;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+
+      .nova-theme-deco.nova-up {
+        animation-name: novaFloatUp;
+      }
+    `;
+    document.head.appendChild(style);
+    state.decoStyleTag = style;
   }
 
-  /* -----------------------------------------------
-   | 6. Init
-   ----------------------------------------------- */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectSettingsUI);
-  } else {
+  function applyTheme(themeKey, withFull) {
+    removeThemeEffects();
+
+    if (!themeKey || themeKey === 'none' || !THEMES[themeKey]) {
+      return;
+    }
+
+    const theme = THEMES[themeKey];
+    document.documentElement.setAttribute('data-nova-event-theme', themeKey);
+
+    applyVars(theme.vars);
+
+    state.styleTag = document.createElement('style');
+    state.styleTag.id = 'nova-event-theme-style';
+    state.styleTag.textContent = `
+      /* Theme ${themeKey} */
+      html[data-nova-event-theme="${themeKey}"] {
+        transition: filter 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+      }
+    `;
+    document.head.appendChild(state.styleTag);
+
+    if (withFull) {
+      ensureDecorationStyles();
+
+      const container = document.createElement('div');
+      container.className = 'nova-theme-overlay';
+      container.id = 'nova-event-overlay';
+      document.body.appendChild(container);
+      state.decoContainer = container;
+
+      spawnDecorations(themeKey, container);
+    }
+  }
+
+  function createThemeSettingsSection() {
+    const section = document.createElement('div');
+    section.className = 'settings-section';
+    section.id = 'nova-event-theme-section';
+
+    section.innerHTML = `
+      <h4>🎨 Event Theme</h4>
+
+      <select id="eventThemeSelect" style="width:100%; margin-bottom:8px;">
+        ${Object.entries(THEMES).map(([key, theme]) =>
+          `<option value="${key}">${theme.emoji} ${theme.name}</option>`
+        ).join('')}
+      </select>
+
+      <label class="toggle-label" style="margin-bottom:8px; display:flex; gap:8px; align-items:center;">
+        <input type="checkbox" id="fullEffectsToggle">
+        <span>✨ Full visual effects (may lag on slow devices)</span>
+      </label>
+
+      <button id="autoEventThemeBtn" style="width:100%; margin-bottom:8px;">
+        Auto-detect current event
+      </button>
+
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:4px;">
+        Auto-detect uses the nearest holiday. You can still override it manually.
+      </p>
+    `;
+
+    return section;
+  }
+
+  function bindSettingsSection(section) {
+    const select = section.querySelector('#eventThemeSelect');
+    const fullToggle = section.querySelector('#fullEffectsToggle');
+    const autoBtn = section.querySelector('#autoEventThemeBtn');
+
+    if (!select || !fullToggle || !autoBtn) return;
+
+    select.value = state.currentTheme;
+    fullToggle.checked = state.fullEffects;
+
+    select.addEventListener('change', () => {
+      state.currentTheme = select.value;
+      localStorage.setItem(STORAGE_THEME, state.currentTheme);
+      applyTheme(state.currentTheme, state.fullEffects);
+    });
+
+    fullToggle.addEventListener('change', () => {
+      state.fullEffects = fullToggle.checked;
+      localStorage.setItem(STORAGE_FULL, String(state.fullEffects));
+      applyTheme(state.currentTheme, state.fullEffects);
+    });
+
+    autoBtn.addEventListener('click', () => {
+      const autoTheme = getAutoEvent();
+      state.currentTheme = autoTheme;
+      localStorage.setItem(STORAGE_THEME, state.currentTheme);
+      select.value = autoTheme;
+      applyTheme(state.currentTheme, state.fullEffects);
+    });
+  }
+
+  function injectSettingsUI() {
+    const existing = document.getElementById('nova-event-theme-section');
+    if (existing) return;
+
+    const tryInsert = () => {
+      const settingsBody = document.querySelector('#settingsOverlay .modal-body');
+      if (!settingsBody) return false;
+
+      const section = createThemeSettingsSection();
+
+      const marker = settingsBody.querySelector('.settings-section:last-of-type');
+      if (marker && marker.parentNode === settingsBody) {
+        settingsBody.insertBefore(section, marker);
+      } else {
+        settingsBody.appendChild(section);
+      }
+
+      bindSettingsSection(section);
+      return true;
+    };
+
+    if (tryInsert()) return;
+
+    const observer = new MutationObserver(() => {
+      if (tryInsert()) observer.disconnect();
+    });
+
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  function initDefaults() {
+    const hasStoredTheme = localStorage.getItem(STORAGE_THEME) !== null;
+    if (!hasStoredTheme) {
+      const auto = getAutoEvent();
+      state.currentTheme = auto;
+      localStorage.setItem(STORAGE_THEME, auto);
+    }
+
+    state.fullEffects = localStorage.getItem(STORAGE_FULL) === 'true';
+  }
+
+  function start() {
+    initDefaults();
     injectSettingsUI();
+    applyTheme(state.currentTheme, state.fullEffects);
   }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
 })();
