@@ -1047,16 +1047,22 @@ function applyFilters() {
   const secondaryTag = document.getElementById('secondaryTagFilter').value.toLowerCase().trim();
 
   filtered = allPacks.filter(p => {
-  const mq = !q ||
-    (p.name || '').toLowerCase().includes(q) || (p.credits || '').toLowerCase().includes(q) ||
-    (p.description || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q) ||
-    (p.secondary_tag || '').toLowerCase().includes(q) || (p.image_credit || '').toLowerCase().includes(q);
-  const mc = !cat || (p.category || '').toLowerCase() === cat;
-  const mt = !secondaryTag || (p.secondary_tag || '').toLowerCase() === secondaryTag;
-  const mf = !featuredOnly || isFeaturedPack(p);   // <-- FIXED: uses the proper check
-  return mq && mc && mt && mf;
-});
+    // Search query
+    const mq = !q ||
+      (p.name || '').toLowerCase().includes(q) || (p.credits || '').toLowerCase().includes(q) ||
+      (p.description || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q) ||
+      (p.secondary_tag || '').toLowerCase().includes(q) || (p.image_credit || '').toLowerCase().includes(q);
+    // Category filter
+    const mc = !cat || (p.category || '').toLowerCase() === cat;
+    // Secondary tag filter
+    const mt = !secondaryTag || (p.secondary_tag || '').toLowerCase() === secondaryTag;
+    // Featured check (inline – no external function)
+    const sup = String(p.support_link || p.support || '').trim();
+    const mf = !featuredOnly || (sup !== '' && sup.toLowerCase() !== 'none');
+    return mq && mc && mt && mf;
+  });
 
+  // Sort
   if (srt === 'recent') {
     const recentNames = recentlyViewed.map(r => r.name);
     filtered = filtered.filter(p => recentNames.includes(p.name))
@@ -1071,6 +1077,14 @@ function applyFilters() {
   } else if (srt === 'az') {
     filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   }
+
+  totalPages = Math.ceil(filtered.length / PER_PAGE);
+  currentPage = 1;
+  document.getElementById('rCount').textContent = filtered.length;
+  document.getElementById('pag').style.display = infiniteMode ? 'none' : (totalPages > 1 ? 'flex' : 'none');
+  document.getElementById('searchStatus').textContent = infiniteMode ? '♾️' : '';
+  render();
+}
 
   totalPages = Math.ceil(filtered.length / PER_PAGE);
   currentPage = 1;
