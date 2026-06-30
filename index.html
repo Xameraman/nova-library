@@ -262,8 +262,7 @@
     .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .filter-label { font-size: 0.75rem; color: var(--muted); }
 
-    .cat-nav-wrap { position: relative; }
-    .cat-nav-btn {
+    .filter-btn {
       background: var(--navy2);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -276,42 +275,9 @@
       align-items: center;
       gap: 6px;
       min-width: 160px;
+      white-space: nowrap;
     }
-    .cat-nav-btn:hover { border-color: var(--cyan); }
-    .cat-nav-btn .arrow { margin-left: auto; transition: transform 0.2s; }
-    .cat-nav-btn.open .arrow { transform: rotate(180deg); }
-
-    .cat-nav-list {
-      display: none;
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      min-width: 200px;
-      max-height: 320px;
-      overflow-y: auto;
-      z-index: 1000;          /* FIXED – now always on top */
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      padding: 6px;
-    }
-    .cat-nav-list.open { display: block; animation: fadeIn 0.15s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-
-    .cat-nav-item {
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      color: var(--muted);
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .cat-nav-item:hover { background: var(--navy3); color: var(--text); }
-    .cat-nav-item.selected { background: var(--cyan); color: var(--navy); font-weight: 700; }
+    .filter-btn:hover { border-color: var(--cyan); }
 
     select {
       background: var(--navy2);
@@ -699,45 +665,16 @@
     </div>
     <div class="filter-row">
       <span class="filter-label">Filter:</span>
-      <div class="cat-nav-wrap">
-        <button class="cat-nav-btn" id="catNavBtn" onclick="toggleCatNav()">
-          <span id="catNavLabel">🌌 All Categories</span>
-          <span class="arrow">▼</span>
-        </button>
-        <div class="cat-nav-list" id="catNavList">
-          <div class="cat-nav-item selected" data-val="" onclick="selectCat('','🌌 All Categories')">🌌 All Categories</div>
-          <div class="cat-nav-item" data-val="__featured__" onclick="selectCat('__featured__','💝 Featured')">💝 Featured</div>
-          <div class="cat-nav-item" data-val="PvP" onclick="selectCat('PvP','⚔️ PvP')">⚔️ PvP</div>
-          <div class="cat-nav-item" data-val="Utility" onclick="selectCat('Utility','🔧 Utility')">🔧 Utility</div>
-          <div class="cat-nav-item" data-val="Furniture" onclick="selectCat('Furniture','🛋️ Furniture')">🛋️ Furniture</div>
-          <div class="cat-nav-item" data-val="Horror" onclick="selectCat('Horror','😱 Horror')">😱 Horror</div>
-          <div class="cat-nav-item" data-val="Anime" onclick="selectCat('Anime','🎌 Anime')">🎌 Anime</div>
-          <div class="cat-nav-item" data-val="Shader" onclick="selectCat('Shader','🌈 Shader')">🌈 Shader</div>
-          <div class="cat-nav-item" data-val="Structure" onclick="selectCat('Structure','🏗️ Structure')">🏗️ Structure</div>
-          <div class="cat-nav-item" data-val="Weapon" onclick="selectCat('Weapon','⚔️ Weapon')">⚔️ Weapon</div>
-          <div class="cat-nav-item" data-val="Bosses" onclick="selectCat('Bosses','👹 Bosses')">👹 Bosses</div>
-          <div class="cat-nav-item" data-val="Vehicle" onclick="selectCat('Vehicle','🚗 Vehicle')">🚗 Vehicle</div>
-          <div class="cat-nav-item" data-val="Visual" onclick="selectCat('Visual','👁️ Visual')">👁️ Visual</div>
-          <div class="cat-nav-item" data-val="Survival" onclick="selectCat('Survival','🛡️ Survival')">🛡️ Survival</div>
-          <div class="cat-nav-item" data-val="Client" onclick="selectCat('Client','💻 Client')">💻 Client</div>
-          <div class="cat-nav-item" data-val="GUI & UI" onclick="selectCat('GUI & UI','🖥️ GUI & UI')">🖥️ GUI & UI</div>
-          <div class="cat-nav-item" data-val="Adventure" onclick="selectCat('Adventure','🗺️ Adventure')">🗺️ Adventure</div>
-          <div class="cat-nav-item" data-val="Minigame" onclick="selectCat('Minigame','🎮 Minigame')">🎮 Minigame</div>
-          <div class="cat-nav-item" data-val="Food" onclick="selectCat('Food','🍖 Food')">🍖 Food</div>
-          <div class="cat-nav-item" data-val="Environment" onclick="selectCat('Environment','🌿 Environment')">🌿 Environment</div>
-          <div class="cat-nav-item" data-val="Animation" onclick="selectCat('Animation','🎬 Animation')">🎬 Animation</div>
-          <div class="cat-nav-item" data-val="Skins" onclick="selectCat('Skins','🎨 Skins')">🎨 Skins</div>
-          <div class="cat-nav-item" data-val="Fps Booster" onclick="selectCat('Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
-        </div>
-      </div>
 
-      <select id="secondaryTagFilter" onchange="applyFilters()">
-        <option value="">All Secondary Tags</option>
-        <option value="Texture Pack">Texture Pack</option>
-        <option value="Addon">Addon</option>
-        <option value="World">World</option>
-        <option value="Skins">Skins</option>
-      </select>
+      <!-- Category filter button (opens modal) -->
+      <button class="filter-btn" onclick="openCatModal()">
+        <span id="catLabel">🌌 All Categories</span> <span class="arrow">▼</span>
+      </button>
+
+      <!-- Secondary tag filter button (opens modal) -->
+      <button class="filter-btn" onclick="openTagModal()">
+        <span id="tagLabel">All Secondary Tags</span> <span class="arrow">▼</span>
+      </button>
 
       <select id="sortFilter" onchange="applyFilters()">
         <option value="newest">Newest First</option>
@@ -801,6 +738,32 @@
   </div>
 </div>
 
+<!-- Category picker modal -->
+<div class="overlay" id="catOverlay" onclick="closeCatModal(event)">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <span class="modal-name">📂 Category</span>
+      <button class="modal-x" onclick="closeCatModal()">✕</button>
+    </div>
+    <div class="modal-body" id="catListContainer">
+      <!-- filled dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- Secondary tag picker modal -->
+<div class="overlay" id="tagOverlay" onclick="closeTagModal(event)">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <span class="modal-name">🏷️ Secondary Tag</span>
+      <button class="modal-x" onclick="closeTagModal()">✕</button>
+    </div>
+    <div class="modal-body" id="tagListContainer">
+      <!-- filled dynamically -->
+    </div>
+  </div>
+</div>
+
 <!-- Pack detail modal -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal">
@@ -851,6 +814,42 @@ let searchDebounce = null;
 let typingAnimationId = null;
 let typingPaused = false;
 let infiniteMode = false;
+
+const CATEGORIES = [
+  { val: '', label: '🌌 All Categories' },
+  { val: '__featured__', label: '💝 Featured' },
+  { val: 'PvP', label: '⚔️ PvP' },
+  { val: 'Utility', label: '🔧 Utility' },
+  { val: 'Furniture', label: '🛋️ Furniture' },
+  { val: 'Horror', label: '😱 Horror' },
+  { val: 'Anime', label: '🎌 Anime' },
+  { val: 'Shader', label: '🌈 Shader' },
+  { val: 'Structure', label: '🏗️ Structure' },
+  { val: 'Weapon', label: '⚔️ Weapon' },
+  { val: 'Bosses', label: '👹 Bosses' },
+  { val: 'Vehicle', label: '🚗 Vehicle' },
+  { val: 'Visual', label: '👁️ Visual' },
+  { val: 'Survival', label: '🛡️ Survival' },
+  { val: 'Client', label: '💻 Client' },
+  { val: 'GUI & UI', label: '🖥️ GUI & UI' },
+  { val: 'Adventure', label: '🗺️ Adventure' },
+  { val: 'Minigame', label: '🎮 Minigame' },
+  { val: 'Food', label: '🍖 Food' },
+  { val: 'Environment', label: '🌿 Environment' },
+  { val: 'Animation', label: '🎬 Animation' },
+  { val: 'Skins', label: '🎨 Skins' },
+  { val: 'Fps Booster', label: '⚡ Fps Booster' }
+];
+
+const SEC_TAGS = [
+  { val: '', label: 'All Secondary Tags' },
+  { val: 'Texture Pack', label: 'Texture Pack' },
+  { val: 'Addon', label: 'Addon' },
+  { val: 'World', label: 'World' },
+  { val: 'Skins', label: 'Skins' }
+];
+
+let selectedSecTag = '';
 
 const PLACEHOLDER_PHRASES = [
   "🔍 Search Nova's Library", "🎯 Find your next favorite pack…", "🛡️ 100% Creator Trusted!",
@@ -950,6 +949,51 @@ function surpriseMe() {
   openModalDirect(allPacks[Math.floor(Math.random() * allPacks.length)]);
 }
 
+// ── Category & Tag Modals ─────────────────────
+function openCatModal() {
+  const container = document.getElementById('catListContainer');
+  container.innerHTML = CATEGORIES.map(c => `
+    <div class="cat-nav-item ${currentCat === c.val ? 'selected' : ''}" onclick="selectCat('${c.val}','${c.label}')">
+      ${c.label}
+    </div>
+  `).join('');
+  document.getElementById('catOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCatModal(e) {
+  if (e && e.target !== document.getElementById('catOverlay')) return;
+  document.getElementById('catOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function selectCat(val, label) {
+  currentCat = val;
+  document.getElementById('catLabel').textContent = label;
+  closeCatModal();
+  applyFilters();
+}
+
+function openTagModal() {
+  const container = document.getElementById('tagListContainer');
+  container.innerHTML = SEC_TAGS.map(t => `
+    <div class="cat-nav-item ${selectedSecTag === t.val ? 'selected' : ''}" onclick="selectTag('${t.val}','${t.label}')">
+      ${t.label}
+    </div>
+  `).join('');
+  document.getElementById('tagOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeTagModal(e) {
+  if (e && e.target !== document.getElementById('tagOverlay')) return;
+  document.getElementById('tagOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function selectTag(val, label) {
+  selectedSecTag = val;
+  document.getElementById('tagLabel').textContent = label;
+  closeTagModal();
+  applyFilters();
+}
+
 // ── Settings & Stats ─────────────────────────
 function openSettings() {
   document.getElementById('settingsOverlay').classList.add('open');
@@ -1033,7 +1077,7 @@ function applyFilters() {
   const srt = document.getElementById('sortFilter').value;
   const featuredOnly = currentCat === '__featured__';
   const cat = featuredOnly ? '' : currentCat.toLowerCase();
-  const secondaryTag = document.getElementById('secondaryTagFilter').value.toLowerCase().trim();
+  const secondaryTag = selectedSecTag.toLowerCase();
 
   filtered = allPacks.filter(p => {
     const mq = !q ||
@@ -1164,9 +1208,7 @@ window.addEventListener('scroll', () => {
   btn.classList.toggle('show', window.scrollY > 500);
 });
 
-function toggleCatNav() { document.getElementById('catNavBtn').classList.toggle('open'); document.getElementById('catNavList').classList.toggle('open'); }
-function selectCat(val, label) { currentCat = val; document.getElementById('catNavLabel').textContent = label; document.querySelectorAll('.cat-nav-item').forEach(i => i.classList.toggle('selected', i.dataset.val === val)); document.getElementById('catNavBtn').classList.remove('open'); document.getElementById('catNavList').classList.remove('open'); applyFilters(); }
-function clearAll() { document.getElementById('q').value = ''; document.getElementById('sortFilter').value = 'newest'; document.getElementById('secondaryTagFilter').value = ''; selectCat('', '🌌 All Categories'); }
+function clearAll() { document.getElementById('q').value = ''; document.getElementById('sortFilter').value = 'newest'; selectCat('', '🌌 All Categories'); selectTag('', 'All Secondary Tags'); }
 function setView(v) { currentView = v; document.getElementById('grid').style.display = v === 'grid' ? 'grid' : 'none'; document.getElementById('imageGrid').style.display = v === 'image' ? 'grid' : 'none'; document.getElementById('btnGrid').classList.toggle('active', v === 'grid'); document.getElementById('btnImage').classList.toggle('active', v === 'image'); applyFilters(); }
 
 function openModalDirect(p) {
@@ -1219,10 +1261,9 @@ function renderRecent() {
   document.getElementById('recentChips').innerHTML = recentlyViewed.map(r => `<span class="recent-chip" onclick='openByName("${esc(r.name)}")'>${esc(r.name)}</span>`).join('');
 }
 function openByName(name) { const pack = allPacks.find(p => p.name === name); if (pack) openModalDirect(pack); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); closeCatModal(); closeTagModal(); } });
 document.getElementById('q').addEventListener('input', function() { clearTimeout(searchDebounce); document.getElementById('searchStatus').textContent = '⏳'; searchDebounce = setTimeout(() => { applyFilters(); document.getElementById('searchStatus').textContent = infiniteMode ? '♾️' : ''; }, 300); });
 document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
-document.addEventListener('click', e => { const list = document.getElementById('catNavList'); const btn = document.getElementById('catNavBtn'); if (list && list.classList.contains('open') && !list.contains(e.target) && !btn.contains(e.target)) { btn.classList.remove('open'); list.classList.remove('open'); } });
 
 async function init() {
   showSkeletons();
