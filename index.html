@@ -294,7 +294,7 @@
       min-width: 200px;
       max-height: 320px;
       overflow-y: auto;
-      z-index: 50;
+      z-index: 200;                              /* FIXED – raised above cards */
       box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       padding: 6px;
     }
@@ -870,7 +870,6 @@ function changeTheme(val) {
   document.documentElement.setAttribute('data-theme', val);
   localStorage.setItem('nova_theme', val);
 }
-// apply saved theme on load
 const savedTheme = localStorage.getItem('nova_theme') || 'dark';
 document.documentElement.setAttribute('data-theme', savedTheme);
 document.getElementById('themeSelect').value = savedTheme;
@@ -973,7 +972,6 @@ function openStatsModal() {
     return;
   }
   const total = allPacks.length;
-
   const catCount = {};
   const tagCount = {};
   const sharerCount = {};
@@ -985,9 +983,7 @@ function openStatsModal() {
     const sharer = p.added_by || 'Unknown';
     sharerCount[sharer] = (sharerCount[sharer] || 0) + 1;
   });
-
   const formatEntries = (obj) => Object.entries(obj).sort((a,b) => b[1]-a[1]).map(([k,v]) => `<b>${k}</b>: ${v}`).join('<br>');
-
   document.getElementById('statsContent').innerHTML = `
     <p>📦 <b>Total packs:</b> ${total}</p>
     <p>📂 <b>By Category:</b><br>${formatEntries(catCount)}</p>
@@ -1042,22 +1038,17 @@ function applyFilters() {
   const secondaryTag = document.getElementById('secondaryTagFilter').value.toLowerCase().trim();
 
   filtered = allPacks.filter(p => {
-    // Search query
     const mq = !q ||
       (p.name || '').toLowerCase().includes(q) || (p.credits || '').toLowerCase().includes(q) ||
       (p.description || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q) ||
       (p.secondary_tag || '').toLowerCase().includes(q) || (p.image_credit || '').toLowerCase().includes(q);
-    // Category filter
     const mc = !cat || (p.category || '').toLowerCase() === cat;
-    // Secondary tag filter
     const mt = !secondaryTag || (p.secondary_tag || '').toLowerCase() === secondaryTag;
-    // Featured check (inline – no external function)
     const sup = String(p.support_link || p.support || '').trim();
     const mf = !featuredOnly || (sup !== '' && sup.toLowerCase() !== 'none');
     return mq && mc && mt && mf;
   });
 
-  // Sort
   if (srt === 'recent') {
     const recentNames = recentlyViewed.map(r => r.name);
     filtered = filtered.filter(p => recentNames.includes(p.name))
