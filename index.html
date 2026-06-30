@@ -676,9 +676,6 @@
   </div>
 </header>
 
-<!-- rest of HTML remains identical to previous full version, with the JavaScript unchanged -->
-<!-- (the only change is the header structure above; everything else is exactly the same) -->
-
 <div class="load-bar"><div class="load-bar-fill" id="loadBar"></div></div>
 
 <div class="stats-bar">
@@ -730,8 +727,6 @@
           <div class="cat-nav-item" data-val="Minigame" onclick="selectCat('Minigame','🎮 Minigame')">🎮 Minigame</div>
           <div class="cat-nav-item" data-val="Food" onclick="selectCat('Food','🍖 Food')">🍖 Food</div>
           <div class="cat-nav-item" data-val="Environment" onclick="selectCat('Environment','🌿 Environment')">🌿 Environment</div>
-          <div class="cat-nav-item" data-val="Addon" onclick="selectCat('Addon','🧩 Addon')">🧩 Addon</div>
-          <div class="cat-nav-item" data-val="World" onclick="selectCat('World','🌍 World')">🌍 World</div>
           <div class="cat-nav-item" data-val="Animation" onclick="selectCat('Animation','🎬 Animation')">🎬 Animation</div>
           <div class="cat-nav-item" data-val="Skins" onclick="selectCat('Skins','🎨 Skins')">🎨 Skins</div>
           <div class="cat-nav-item" data-val="Fps Booster" onclick="selectCat('Fps Booster','⚡ Fps Booster')">⚡ Fps Booster</div>
@@ -1077,14 +1072,6 @@ function applyFilters() {
   } else if (srt === 'az') {
     filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   }
-
-  totalPages = Math.ceil(filtered.length / PER_PAGE);
-  currentPage = 1;
-  document.getElementById('rCount').textContent = filtered.length;
-  document.getElementById('pag').style.display = infiniteMode ? 'none' : (totalPages > 1 ? 'flex' : 'none');
-  document.getElementById('searchStatus').textContent = infiniteMode ? '♾️' : '';
-  render();
-}
 
   totalPages = Math.ceil(filtered.length / PER_PAGE);
   currentPage = 1;
