@@ -15,7 +15,6 @@
       name: 'None (base theme)',
       emoji: '🎨',
       vars: {},
-      particleClass: null,
       particleCount: 0
     },
 
@@ -29,11 +28,11 @@
         '--surprise-bg': '#d12c2c',
         '--surprise-text': '#ffffff',
         '--support-btn-bg': '#8f1f4a',
-        '--support-btn-text': '#ffffff'
+        '--support-btn-text': '#ffffff',
+        '--particle-color': '#ffffff',
+        '--particle-glow': 'rgba(255,255,255,0.35)'
       },
-      particleClass: 'nova-snow',
-      particleCount: 26,
-      overlayClass: 'nova-winter-overlay'
+      particleCount: 18
     },
 
     halloween: {
@@ -46,11 +45,11 @@
         '--surprise-bg': '#ff7a18',
         '--surprise-text': '#ffffff',
         '--support-btn-bg': '#7f3fbf',
-        '--support-btn-text': '#ffffff'
+        '--support-btn-text': '#ffffff',
+        '--particle-color': '#ffb15a',
+        '--particle-glow': 'rgba(255,122,24,0.28)'
       },
-      particleClass: 'nova-ember',
-      particleCount: 22,
-      overlayClass: 'nova-halloween-overlay'
+      particleCount: 16
     },
 
     easter: {
@@ -63,11 +62,11 @@
         '--surprise-bg': '#ffb7d5',
         '--surprise-text': '#2a2a2a',
         '--support-btn-bg': '#b56adf',
-        '--support-btn-text': '#ffffff'
+        '--support-btn-text': '#ffffff',
+        '--particle-color': '#ffc2dd',
+        '--particle-glow': 'rgba(255,182,213,0.24)'
       },
-      particleClass: 'nova-petal',
-      particleCount: 20,
-      overlayClass: 'nova-easter-overlay'
+      particleCount: 14
     },
 
     newyear: {
@@ -80,11 +79,11 @@
         '--surprise-bg': '#ffd700',
         '--surprise-text': '#111111',
         '--support-btn-bg': '#111111',
-        '--support-btn-text': '#ffffff'
+        '--support-btn-text': '#ffffff',
+        '--particle-color': '#ffd700',
+        '--particle-glow': 'rgba(255,215,0,0.55)'
       },
-      particleClass: 'nova-spark',
-      particleCount: 28,
-      overlayClass: 'nova-newyear-overlay'
+      particleCount: 34
     },
 
     valentine: {
@@ -97,11 +96,11 @@
         '--surprise-bg': '#ff4d8d',
         '--surprise-text': '#ffffff',
         '--support-btn-bg': '#c61f5a',
-        '--support-btn-text': '#ffffff'
+        '--support-btn-text': '#ffffff',
+        '--particle-color': '#ff6fa3',
+        '--particle-glow': 'rgba(255,95,143,0.28)'
       },
-      particleClass: 'nova-heartdust',
-      particleCount: 20,
-      overlayClass: 'nova-valentine-overlay'
+      particleCount: 16
     },
 
     patrick: {
@@ -114,11 +113,11 @@
         '--surprise-bg': '#1f9d55',
         '--surprise-text': '#ffffff',
         '--support-btn-bg': '#1f9d55',
-        '--support-btn-text': '#ffffff'
+        '--support-btn-text': '#ffffff',
+        '--particle-color': '#59c77a',
+        '--particle-glow': 'rgba(31,157,85,0.20)'
       },
-      particleClass: 'nova-cloverdust',
-      particleCount: 18,
-      overlayClass: 'nova-patrick-overlay'
+      particleCount: 8
     }
   };
 
@@ -127,8 +126,7 @@
     fullEffects: localStorage.getItem(STORAGE_FULL) === 'true',
     themeStyleTag: null,
     effectStyleTag: null,
-    overlay: null,
-    observer: null
+    overlay: null
   };
 
   const ALL_VARS = [...new Set(
@@ -165,11 +163,6 @@
       state.overlay = null;
     }
 
-    if (state.observer) {
-      state.observer.disconnect();
-      state.observer = null;
-    }
-
     const root = document.documentElement;
     ALL_VARS.forEach(v => root.style.removeProperty(v));
     root.removeAttribute('data-nova-event-theme');
@@ -182,40 +175,6 @@
     for (const [key, value] of Object.entries(vars || {})) {
       root.style.setProperty(key, value);
     }
-  }
-
-  function buildThemeBaseCSS(themeKey) {
-    return `
-      html[data-nova-event-theme="${themeKey}"] {
-        transition: background-color 0.25s ease, color 0.25s ease, filter 0.25s ease;
-      }
-
-      html[data-nova-event-theme="${themeKey}"] .btn-support,
-      html[data-nova-event-theme="${themeKey}"] .btn-modal-support,
-      html[data-nova-event-theme="${themeKey}"] .btn-archive,
-      html[data-nova-event-theme="${themeKey}"] .btn-modal-archive {
-        background: var(--support-btn-bg) !important;
-        color: var(--support-btn-text) !important;
-        text-shadow: none !important;
-      }
-
-      html[data-nova-event-theme="${themeKey}"] .btn-support:hover,
-      html[data-nova-event-theme="${themeKey}"] .btn-modal-support:hover,
-      html[data-nova-event-theme="${themeKey}"] .btn-archive:hover,
-      html[data-nova-event-theme="${themeKey}"] .btn-modal-archive:hover {
-        filter: brightness(1.06);
-      }
-
-      html[data-nova-event-theme="${themeKey}"] .discord-btn {
-        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-      }
-
-      html[data-nova-event-theme="${themeKey}"] .search-box,
-      html[data-nova-event-theme="${themeKey}"] .pack-card,
-      html[data-nova-event-theme="${themeKey}"] .modal {
-        backdrop-filter: blur(3px);
-      }
-    `;
   }
 
   function ensureEffectCSS() {
@@ -234,111 +193,65 @@
 
       .nova-theme-particle {
         position: absolute;
+        top: -12vh;
         user-select: none;
         pointer-events: none;
         will-change: transform, opacity;
-        opacity: 0.8;
+        border-radius: 999px;
+        background: var(--particle-color, #ffffff);
+        box-shadow: 0 0 10px var(--particle-glow, rgba(255,255,255,0.2));
+        opacity: 0;
       }
 
       @keyframes novaFall {
         0%   { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
         10%  { opacity: 1; }
-        100% { transform: translate3d(18px, 112vh, 0) rotate(360deg); opacity: 0; }
+        100% { transform: translate3d(14px, 112vh, 0) rotate(360deg); opacity: 0; }
       }
 
       @keyframes novaRise {
         0%   { transform: translate3d(0, 112vh, 0) rotate(0deg); opacity: 0; }
         10%  { opacity: 1; }
-        100% { transform: translate3d(-18px, -12vh, 0) rotate(-360deg); opacity: 0; }
+        100% { transform: translate3d(-14px, -12vh, 0) rotate(-360deg); opacity: 0; }
       }
 
-      .nova-snow {
-        width: 6px;
-        height: 6px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.95);
-        box-shadow: 0 0 12px rgba(255,255,255,0.35);
-        animation: novaFall linear infinite;
+      .nova-theme-particle[data-dir="down"] {
+        animation-name: novaFall;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
       }
 
-      .nova-ember {
-        width: 10px;
-        height: 10px;
-        border-radius: 2px;
-        background: rgba(255,122,24,0.95);
-        box-shadow: 0 0 16px rgba(255,122,24,0.3);
-        animation: novaRise linear infinite;
+      .nova-theme-particle[data-dir="up"] {
+        animation-name: novaRise;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
       }
 
-      .nova-petal {
-        width: 10px;
-        height: 14px;
-        border-radius: 50% 50% 50% 0;
-        background: rgba(255,182,213,0.95);
-        box-shadow: 0 0 12px rgba(255,182,213,0.25);
-        animation: novaFall linear infinite;
+      html[data-nova-event-theme] .btn-support,
+      html[data-nova-event-theme] .btn-modal-support,
+      html[data-nova-event-theme] .btn-archive,
+      html[data-nova-event-theme] .btn-modal-archive {
+        background: var(--support-btn-bg) !important;
+        color: var(--support-btn-text) !important;
+        text-shadow: none !important;
+        border-color: transparent !important;
       }
 
-      .nova-spark {
-        width: 4px;
-        height: 4px;
-        border-radius: 999px;
-        background: rgba(255,215,0,0.98);
-        box-shadow:
-          0 0 8px rgba(255,215,0,0.45),
-          0 0 18px rgba(255,215,0,0.15);
-        animation: novaFall linear infinite;
+      html[data-nova-event-theme] .btn-support:hover,
+      html[data-nova-event-theme] .btn-modal-support:hover,
+      html[data-nova-event-theme] .btn-archive:hover,
+      html[data-nova-event-theme] .btn-modal-archive:hover {
+        filter: brightness(1.06);
       }
 
-      .nova-heartdust {
-        width: 8px;
-        height: 8px;
-        transform: rotate(45deg);
-        background: rgba(255,95,143,0.95);
-        box-shadow: 0 0 12px rgba(255,95,143,0.28);
-        animation: novaRise linear infinite;
+      html[data-nova-event-theme] .search-box,
+      html[data-nova-event-theme] .pack-card,
+      html[data-nova-event-theme] .modal {
+        backdrop-filter: blur(3px);
       }
 
-      .nova-heartdust::before,
-      .nova-heartdust::after {
-        content: '';
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: inherit;
-      }
-      .nova-heartdust::before { top: -4px; left: 0; }
-      .nova-heartdust::after { top: 0; left: -4px; }
-
-      .nova-cloverdust {
-        width: 10px;
-        height: 10px;
-        background:
-          radial-gradient(circle at 30% 30%, rgba(80,200,120,0.95) 0 46%, transparent 47%),
-          radial-gradient(circle at 70% 30%, rgba(80,200,120,0.95) 0 46%, transparent 47%),
-          radial-gradient(circle at 30% 70%, rgba(80,200,120,0.95) 0 46%, transparent 47%),
-          radial-gradient(circle at 70% 70%, rgba(80,200,120,0.95) 0 46%, transparent 47%);
-        filter: drop-shadow(0 0 8px rgba(80,200,120,0.22));
-        animation: novaFall linear infinite;
-      }
-
-      html[data-nova-event-theme="christmas"] body::before,
-      html[data-nova-event-theme="halloween"] body::before,
-      html[data-nova-event-theme="easter"] body::before,
-      html[data-nova-event-theme="newyear"] body::before,
-      html[data-nova-event-theme="valentine"] body::before,
-      html[data-nova-event-theme="patrick"] body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        background:
-          radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 45%);
-      }
-
-      html[data-nova-event-theme="christmas"] header {
+      html[data-nova-event-theme="christmas"] header,
+      html[data-nova-event-theme="newyear"] header {
         box-shadow: inset 0 -1px 0 rgba(255,255,255,0.08);
       }
 
@@ -346,18 +259,31 @@
         box-shadow: inset 0 -1px 0 rgba(255,255,255,0.04);
       }
 
-      html[data-nova-event-theme="newyear"] .aurora-text,
-      html[data-nova-event-theme="christmas"] .aurora-text {
-        filter: saturate(1.08);
+      html[data-nova-event-theme] .aurora-text {
+        filter: saturate(1.05);
+      }
+
+      html[data-nova-event-theme] .card-footer,
+      html[data-nova-event-theme] .modal-actions {
+        position: relative;
+        z-index: 1;
       }
     `;
     document.head.appendChild(style);
     state.effectStyleTag = style;
   }
 
+  function buildThemeBaseCSS(themeKey) {
+    return `
+      html[data-nova-event-theme="${themeKey}"] {
+        transition: background-color 0.25s ease, color 0.25s ease, filter 0.25s ease;
+      }
+    `;
+  }
+
   function spawnParticles(themeKey) {
     const theme = THEMES[themeKey];
-    if (!theme || !theme.particleClass || !theme.particleCount) return;
+    if (!theme || !theme.particleCount) return;
 
     ensureEffectCSS();
 
@@ -369,16 +295,31 @@
 
     for (let i = 0; i < theme.particleCount; i++) {
       const el = document.createElement('div');
-      el.className = `nova-theme-particle ${theme.particleClass}`;
+      el.className = 'nova-theme-particle';
 
+      el.dataset.dir = Math.random() > 0.22 ? 'down' : 'up';
       el.style.left = Math.random() * 100 + 'vw';
-      el.style.animationDelay = (Math.random() * 4) + 's';
-      el.style.animationDuration = (Math.random() * 5 + 6) + 's';
+      el.style.animationDelay = (Math.random() * 2.8) + 's';
+      el.style.animationDuration = (Math.random() * 4 + 6) + 's';
 
-      if (themeKey === 'newyear') {
-        el.style.transform = `scale(${(Math.random() * 0.7 + 0.7).toFixed(2)})`;
+      const isNewYear = themeKey === 'newyear';
+      const isPatrick = themeKey === 'patrick';
+
+      let size;
+      if (isNewYear) {
+        size = Math.random() * 6 + 7; // bigger sparks
+      } else if (isPatrick) {
+        size = Math.random() * 4 + 7; // calmer clovers
       } else {
-        el.style.transform = `scale(${(Math.random() * 0.8 + 0.5).toFixed(2)})`;
+        size = Math.random() * 4 + 5;
+      }
+
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.opacity = String(Math.random() * 0.25 + 0.65);
+
+      if (isPatrick) {
+        el.style.borderRadius = '999px';
       }
 
       frag.appendChild(el);
@@ -398,7 +339,6 @@
 
     const theme = THEMES[themeKey];
     document.documentElement.setAttribute('data-nova-event-theme', themeKey);
-
     applyVars(theme.vars);
 
     const style = document.createElement('style');
