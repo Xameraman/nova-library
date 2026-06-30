@@ -132,7 +132,6 @@
     .header-title p { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-    /* Header buttons */
     .discord-btn {
       background: #5865F2;
       color: white;
@@ -161,7 +160,6 @@
     }
     .partnership-btn:hover { opacity: 0.95; transform: translateY(-1px); }
 
-    /* Theme dropdown */
     .theme-select {
       background: var(--navy3);
       border: 1px solid var(--border);
@@ -294,7 +292,7 @@
       min-width: 200px;
       max-height: 320px;
       overflow-y: auto;
-      z-index: 200;                              /* FIXED – raised above cards */
+      z-index: 1000;          /* FIXED – now always on top */
       box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       padding: 6px;
     }
