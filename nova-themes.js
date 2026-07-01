@@ -8,6 +8,7 @@
   const STORAGE_THEME = 'nova_event_theme';
   const STORAGE_FULL = 'nova_event_full';
 
+  // Expanded Theme Engine Options[span_12](start_span)[span_12](end_span)
   const THEMES = {
     default: {
       name: 'Standard Dark',
@@ -31,6 +32,38 @@
         '--gold': '#FF9800',
         '--cyan': '#7E57C2',
         '--purple': '#4E342E'
+      }
+    },
+    ocean: {
+      name: 'Ocean Depths',
+      vars: {
+        '--gold': '#00B4D8',
+        '--cyan': '#0077B6',
+        '--purple': '#03045E'
+      }
+    },
+    cyberpunk: {
+      name: 'Cyberpunk',
+      vars: {
+        '--gold': '#FCEE09',
+        '--cyan': '#00F0FF',
+        '--purple': '#FF003C'
+      }
+    },
+    forest: {
+      name: 'Enchanted Forest',
+      vars: {
+        '--gold': '#A7C957',
+        '--cyan': '#386641',
+        '--purple': '#6A994E'
+      }
+    },
+    sunset: {
+      name: 'Neon Sunset',
+      vars: {
+        '--gold': '#FFB703',
+        '--cyan': '#FB8500',
+        '--purple': '#8ECAE6'
       }
     }
   };
@@ -56,12 +89,9 @@
   }
 
   // --- UI Engine Logic ---
-  // This handles the new features like the "Retry" button behavior
-  // and the smooth drawer transitions.
   function initUIEngine() {
     console.log("NovaEngine: UI Interactivity Initialized.");
     
-    // Listen for custom "retry" events from images
     document.addEventListener('click', (e) => {
       if (e.target.matches('.btn-retry-img')) {
         const parent = e.target.closest('.card-img');
@@ -74,7 +104,6 @@
       }
     });
 
-    // Handle smooth drawer interaction
     const overlays = document.querySelectorAll('.overlay');
     overlays.forEach(o => {
       o.addEventListener('click', (e) => {
@@ -96,17 +125,15 @@
   }
 
   function start() {
-    // Load state
     state.currentTheme = localStorage.getItem(STORAGE_THEME) || 'default';
     state.fullEffects = localStorage.getItem(STORAGE_FULL) !== 'false';
     
     applyTheme(state.currentTheme, state.fullEffects);
     initUIEngine();
 
-    // Hook into settings
     const settingsBody = document.querySelector('#settingsOverlay .modal-body');
     if (settingsBody) {
-      settingsBody.appendChild(createThemeSettingsSection());
+      settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
       document.getElementById('themeEngineSelect').addEventListener('change', (e) => {
         applyTheme(e.target.value, state.fullEffects);
       });
