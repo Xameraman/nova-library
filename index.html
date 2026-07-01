@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Nova's Library — Nexus of Verified Assets</title>
-  <!-- Updated Meta Description[span_0](start_span)[span_0](end_span) -->
   <meta name="description" content="Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits...." />
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +13,7 @@
   
   <style>
     :root {
-      /* Base Colors[span_1](start_span)[span_1](end_span) */
+      /* Base Colors */
       --navy:   #0D1B2A;
       --navy2:  #1B2A3D;
       --navy3:  #273B54;
@@ -78,12 +77,11 @@
     }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     
-    /* Fixed Z-Index Issues[span_2](start_span)[span_2](end_span) */
     header {
       background: rgba(var(--navy2-rgb), 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding: 14px 24px; display: flex; align-items: center;
       justify-content: space-between; flex-wrap: wrap; gap: 12px; position: sticky; top: 0;
-      z-index: 120; /* Increased to stay above all sticky elements */
+      z-index: 120;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     .load-bar { height: 3px; background: var(--border); position: sticky; top: 72px; z-index: 110; }
@@ -198,13 +196,19 @@
 
     .recent-section { margin-bottom: 24px; }
     .recent-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .recent-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-    /* Recently viewed chips now match the categorized pills[span_3](start_span)[span_3](end_span) */
+    
+    /* RECENTLY VIEWED SCROLL FIX */
+    .recent-chips { 
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+      scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
+    }
+    .recent-chips::-webkit-scrollbar { display: none; }
+    
     .recent-chip {
       background: var(--card); border: 1px solid var(--border); color: var(--muted);
       border-radius: 20px; padding: 8px 16px; font-size: 0.85rem; font-weight: 500;
       white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02); flex-shrink: 0;
     }
     .recent-chip:hover { border-color: var(--cyan); color: var(--text); }
 
@@ -217,7 +221,6 @@
     }
     .pack-card:hover { transform: translateY(-5px); border-color: rgba(0,229,255,0.4); box-shadow: 0 12px 30px rgba(0,229,255,0.1); }
 
-    /* Flexible Image Fix - Swapped cover to contain & dynamic ratio[span_4](start_span)[span_4](end_span) */
     .card-img { width: 100%; aspect-ratio: 16/9; height: auto; background: var(--navy3); position: relative; overflow: hidden; flex-shrink: 0; }
     .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.5s ease; }
     .pack-card:hover .card-img img { transform: scale(1.05); }
@@ -256,7 +259,6 @@
     .btn-copy:hover { border-color: var(--cyan); color: var(--cyan); }
     .btn-copy.copied { background: var(--green); color: white; border-color: var(--green); }
 
-    /* Image Grid - Fixed cropping by changing to contain[span_5](start_span)[span_5](end_span) */
     .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
     .image-card { position: relative; border-radius: 16px; overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--navy3); border: 1px solid var(--border); will-change: transform; transition: all 0.3s; }
     .image-card img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s; }
@@ -303,15 +305,15 @@
     }
     .overlay.open .drawer.right { transform: translateX(0); }
 
-    /* Modal Image Fix for Title Cover[span_6](start_span)[span_6](end_span) */
+    /* MODAL IMAGE CROP FIX */
     .pack-modal { max-width: 900px; }
-    .modal-img-container { width: 100%; background: var(--navy3); position: relative; display: none; overflow: hidden; }
-    .modal-img { width: 100%; height: auto; max-height: 400px; object-fit: contain; display: block; }
+    .modal-img-container { width: 100%; background: var(--navy3); position: relative; display: none; }
+    .modal-img { width: 100%; height: auto; max-height: 400px; object-fit: contain; display: block; margin: 0 auto; }
     .modal-body { padding: 20px; flex: 1; overflow-y: auto; }
     
     @media (min-width: 768px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
-      .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); max-height: unset; }
+      .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); }
       .modal-img { height: 100%; max-height: 600px; object-fit: contain; }
       .modal-content-wrapper { width: 50%; display: flex; flex-direction: column; }
     }
@@ -322,10 +324,19 @@
         max-height: 85vh;
       }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
-      .modal-img-container { display: block; max-height: 250px; }
+      
+      /* Fixed Mobile Image Height to strictly contain */
+      .modal-img-container { display: block; height: auto; max-height: 30vh; }
+      .modal-img { height: 100%; max-height: 30vh; object-fit: contain; }
     }
 
-    .modal-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 24px; padding: 16px; background: rgba(var(--navy2-rgb), 0.5); border-radius: 12px; }
+    /* PREMIUM DESCRIPTION HIGHLIGHT (Brought to the top) */
+    .modal-desc { 
+      font-size: 0.95rem; color: var(--text); line-height: 1.6; margin-bottom: 20px; 
+      padding: 16px; background: linear-gradient(145deg, rgba(var(--navy2-rgb), 0.8), rgba(var(--card-rgb), 0.4)); 
+      border: 1px solid var(--border); border-left: 4px solid var(--cyan); border-radius: 12px; 
+    }
+    
     .modal-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
     .modal-main-actions { display: flex; gap: 10px; }
     .modal-meta { padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
@@ -437,8 +448,7 @@
     </div>
 
     <div class="category-bar" id="categoryBar">
-      <!-- Generated via JS -->
-    </div>
+      </div>
   </div>
 
   <div class="view-bar">
@@ -489,12 +499,9 @@
         <button class="btn-full" style="background:var(--navy3); color:var(--text);" onclick="openStatsModal()"><i class="fa-solid fa-chart-pie"></i> View Statistics</button>
       </div>
 
-      <!-- List of Sharers Added Here[span_7](start_span)[span_7](end_span) -->
       <div style="margin-top: 24px;">
         <h4 style="font-size: 0.9rem; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-users"></i> Contributors & Sharers</h4>
-        <div id="sharersList" style="display: flex; flex-wrap: wrap; gap: 8px;">
-           <!-- Loaded via JS -->
-        </div>
+        <div id="sharersList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
       </div>
     </div>
   </div>
@@ -520,9 +527,12 @@
         <span class="modal-name" id="mName"></span>
         <button class="modal-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
+      
       <div class="modal-body">
-        <div class="card-tags" id="mTags"></div>
         <div class="modal-desc" id="mDesc"></div>
+        
+        <div class="card-tags" id="mTags" style="margin-bottom: 20px;"></div>
+        
         <div class="modal-actions">
           <a class="btn-full btn-support" id="mSupport" href="#" target="_blank" style="display:none"><i class="fa-solid fa-heart"></i> Support Creator</a>
           <a class="btn-full btn-archive" id="mArchive" href="#" target="_blank" style="display:none"><i class="fa-solid fa-box-archive"></i> Download Archive</a>
@@ -674,14 +684,13 @@ async function loadAllPacks() {
       document.getElementById('sLast').textContent = new Date(newestStr).toLocaleDateString();
     }
     document.getElementById('sTot').textContent = allPacks.length;
-    renderSharers(); // Call the function to list all unique users[span_8](start_span)[span_8](end_span)
+    renderSharers();
   }
   setBar(100); setTimeout(() => setBar(0), 500);
   startTypingAnimation();
   return true;
 }
 
-// Extract and Render List of Sharers Added by Users[span_9](start_span)[span_9](end_span)
 function renderSharers() {
   const sharers = [...new Set(allPacks.map(p => p.added_by).filter(Boolean))].sort();
   document.getElementById('sharersList').innerHTML = sharers.map(s => 
@@ -739,7 +748,6 @@ function closeStats(e) { if (e && e.target !== document.getElementById('statsOve
 
 function toggleInfinite(val) { infiniteMode = val; localStorage.setItem('nova_infinite', val); currentPage = 1; applyFilters(); }
 
-// Fix for Infinite Scroll in Image Mode[span_10](start_span)[span_10](end_span)
 let loadingMore = false;
 function handleScroll() {
   if (!infiniteMode || loadingMore || currentPage >= totalPages) return;
@@ -770,7 +778,7 @@ function applyFilters() {
     const recentNames = recentlyViewed.map(r => r.name);
     filtered = filtered.filter(p => recentNames.includes(p.name)).sort((a, b) => recentNames.indexOf(a.name) - recentNames.indexOf(b.name));
   } else if (srt === 'newest') {
-    filtered.sort((a, b) => { const d = (b.date_added || '').localeCompare(a.date_added || ''); return d !== 0 ? d : (Number(b.id) || 0) - (Number(a.id) || 0); });
+    filtered.sort((a, b) => { const d = (b.date_added || '').localeCompare(a.date_added || ''); return d !== d ? d : (Number(b.id) || 0) - (Number(a.id) || 0); });
   } else if (srt === 'oldest') {
     filtered.sort((a, b) => (a.date_added || '').localeCompare(b.date_added || ''));
   } else if (srt === 'az') {
@@ -793,7 +801,6 @@ function render() {
   if (!infiniteMode && totalPages > 1) renderPag();
 }
 
-// Append Cards Fix for Image Grid Mode[span_11](start_span)[span_11](end_span)
 function appendCards(slice) {
   const frag = document.createDocumentFragment();
   
@@ -931,6 +938,7 @@ function copyLink(link, btn) {
 }
 
 function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function addRecent(pack) {
   recentlyViewed = recentlyViewed.filter(r => r.name !== pack.name);
   recentlyViewed.unshift({ name: pack.name });
@@ -938,12 +946,14 @@ function addRecent(pack) {
   localStorage.setItem('nova_recent', JSON.stringify(recentlyViewed));
   renderRecent();
 }
+
 function renderRecent() {
   const sec = document.getElementById('recentSection');
   if (!recentlyViewed.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
   document.getElementById('recentChips').innerHTML = recentlyViewed.map(r => `<button class="recent-chip" onclick='openByName("${esc(r.name)}")'>${esc(r.name)}</button>`).join('');
 }
+
 function openByName(name) { const pack = allPacks.find(p => p.name === name); if (pack) openModalDirect(pack); }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); } });
