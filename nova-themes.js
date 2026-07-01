@@ -8,7 +8,7 @@
   const STORAGE_THEME = 'nova_event_theme';
   const STORAGE_FULL = 'nova_event_full';
 
-  // Expanded Theme Engine Options[span_12](start_span)[span_12](end_span)
+  // Expanded Theme Engine Options
   const THEMES = {
     default: {
       name: 'Standard Dark',
@@ -88,28 +88,11 @@
     localStorage.setItem(STORAGE_FULL, useEffects);
   }
 
-  // --- UI Engine Logic ---
+  // --- UI Engine Logic (NO CONFLICTS) ---
   function initUIEngine() {
     console.log("NovaEngine: UI Interactivity Initialized.");
-    
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('.btn-retry-img')) {
-        const parent = e.target.closest('.card-img');
-        const img = parent.querySelector('img');
-        if (img) {
-          img.style.display = 'block';
-          img.src = img.src.split('?')[0] + '?t=' + Date.now();
-          e.target.parentElement.remove();
-        }
-      }
-    });
-
-    const overlays = document.querySelectorAll('.overlay');
-    overlays.forEach(o => {
-      o.addEventListener('click', (e) => {
-        if (e.target === o) o.classList.remove('open');
-      });
-    });
+    // All overlay, modal, and image-retry behaviour is handled
+    // perfectly by the main index.html – nothing to do here.
   }
 
   function createThemeSettingsSection() {
