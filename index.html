@@ -13,7 +13,6 @@
   
   <style>
     :root {
-      /* Base Colors */
       --navy:   #0D1B2A;
       --navy2:  #1B2A3D;
       --navy3:  #273B54;
@@ -197,7 +196,6 @@
     .recent-section { margin-bottom: 24px; }
     .recent-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    /* RECENTLY VIEWED SCROLL FIX */
     .recent-chips { 
       display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
       scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
@@ -305,7 +303,6 @@
     }
     .overlay.open .drawer.right { transform: translateX(0); }
 
-    /* MODAL IMAGE CROP FIX */
     .pack-modal { max-width: 900px; }
     .modal-img-container { width: 100%; background: var(--navy3); position: relative; display: none; }
     .modal-img { width: 100%; height: auto; max-height: 400px; object-fit: contain; display: block; margin: 0 auto; }
@@ -325,12 +322,10 @@
       }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
       
-      /* Fixed Mobile Image Height to strictly contain */
       .modal-img-container { display: block; height: auto; max-height: 30vh; }
       .modal-img { height: 100%; max-height: 30vh; object-fit: contain; }
     }
 
-    /* PREMIUM DESCRIPTION HIGHLIGHT (Brought to the top) */
     .modal-desc { 
       font-size: 0.95rem; color: var(--text); line-height: 1.6; margin-bottom: 20px; 
       padding: 16px; background: linear-gradient(145deg, rgba(var(--navy2-rgb), 0.8), rgba(var(--card-rgb), 0.4)); 
@@ -426,8 +421,9 @@
 
 <main>
   <div style="text-align:center; color: var(--muted); font-size: 0.95rem; font-weight: 500; margin-bottom: 20px; max-width: 700px; margin-left: auto; margin-right: auto;">
-  Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.
-</div>
+    Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.
+  </div>
+  
   <div class="recent-section" id="recentSection" style="display:none">
     <div class="recent-title"><i class="fa-solid fa-history"></i> Recently Viewed</div>
     <div class="recent-chips" id="recentChips"></div>
@@ -450,8 +446,7 @@
       <button class="btn-action" onclick="clearAll()"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <div class="category-bar" id="categoryBar">
-      </div>
+    <div class="category-bar" id="categoryBar"></div>
   </div>
 
   <div class="view-bar">
@@ -667,6 +662,7 @@ async function loadAllPacks() {
     if (idxRes.ok) {
       const index = await idxRes.json();
       document.getElementById('sSynced').textContent = new Date(index.updated).toLocaleDateString();
+      document.getElementById('sPages').textContent = index.pages;   // ✅ FIX: show number of chunk files
       const promises = Array.from({ length: index.pages }, (_, i) =>
         fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now()).then(r => r.json()).catch(() => [])
       );
@@ -677,6 +673,7 @@ async function loadAllPacks() {
       const r = await fetch(BASE_URL + 'packs.json?_=' + Date.now());
       allPacks = await r.json();
       document.getElementById('sSynced').textContent = new Date().toLocaleDateString();
+      document.getElementById('sPages').textContent = '1';   // fallback: single file
     }
   } catch (err) { console.error('Load error:', err); return false; }
 
