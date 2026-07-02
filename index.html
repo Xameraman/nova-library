@@ -921,10 +921,19 @@ function closeModal(e) { if (!e || e.target === document.getElementById('overlay
 
 function shareCurrentPack() {
   if (!currentModalPack) return;
-  const text = `${currentModalPack.name}\nDevs: ${currentModalPack.credits}\n🔗 ${currentModalPack.link || ''}\n\nBrowse Nova's Library: ${NOVA_URL}`;
-  navigator.clipboard.writeText(text).then(() => { 
-    const btn = document.getElementById('mShare'); btn.innerHTML = '<i class="fa-solid fa-check"></i>'; btn.classList.add('copied'); 
-    setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-link"></i>'; btn.classList.remove('copied'); }, 2000); 
+  const text = `📝 Name: ${currentModalPack.name}\n🎨 Devs: ${currentModalPack.credits}\n🚀 Download Now: ${currentModalPack.link || ''}\n\n🌐 Browse Nova's Library: <${NOVA_URL}>`;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastPackName').textContent = currentModalPack.name || 'Pack shared';
+    toast.classList.add('show');
+    const btn = document.getElementById('mShare');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      btn.innerHTML = '<i class="fa-solid fa-link"></i>';
+      btn.classList.remove('copied');
+    }, 2000);
   });
 }
 
