@@ -19,6 +19,10 @@
         '--text-muted': '#A1A1AA',
         '--cyan': '#06B6D4',
         '--cyan-glow': 'rgba(6, 182, 212, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '0, 0, 0'
       }
     },
@@ -34,6 +38,10 @@
         '--text-muted': '#A0A0A0',
         '--cyan': '#22D3EE',
         '--cyan-glow': 'rgba(34, 211, 238, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '0, 0, 0'
       }
     },
@@ -49,6 +57,10 @@
         '--text-muted': '#94A3B8',
         '--cyan': '#38BDF8',
         '--cyan-glow': 'rgba(56, 189, 248, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '2, 6, 23'
       }
     },
@@ -64,6 +76,10 @@
         '--text-muted': '#99F6E4',
         '--cyan': '#2DD4BF',
         '--cyan-glow': 'rgba(45, 212, 191, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '4, 47, 46'
       }
     },
@@ -79,6 +95,10 @@
         '--text-muted': '#999999',
         '--cyan': '#00F0FF',
         '--cyan-glow': 'rgba(0, 240, 255, 0.3)',
+        '--gold': '#FCEE09',
+        '--gold-glow': 'rgba(252, 238, 9, 0.3)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '5, 5, 5'
       }
     },
@@ -94,6 +114,10 @@
         '--text-muted': '#FED7AA',
         '--cyan': '#F97316',
         '--cyan-glow': 'rgba(249, 115, 22, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '26, 12, 12'
       }
     },
@@ -109,6 +133,10 @@
         '--text-muted': '#BBF7D0',
         '--cyan': '#4ADE80',
         '--cyan-glow': 'rgba(74, 222, 128, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '11, 30, 17'
       }
     },
@@ -124,6 +152,10 @@
         '--text-muted': '#FECDD3',
         '--cyan': '#FB7185',
         '--cyan-glow': 'rgba(251, 113, 133, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '28, 15, 19'
       }
     },
@@ -139,6 +171,10 @@
         '--text-muted': '#64748B',
         '--cyan': '#0284C7',
         '--cyan-glow': 'rgba(2, 132, 199, 0.25)',
+        '--gold': '#F59E0B',
+        '--gold-glow': 'rgba(245, 158, 11, 0.2)',
+        '--purple': '#8B5CF6',
+        '--featured-pink': '#EC4899',
         '--overlay-rgb': '15, 23, 42'
       }
     }
@@ -147,13 +183,10 @@
   function applyTheme(themeKey) {
     const theme = THEMES[themeKey] || THEMES.dark;
     const root = document.documentElement;
-    
-    // Smooth insertion of the new variables
     Object.entries(theme.vars).forEach(([prop, val]) => {
       root.style.setProperty(prop, val);
     });
-    
-    // Adjust data-theme for any external dependencies
+    // Set data-theme attribute so light/dark specific overrides work
     root.setAttribute('data-theme', themeKey === 'light' ? 'light' : 'dark');
     localStorage.setItem(STORAGE_THEME, themeKey);
   }
@@ -177,16 +210,14 @@
 
     const settingsBody = document.querySelector('#settingsOverlay .modal-body');
     if (settingsBody) {
-      // Clear out the older standard theme select row if left behind
+      // Remove old theme toggle if it exists (the simple dark/light select)
       const oldThemeRow = document.getElementById('themeSelect')?.closest('.toggle-row');
       if (oldThemeRow) oldThemeRow.remove();
 
-      // Ensure we don't accidentally add the toggle twice when transitioning pages
       if (!document.getElementById('themeEngineSelect')) {
-          settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
+        settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
       }
 
-      // Add intuitive listening
       const engineSelect = document.getElementById('themeEngineSelect');
       if (engineSelect) {
         engineSelect.addEventListener('change', (e) => {
@@ -196,7 +227,6 @@
     }
   }
 
-  // Self-mounting initiation
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start);
   } else {
