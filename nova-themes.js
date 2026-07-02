@@ -17,7 +17,9 @@
         '--border-light': '#3F3F46',
         '--text-main': '#FAFAFA',
         '--text-muted': '#A1A1AA',
-        '--cyan': '#06B6D4'
+        '--cyan': '#06B6D4',
+        '--cyan-glow': 'rgba(6, 182, 212, 0.25)',
+        '--overlay-rgb': '0, 0, 0'
       }
     },
     pureblack: {
@@ -30,7 +32,9 @@
         '--border-light': '#404040',
         '--text-main': '#FFFFFF',
         '--text-muted': '#A0A0A0',
-        '--cyan': '#22D3EE'
+        '--cyan': '#22D3EE',
+        '--cyan-glow': 'rgba(34, 211, 238, 0.25)',
+        '--overlay-rgb': '0, 0, 0'
       }
     },
     midnight: {
@@ -43,7 +47,9 @@
         '--border-light': '#334155',
         '--text-main': '#F8FAFC',
         '--text-muted': '#94A3B8',
-        '--cyan': '#38BDF8'
+        '--cyan': '#38BDF8',
+        '--cyan-glow': 'rgba(56, 189, 248, 0.25)',
+        '--overlay-rgb': '2, 6, 23'
       }
     },
     aurora: {
@@ -56,7 +62,9 @@
         '--border-light': '#2DD4BF',
         '--text-main': '#ECFDF5',
         '--text-muted': '#99F6E4',
-        '--cyan': '#2DD4BF'
+        '--cyan': '#2DD4BF',
+        '--cyan-glow': 'rgba(45, 212, 191, 0.25)',
+        '--overlay-rgb': '4, 47, 46'
       }
     },
     cyber: {
@@ -69,7 +77,9 @@
         '--border-light': '#E11D48',
         '--text-main': '#FCEE09',
         '--text-muted': '#999999',
-        '--cyan': '#00F0FF'
+        '--cyan': '#00F0FF',
+        '--cyan-glow': 'rgba(0, 240, 255, 0.3)',
+        '--overlay-rgb': '5, 5, 5'
       }
     },
     sunset: {
@@ -82,7 +92,9 @@
         '--border-light': '#FB923C',
         '--text-main': '#FFFBEB',
         '--text-muted': '#FED7AA',
-        '--cyan': '#F97316'
+        '--cyan': '#F97316',
+        '--cyan-glow': 'rgba(249, 115, 22, 0.25)',
+        '--overlay-rgb': '26, 12, 12'
       }
     },
     forest: {
@@ -95,7 +107,9 @@
         '--border-light': '#4ADE80',
         '--text-main': '#F0FDF4',
         '--text-muted': '#BBF7D0',
-        '--cyan': '#4ADE80'
+        '--cyan': '#4ADE80',
+        '--cyan-glow': 'rgba(74, 222, 128, 0.25)',
+        '--overlay-rgb': '11, 30, 17'
       }
     },
     rosegold: {
@@ -108,7 +122,9 @@
         '--border-light': '#FDA4AF',
         '--text-main': '#FFF1F2',
         '--text-muted': '#FECDD3',
-        '--cyan': '#FB7185'
+        '--cyan': '#FB7185',
+        '--cyan-glow': 'rgba(251, 113, 133, 0.25)',
+        '--overlay-rgb': '28, 15, 19'
       }
     },
     light: {
@@ -121,7 +137,9 @@
         '--border-light': '#CBD5E1',
         '--text-main': '#0F172A',
         '--text-muted': '#64748B',
-        '--cyan': '#0284C7'
+        '--cyan': '#0284C7',
+        '--cyan-glow': 'rgba(2, 132, 199, 0.25)',
+        '--overlay-rgb': '15, 23, 42'
       }
     }
   };
@@ -129,9 +147,14 @@
   function applyTheme(themeKey) {
     const theme = THEMES[themeKey] || THEMES.dark;
     const root = document.documentElement;
+    
+    // Smooth insertion of the new variables
     Object.entries(theme.vars).forEach(([prop, val]) => {
       root.style.setProperty(prop, val);
     });
+    
+    // Adjust data-theme for any external dependencies
+    root.setAttribute('data-theme', themeKey === 'light' ? 'light' : 'dark');
     localStorage.setItem(STORAGE_THEME, themeKey);
   }
 
@@ -140,8 +163,8 @@
     div.className = 'toggle-row';
     const current = localStorage.getItem(STORAGE_THEME) || 'dark';
     div.innerHTML = `
-      <span style="font-weight:600;font-size:0.95rem;">Engine Theme</span>
-      <select class="modern-select" id="themeEngineSelect" style="padding:8px 32px 8px 16px;">
+      <span style="font-weight:700;font-size:1.05rem;">Engine Theme</span>
+      <select class="modern-select" id="themeEngineSelect" style="padding:10px 40px 10px 20px;">
         ${Object.entries(THEMES).map(([k, v]) => `<option value="${k}" ${current === k ? 'selected' : ''}>${v.name}</option>`).join('')}
       </select>
     `;
@@ -154,14 +177,16 @@
 
     const settingsBody = document.querySelector('#settingsOverlay .modal-body');
     if (settingsBody) {
-      // Remove the hardcoded theme toggle (the one with id="themeSelect")
+      // Clear out the older standard theme select row if left behind
       const oldThemeRow = document.getElementById('themeSelect')?.closest('.toggle-row');
       if (oldThemeRow) oldThemeRow.remove();
 
-      // Insert the dynamic engine theme section at the top of the settings body
-      settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
+      // Ensure we don't accidentally add the toggle twice when transitioning pages
+      if (!document.getElementById('themeEngineSelect')) {
+          settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
+      }
 
-      // Listen for changes
+      // Add intuitive listening
       const engineSelect = document.getElementById('themeEngineSelect');
       if (engineSelect) {
         engineSelect.addEventListener('change', (e) => {
@@ -171,6 +196,7 @@
     }
   }
 
+  // Self-mounting initiation
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start);
   } else {
