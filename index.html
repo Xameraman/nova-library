@@ -217,7 +217,7 @@
     .btn-card:hover { background: var(--text-main); color: var(--bg); transform: scale(1.1); }
     .btn-card.copied { background: var(--green); color: white; border-color: var(--green); }
     .btn-card.download-card { background: var(--cyan); color: var(--bg); border: none; box-shadow: 0 4px 12px var(--cyan-glow); }
-    .btn-card.download-card:hover { opacity: 0.8; }  /* hover respects theme via opacity */
+    .btn-card.download-card:hover { opacity: 0.8; }
     .btn-card.support-card { color: var(--featured-pink); border-color: var(--featured-pink); background: rgba(236, 72, 153, 0.1); }
     .btn-card.support-card:hover { background: var(--featured-pink); color: white; transform: scale(1.1); }
 
@@ -253,32 +253,17 @@
     .modal-x { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
     
-    /* PACK DETAIL MODAL */
+    /* PACK DETAIL MODAL – REVERTED TO THE PROVEN SIMPLE STYLE */
     .pack-modal { max-width: 1100px; }
-    .modal-img-container {
-      width: 100%;
-      background: var(--bg);
-      position: relative;
-      display: none;
-      overflow: hidden;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-      transition: transform 0.5s;
-    }
+    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; }
+    .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; }
     .modal-img:hover { transform: scale(1.03); }
     .modal-body { padding: 32px; flex: 1; overflow-y: auto; }
     
     @media (min-width: 900px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
       .modal-img-container { width: 55%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { max-height: 650px; }
+      .modal-img { height: 100%; max-height: 650px; }
       .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; }
     }
     
@@ -294,7 +279,7 @@
       .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 85vh; }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
       .modal-img-container { display: block; height: auto; max-height: 35vh; }
-      .modal-img { max-height: 100%; }
+      .modal-img { height: auto; max-height: 100%; }
       .drawer.right { max-width: 100%; border-radius: 0; }
     }
 
@@ -832,8 +817,7 @@ function openModalDirect(p) {
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
-    img.src = p.image; imgContainer.style.display = 'flex';  // flex to centre
-    img.style.display = 'block';
+    img.src = p.image; imgContainer.style.display = 'block'; img.style.display = 'block';
     img.onerror = () => { imgContainer.style.display = 'none'; };
   } else { imgContainer.style.display = 'none'; }
   
