@@ -31,14 +31,15 @@
       --red: #EF4444;
       --green: #10B981;
       --featured-pink: #EC4899;
+      --surprise-start: #FF6F61;
+      --surprise-end: #FF9F4B;
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
       --radius-xl: 24px;
       --overlay-rgb: 0,0,0;
       
-      /* Global transition for theme switching */
-      --theme-transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+      --theme-transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -49,7 +50,7 @@
       transition: var(--theme-transition);
     }
 
-    /* Custom Webkit Scrollbar for Premium Feel */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; border: 2px solid var(--bg); }
@@ -61,7 +62,7 @@
     }
     button:active:not(:disabled), .cat-pill:active { transform: scale(0.95); }
 
-    /* HEADER - Enhanced Glassmorphism */
+    /* HEADER - Glassmorphism */
     header {
       background: rgba(9, 9, 11, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border); padding: 16px 5%; display: flex; align-items: center;
@@ -101,7 +102,6 @@
     .hero { padding: 60px 5% 30px 5%; text-align: center; max-width: 900px; margin: 0 auto; }
     .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 32px; line-height: 1.6; }
 
-    /* Main content wrapper */
     main { max-width: 1600px; margin: 0 auto; padding: 0 5% 60px 5%; }
 
     /* SEARCH BOX */
@@ -134,7 +134,7 @@
     /* SURPRISE / FILTERS */
     .surprise-filter-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
     .surprise-btn {
-      background: linear-gradient(135deg, #FF6F61, #FF9F4B);
+      background: linear-gradient(135deg, var(--surprise-start), var(--surprise-end));
       color: #fff; border: none; border-radius: 30px;
       padding: 14px 32px; font-size: 1rem; font-weight: 700;
       box-shadow: 0 8px 20px rgba(255,111,97,0.3);
@@ -142,7 +142,7 @@
     }
     .surprise-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(255,111,97,0.4); }
 
-    /* SCROLL BARS (CATEGORIES) */
+    /* SCROLL BARS */
     .scroll-bar { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; margin-bottom: 16px; }
     .scroll-bar::-webkit-scrollbar { display: none; }
     .cat-pill {
@@ -160,7 +160,7 @@
     .results-count { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
     .results-count b { color: var(--text-main); font-weight: 800; }
 
-    /* GRID CARDS - Responsive Design Refined */
+    /* GRID CARDS – FLEXIBLE IMAGE CONTAINER */
     .packs-grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); 
@@ -178,9 +178,26 @@
     .pack-card.featured-card { border-color: var(--gold); background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(245, 158, 11, 0.05) 100%); }
     .pack-card.featured-card:hover { box-shadow: 0 24px 48px var(--gold-glow); }
     
-    .card-img { width: 100%; aspect-ratio: 16/9; background: var(--bg); position: relative; overflow: hidden; }
-    .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    .pack-card:hover .card-img img { transform: scale(1.05); }
+    /* 🖼️ FLEXIBLE IMAGE – no forced aspect ratio, image is fully visible */
+    .card-img {
+      width: 100%;
+      max-height: 240px;           /* prevents absurdly tall cards */
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-img img {
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      object-fit: contain;          /* show the whole image, no cropping */
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .pack-card:hover .card-img img { transform: scale(1.03); }
     
     .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
     .card-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
@@ -233,7 +250,7 @@
     .pg-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); box-shadow: 0 4px 12px var(--cyan-glow); }
     .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* MODALS & OVERLAYS */
+    /* MODALS */
     .overlay { position: fixed; inset: 0; background: rgba(var(--overlay-rgb), 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .overlay.open { opacity: 1; pointer-events: auto; }
     
@@ -249,39 +266,18 @@
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
     
     .pack-modal { max-width: 1100px; }
-    
-    /* MODAL IMAGE BASE FIX */
-    .modal-img-container { 
-      width: 100%; 
-      background: var(--bg); 
-      position: relative; 
-      display: none; 
-      align-items: center; 
-      justify-content: center;
-      overflow: hidden; 
-    }
-    .modal-img { 
-      width: 100%; 
-      height: auto; 
-      max-height: 50vh; 
-      object-fit: contain; /* Guarantees the image never crops */
-      display: block; 
-      margin: 0 auto; 
-      transition: transform 0.5s; 
-    }
+    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; overflow: hidden; }
+    .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; transition: transform 0.5s; }
     .modal-img:hover { transform: scale(1.03); }
-    
     .modal-body { padding: 32px; flex: 1; overflow-y: auto; }
     
-    /* MODAL SPLIT VIEW (PC/LAPTOPS) */
     @media (min-width: 900px) {
-      .pack-modal { flex-direction: row; overflow: hidden; align-items: stretch; }
+      .pack-modal { flex-direction: row; overflow: hidden; }
       .modal-img-container { width: 55%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { width: 100%; height: 100%; max-height: 85vh; object-fit: contain; }
-      .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; max-height: 85vh; }
+      .modal-img { height: 100%; max-height: 650px; }
+      .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; }
     }
     
-    /* MOBILE RESPONSIVENESS */
     @media (max-width: 768px) {
       header { padding: 12px 5%; }
       .packs-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -290,15 +286,11 @@
       .hero { padding: 40px 5% 20px 5%; }
       .stats-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 12px 5%; }
       
-      /* Bottom Sheet Mobile Modals */
       .overlay { align-items: flex-end; padding: 0; }
       .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 85vh; }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
-      
-      /* Mobile Image Fix */
-      .modal-img-container { display: flex; height: auto; max-height: 40vh; }
-      .modal-img { height: 100%; max-height: 40vh; object-fit: contain; }
-      
+      .modal-img-container { display: block; height: auto; max-height: 35vh; }
+      .modal-img { height: 100%; max-height: 35vh; object-fit: contain; }
       .drawer.right { max-width: 100%; border-radius: 0; }
     }
 
@@ -328,7 +320,7 @@
     .back-to-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
     .back-to-top:hover { transform: translateY(-5px); box-shadow: 0 16px 32px var(--cyan-glow); }
 
-    /* TOGGLE SWITCH */
+    /* TOGGLE */
     .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border); }
     .toggle-switch { position: relative; display: inline-block; width: 50px; height: 28px; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -394,7 +386,6 @@
   <div class="view-bar">
     <div class="results-count">Showing <b id="rCount">0</b> results</div>
     <div style="display:flex; gap:12px;">
-      <!-- Grid icon fixed here: fa-border-all is natively supported and reliable -->
       <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius:var(--radius-sm);"><i class="fa-solid fa-border-all"></i></button>
       <button class="icon-btn" onclick="setView('image')" id="btnImage" style="border-radius:var(--radius-sm);"><i class="fa-regular fa-image"></i></button>
     </div>
@@ -415,6 +406,7 @@
       <button class="modal-x" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
+      <!-- Theme engine will inject here -->
       <div class="toggle-row">
         <span style="font-weight:700;font-size:1.05rem;">Infinite Scroll</span>
         <label class="toggle-switch">
@@ -476,7 +468,6 @@
 </div>
 
 <script>
-// Logic Optimization & Base Features retained
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbzbHGChQRyj-aKkgPq0g5m136a6PgCIp7qYRc7kreAEKxk_LOIpDqTMPkkcFPWErdl4/exec';
@@ -803,7 +794,6 @@ function setView(v) {
   document.getElementById('grid').style.display = v==='grid' ? 'grid' : 'none';
   document.getElementById('imageGrid').style.display = v==='image' ? 'grid' : 'none';
   
-  // Highlight active view icon
   document.getElementById('btnGrid').style.color = v === 'grid' ? 'var(--cyan)' : 'var(--text-main)';
   document.getElementById('btnGrid').style.borderColor = v === 'grid' ? 'var(--cyan)' : 'var(--border)';
   document.getElementById('btnImage').style.color = v === 'image' ? 'var(--cyan)' : 'var(--text-main)';
@@ -838,7 +828,7 @@ function openModalDirect(p) {
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
-    img.src = p.image; imgContainer.style.display = 'flex'; img.style.display = 'block';
+    img.src = p.image; imgContainer.style.display = 'block'; img.style.display = 'block';
     img.onerror = () => { imgContainer.style.display = 'none'; };
   } else { imgContainer.style.display = 'none'; }
   
@@ -896,8 +886,6 @@ async function init() {
   if (!ok) { document.getElementById('grid').innerHTML = '<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i><h3>Failed to load</h3></div>'; return; }
   document.getElementById('infiniteToggle').checked = infiniteMode;
   renderRecent();
-  
-  // Set View manually on load so button highlighting applies properly
   setView('grid'); 
 }
 init();
