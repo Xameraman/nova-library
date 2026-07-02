@@ -142,7 +142,7 @@
     .results-count { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
     .results-count b { color: var(--text-main); font-weight: 700; }
 
-    /* GRID CARDS – ENHANCED */
+    /* GRID CARDS */
     .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
     .pack-card {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
@@ -312,7 +312,7 @@
   <div class="view-bar">
     <div class="results-count">Showing <b id="rCount">0</b> results</div>
     <div style="display:flex; gap:8px;">
-      <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius:var(--radius-sm);"><i class="fa-solid fa-grid-2"></i></button>
+      <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius:var(--radius-sm);"><i class="fa-solid fa-table-cells"></i></button>
       <button class="icon-btn" onclick="setView('image')" id="btnImage" style="border-radius:var(--radius-sm);"><i class="fa-regular fa-image"></i></button>
     </div>
   </div>
@@ -616,14 +616,14 @@ function appendCards(slice) {
           <div class="card-tags">
             <span class="card-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>
             ${secondaryTag}
-            ${hasSupport ? `<span class="featured-badge" onclick="event.stopPropagation(); window.open('${esc(supportLink)}', '_blank')">Featured</span>` : ''}
+            ${hasSupport ? `<span class="featured-badge" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])">Featured</span>` : ''}
           </div>
           <div class="card-desc">${esc(p.description || 'No description provided.')}</div>
           <div class="card-footer">
             <span class="dev-tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>
             <div class="card-actions">
-              ${hasSupport ? `<a class="btn-card support-card" href="${esc(supportLink)}" target="_blank" onclick="event.stopPropagation()" title="Support Creator"><i class="fa-solid fa-heart"></i></a>` : ''}
-              <a class="btn-card download-card" href="${esc(p.link || '#')}" target="_blank" onclick="event.stopPropagation()" title="Download"><i class="fa-solid fa-download"></i></a>
+              ${hasSupport ? `<a class="btn-card support-card" href="#" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Support Creator"><i class="fa-solid fa-heart"></i></a>` : ''}
+              <a class="btn-card download-card" href="#" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Download"><i class="fa-solid fa-download"></i></a>
               <button class="btn-card" onclick="event.stopPropagation(); triggerCopyShare(filtered[${absIdx}], this)" title="Copy share text"><i class="fa-solid fa-link"></i></button>
             </div>
           </div>
@@ -633,7 +633,6 @@ function appendCards(slice) {
     });
     document.getElementById('grid').appendChild(frag);
   } else {
-    // image view – keep as before
     slice.forEach((p, i) => {
       const absIdx = (currentPage-1)*PER_PAGE + i;
       const card = document.createElement('div');
@@ -663,7 +662,13 @@ function renderPag() {
   h += `<button class="pg-btn" onclick="go(${currentPage+1})" ${currentPage===totalPages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>`;
   pag.innerHTML = h;
 }
-function go(p) { if (p<1 || p>totalPages) return; currentPage = p; applyFilters(); window.scrollTo({top:0, behavior:'smooth'}); }
+
+function go(p) {
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  applyFilters();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 function setView(v) {
   currentView = v;
