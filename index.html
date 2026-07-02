@@ -137,7 +137,7 @@
     .results-count { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
     .results-count b { color: var(--text-main); font-weight: 800; }
 
-    /* CARDS – completely unchanged */
+    /* CARDS – unchanged, premium style */
     .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; margin-bottom: 40px; }
     .pack-card {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
@@ -200,11 +200,11 @@
     .pg-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); box-shadow: 0 4px 12px var(--cyan-glow); }
     .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* OVERLAYS & MODALS */
+    /* OVERLAYS & MODALS – general */
     .overlay { position: fixed; inset: 0; background: rgba(var(--overlay-rgb), 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .overlay.open { opacity: 1; pointer-events: auto; }
 
-    .modal { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl); max-width: 500px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8); transform: translateY(30px) scale(0.95); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column; }
+    .modal { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8); transform: translateY(30px) scale(0.95); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column; }
     .overlay.open .modal { transform: translateY(0) scale(1); }
 
     .drawer.right { position: absolute; right: 0; top: 0; bottom: 0; max-width: 420px; width: 100%; border-radius: var(--radius-xl) 0 0 var(--radius-xl); transform: translateX(100%); margin: 0; max-height: 100vh; }
@@ -215,15 +215,15 @@
     .modal-x { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
 
-    /* PACK MODAL – smaller, breathing space added */
-    .pack-modal { max-width: 650px; }  /* reduced further for a compact, airy pop-up */
+    /* PACK MODAL – REVERTED TO RELIABLE OLD IMAGE STYLING */
+    .pack-modal { max-width: 900px; }
     .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; }
     .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; }
 
     @media (min-width: 768px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
       .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { height: 100%; max-height: 550px; object-fit: contain; }  /* slightly lower for more breathing room */
+      .modal-img { height: 100%; max-height: 600px; object-fit: contain; }
       .modal-content-wrapper { width: 50%; display: flex; flex-direction: column; }
     }
     @media (max-width: 767px) {
@@ -343,6 +343,7 @@
       <button class="modal-x" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
+      <!-- Theme toggle will be injected by nova-themes.js -->
       <div class="toggle-row">
         <span style="font-weight:700;font-size:1.05rem;">Infinite Scroll</span>
         <label class="toggle-switch">
@@ -374,7 +375,7 @@
   </div>
 </div>
 
-<!-- PACK DETAIL MODAL – smaller, breathing room added -->
+<!-- PACK DETAIL MODAL – image handling restored to old reliable version -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal pack-modal">
     <div class="modal-img-container" id="mImgContainer">
@@ -385,7 +386,7 @@
         <span class="modal-name" id="mName"></span>
         <button class="modal-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="modal-body" style="padding-top:0; padding-left: 20px; padding-right: 20px;"> <!-- extra horizontal padding for breathing room -->
+      <div class="modal-body" style="padding-top:0;">
         <div class="tags-grid" id="mTags"></div>
         <div class="modal-desc" id="mDesc"></div>
         <div class="action-stack">
@@ -397,7 +398,7 @@
           </div>
         </div>
         <div style="padding-top:32px;font-size:0.85rem;color:var(--text-muted);display:flex;justify-content:space-between;font-weight:600;">
-          <span><i class="fa-solid fa-user"></i> <span id="mAddedBy"></span></span>
+          <span id="mAddedBy"></span>
           <span id="mDate"></span>
         </div>
       </div>
@@ -759,9 +760,10 @@ function openModalDirect(p) {
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
+    // OLD reliable method: set source and show container
     imgContainer.style.display = 'block';
     img.style.display = 'block';
-    img.onerror = () => { img.style.display = 'none'; };
+    img.onerror = () => { img.style.display = 'none'; }; // only hide the image itself
     img.src = p.image;
   } else {
     imgContainer.style.display = 'none';
