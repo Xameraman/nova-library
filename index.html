@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nova's Library — Premium Asset Nexus</title>
+  <title>Nova's Library — Nexus of Verified Assets</title>
   <meta name="description" content="Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,36 +59,31 @@
     header {
       background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border); padding: 16px 5%; display: flex; align-items: center;
-      justify-content: space-between; position: sticky; top: 0; z-index: 100;
+      justify-content: space-between; position: sticky; top: 0; z-index: 100; gap: 12px;
     }
     [data-theme="light"] header { background: rgba(248, 250, 252, 0.8); }
     .header-left { display: flex; align-items: center; gap: 16px; }
     .server-icon { width: 40px; height: 40px; border-radius: var(--radius-md); object-fit: cover; }
     .header-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
     .header-title p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
-    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    /* Restore Partnership Button */
+    .header-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      color: white; text-decoration: none; padding: 8px 16px; border-radius: 30px;
+      font-size: 0.85rem; font-weight: 600; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .partnership-btn { background: linear-gradient(135deg, #C2185B, #7B1FA2); }
+    .partnership-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
     .icon-btn {
       background: transparent; border: 1px solid var(--border); color: var(--text-main);
       border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center;
       justify-content: center; font-size: 1rem; cursor: pointer; text-decoration: none;
     }
     .icon-btn:hover { background: var(--bg-surface-hover); border-color: var(--border-light); color: var(--cyan); }
-
-    /* Partnership Button */
-    .partnership-btn {
-      background: linear-gradient(135deg, #C2185B, #7B1FA2);
-      color: white !important;
-      border-radius: 30px;
-      padding: 8px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-    }
-    .partnership-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
     /* LOAD BAR */
     .load-bar { height: 3px; background: var(--border); position: sticky; top: 72px; z-index: 110; }
@@ -99,7 +94,7 @@
       background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 10px 5%;
       display: flex; gap: 20px; flex-wrap: wrap; align-items: center; font-size: 0.75rem;
       font-weight: 500; color: var(--text-muted); overflow-x: auto; white-space: nowrap;
-      -ms-overflow-style: none; scrollbar-width: none; z-index: 100; position: relative;
+      scrollbar-width: none; z-index: 100; position: relative;
     }
     .stats-bar::-webkit-scrollbar { display: none; }
     .stat { display: flex; align-items: center; gap: 6px; }
@@ -139,7 +134,7 @@
     .btn-secondary { background: var(--bg-surface-hover); color: var(--text-main); border: none; padding: 12px 20px; border-radius: var(--radius-lg); font-weight: 600; cursor: pointer; }
     .btn-secondary:hover { background: var(--border-light); }
 
-    /* SCROLL BARS (categories, recents) */
+    /* SCROLL BARS */
     .scroll-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
     .scroll-bar::-webkit-scrollbar { display: none; }
     .cat-pill {
@@ -170,16 +165,18 @@
     .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: calc(var(--radius-xl) - 2px) calc(var(--radius-xl) - 2px) 0 0; transition: transform 0.3s ease; }
     .pack-card:hover .card-img img { transform: scale(1.03); }
     .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
-    .card-category { margin-bottom: 10px; }
-    .cat-tag {
-      background: rgba(6, 182, 212, 0.1); color: var(--cyan);
-      border-radius: 20px; padding: 4px 12px; font-size: 0.7rem; font-weight: 600;
-      display: inline-flex; align-items: center; gap: 4px;
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+    .card-tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .card-tag {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 600;
+      background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: var(--radius-sm);
     }
+    .card-tag.featured { background: rgba(245, 158, 11, 0.1); border-color: var(--gold); color: var(--gold); }
+    .card-tag i { color: var(--cyan); }
     .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto; }
     .dev-tag { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .card-quick-actions { display: flex; gap: 8px; }
     .btn-quick {
       background: var(--bg); border: 1px solid var(--border); color: var(--text-main);
       width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
@@ -198,7 +195,7 @@
 
     /* PAGINATION */
     .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
-    .pg-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); border-radius: var(--radius-md); padding: 8px 16px; font-weight: 600; cursor: pointer; }
+    .pg-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); border-radius: var(--radius-md); padding: 8px 16px; font-weight: 600; }
     .pg-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
     .pg-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); }
     .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -246,6 +243,7 @@
     .tags-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
     .tag { background: var(--bg); border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; color: var(--text-main); display: inline-flex; align-items: center; gap: 6px; }
     .tag i { color: var(--cyan); }
+    .tag.featured-tag { background: rgba(245, 158, 11, 0.1); border-color: var(--gold); color: var(--gold); }
     .action-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
     .btn-full { width: 100%; text-align: center; border-radius: var(--radius-lg); padding: 14px; font-weight: 700; font-size: 0.95rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; }
     .btn-dl { background: var(--text-main); color: var(--bg); }
@@ -282,6 +280,10 @@
     .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
     input:checked + .toggle-slider { background-color: var(--cyan); }
     input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+    @media (max-width: 580px) {
+      .packs-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -297,10 +299,7 @@
     </div>
   </div>
   <div class="header-right">
-    <!-- Partnership button restored -->
-    <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener" class="partnership-btn">
-      <i class="fa-solid fa-handshake"></i> Partners
-    </a>
+    <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" rel="noopener noreferrer" class="header-btn partnership-btn"><i class="fa-solid fa-handshake"></i> Partners</a>
     <a href="https://discord.gg/ThgxvPtUjZ" target="_blank" class="icon-btn"><i class="fa-brands fa-discord"></i></a>
     <button class="icon-btn" onclick="openSettings()"><i class="fa-solid fa-sliders"></i></button>
   </div>
@@ -308,7 +307,6 @@
 
 <div class="load-bar"><div class="load-bar-fill" id="loadBar"></div></div>
 
-<!-- Stats bar restored -->
 <div class="stats-bar">
   <div class="stat"><i class="fa-solid fa-box"></i> <b id="sTot">—</b> Packs</div>
   <div class="stat"><i class="fa-solid fa-folder-open"></i> <b>23</b> Categories</div>
@@ -341,8 +339,7 @@
   <div class="view-bar">
     <div class="results-count">Showing <b id="rCount">0</b> results</div>
     <div style="display:flex; gap:8px;">
-      <!-- Fixed grid icon to fa-grip -->
-      <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius:var(--radius-sm);"><i class="fa-solid fa-grip"></i></button>
+      <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius:var(--radius-sm);"><i class="fa-solid fa-table-cells-large"></i></button>
       <button class="icon-btn" onclick="setView('image')" id="btnImage" style="border-radius:var(--radius-sm);"><i class="fa-regular fa-image"></i></button>
     </div>
   </div>
@@ -594,7 +591,6 @@ function applyFilters() {
   filtered = allPacks.filter(p => {
     const mq = !q || [p.name, p.credits, p.description, p.category].some(val => (val||'').toLowerCase().includes(q));
     const mc = !cat || (p.category||'').toLowerCase() === cat;
-    // Featured filter: only packs with a valid support_link
     const sup = String(p.support_link || p.support || '').trim();
     const mf = !featuredOnly || (sup !== '' && sup.toLowerCase() !== 'none');
     return mq && mc && mf;
@@ -633,15 +629,24 @@ function appendCards(slice) {
       const card = document.createElement('div');
       card.className = 'pack-card';
       card.onclick = () => openModalDirect(filtered[absIdx]);
+
+      const hasSupport = String(p.support_link || p.support || '').trim().toLowerCase() !== 'none' && String(p.support_link || p.support || '').trim() !== '';
+
       card.innerHTML = `
         <div class="card-img">${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : ''}</div>
         <div class="card-body">
+          <div class="card-tags-row">
+            <span class="card-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>
+            ${hasSupport ? `<span class="card-tag featured"><i class="fa-solid fa-star"></i> Featured</span>` : ''}
+          </div>
           <div class="card-title">${esc(p.name)}</div>
-          <div class="card-category"><span class="cat-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span></div>
           <div class="card-desc">${esc(p.description || 'No description provided.')}</div>
           <div class="card-footer">
             <span class="dev-tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>
-            <button class="btn-quick" onclick="event.stopPropagation(); triggerCopyShare(filtered[${absIdx}], this)" title="Copy link"><i class="fa-solid fa-link"></i></button>
+            <div class="card-quick-actions">
+              <button class="btn-quick" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Download"><i class="fa-solid fa-download"></i></button>
+              <button class="btn-quick" onclick="event.stopPropagation(); triggerCopyShare(filtered[${absIdx}], this)" title="Copy link"><i class="fa-solid fa-link"></i></button>
+            </div>
           </div>
         </div>`;
       frag.appendChild(card);
@@ -693,18 +698,24 @@ function openModalDirect(p) {
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
-  document.getElementById('mTags').innerHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span> <span class="tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>`;
-  const sup = String(p.support_link || p.support || '').trim();
-  const arch = String(p.archive_link || p.archive || '').trim();
-  document.getElementById('mSupport').style.display = (sup && sup.toLowerCase()!=='none') ? 'flex' : 'none';
-  document.getElementById('mSupport').href = sup;
-  document.getElementById('mArchive').style.display = (arch && arch.toLowerCase()!=='none') ? 'flex' : 'none';
-  document.getElementById('mArchive').href = arch;
+
+  const hasSupport = String(p.support_link || p.support || '').trim().toLowerCase() !== 'none' && String(p.support_link || p.support || '').trim() !== '';
+  let tagsHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>`;
+  if (hasSupport) tagsHTML += ` <span class="tag featured-tag"><i class="fa-solid fa-star"></i> Featured</span>`;
+  tagsHTML += ` <span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
+  document.getElementById('mTags').innerHTML = tagsHTML;
+
+  const supVal = String(p.support_link || p.support || '').trim();
+  const archVal = String(p.archive_link || p.archive || '').trim();
+  document.getElementById('mSupport').style.display = (supVal && supVal.toLowerCase()!=='none') ? 'flex' : 'none';
+  document.getElementById('mSupport').href = supVal;
+  document.getElementById('mArchive').style.display = (archVal && archVal.toLowerCase()!=='none') ? 'flex' : 'none';
+  document.getElementById('mArchive').href = archVal;
   document.getElementById('mAddedBy').textContent = `Added by ${p.added_by || 'Staff'}`;
   document.getElementById('mDate').textContent = p.date_added || '';
-  const btn = document.getElementById('mShare');
-  btn.innerHTML = '<i class="fa-solid fa-link"></i>';
-  btn.classList.remove('copied');
+  const shareBtn = document.getElementById('mShare');
+  shareBtn.innerHTML = '<i class="fa-solid fa-link"></i>';
+  shareBtn.classList.remove('copied');
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
