@@ -190,7 +190,7 @@
     .btn-card {
       background: var(--bg); border: 1px solid var(--border); color: var(--text-main);
       width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 0.85rem; cursor: pointer; text-decoration: none;
+      justify-content: center; font-size: 0.85rem; cursor: pointer;
     }
     .btn-card:hover { background: var(--text-main); color: var(--bg); border-color: var(--text-main); }
     .btn-card.copied { background: var(--green); color: white; border-color: var(--green); }
@@ -304,14 +304,12 @@
 
 <div class="hero">
   <p>Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
-  <!-- Search Bar without filter dropdown -->
   <div class="search-container">
     <div class="search-input-wrapper">
       <i class="fa-solid fa-magnifying-glass"></i>
       <input class="search-input" id="q" type="text" placeholder="Search the nexus..." autocomplete="off" />
     </div>
   </div>
-  <!-- Row: Surprise Me (left) + Filter/Sort select (right) -->
   <div class="surprise-filter-row">
     <button class="surprise-btn" onclick="surpriseMe()"><i class="fa-solid fa-wand-magic-sparkles"></i> Surprise Me</button>
     <select class="modern-select" id="sortFilter" onchange="applyFilters()">
@@ -696,8 +694,8 @@ function appendCards(slice) {
           <div class="card-footer">
             <span class="dev-tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>
             <div class="card-actions">
-              ${hasSupport ? `<a class="btn-card support-card" href="#" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Support Creator"><i class="fa-solid fa-heart"></i></a>` : ''}
-              <a class="btn-card download-card" href="#" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Download"><i class="fa-solid fa-download"></i></a>
+              ${hasSupport ? `<button class="btn-card support-card" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Support Creator"><i class="fa-solid fa-heart"></i></button>` : ''}
+              <button class="btn-card download-card" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Download"><i class="fa-solid fa-download"></i></button>
               <button class="btn-card" onclick="event.stopPropagation(); triggerCopyShare(filtered[${absIdx}], this)" title="Copy share text"><i class="fa-solid fa-link"></i></button>
             </div>
           </div>
@@ -762,7 +760,8 @@ function openModalDirect(p) {
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
-  document.getElementById('mTags').innerHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span> <span class="tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>`;
+  // FIX: show devs with a clear label
+  document.getElementById('mTags').innerHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span> <span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
   const sup = String(p.support_link || p.support || '').trim();
   const arch = String(p.archive_link || p.archive || '').trim();
   document.getElementById('mSupport').style.display = (sup && sup.toLowerCase()!=='none') ? 'flex' : 'none';
