@@ -12,9 +12,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
 
   <style>
-    /* 
-      PREMIUM CSS VARIABLES & THEMING
-    */
     :root {
       --bg: #09090B;
       --bg-surface: #18181B;
@@ -38,7 +35,6 @@
       --radius-lg: 16px;
       --radius-xl: 24px;
       --overlay-rgb: 0,0,0;
-      
       --theme-transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
     }
 
@@ -50,7 +46,6 @@
       transition: var(--theme-transition);
     }
 
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; border: 2px solid var(--bg); }
@@ -62,7 +57,7 @@
     }
     button:active:not(:disabled), .cat-pill:active { transform: scale(0.95); }
 
-    /* HEADER - Glassmorphism */
+    /* HEADER */
     header {
       background: rgba(9, 9, 11, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border); padding: 16px 5%; display: flex; align-items: center;
@@ -98,7 +93,7 @@
     .stat i { color: var(--cyan); font-size: 0.9rem; }
     .stat b { color: var(--text-main); font-weight: 700; }
 
-    /* HERO / DESCRIPTION */
+    /* HERO */
     .hero { padding: 60px 5% 30px 5%; text-align: center; max-width: 900px; margin: 0 auto; }
     .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 32px; line-height: 1.6; }
 
@@ -120,7 +115,6 @@
     }
     .search-input::placeholder { color: var(--border-light); font-weight: 400; }
 
-    /* SELECT DROPDOWN */
     .modern-select {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
       padding: 14px 40px 14px 20px; color: var(--text-main); font-size: 0.95rem; font-weight: 600;
@@ -161,12 +155,7 @@
     .results-count b { color: var(--text-main); font-weight: 800; }
 
     /* GRID CARDS – FLEXIBLE IMAGE CONTAINER */
-    .packs-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); 
-      gap: 28px; 
-      margin-bottom: 40px; 
-    }
+    .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; margin-bottom: 40px; }
     
     .pack-card {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
@@ -178,10 +167,9 @@
     .pack-card.featured-card { border-color: var(--gold); background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(245, 158, 11, 0.05) 100%); }
     .pack-card.featured-card:hover { box-shadow: 0 24px 48px var(--gold-glow); }
     
-    /* 🖼️ FLEXIBLE IMAGE – no forced aspect ratio, image is fully visible */
     .card-img {
       width: 100%;
-      max-height: 240px;           /* prevents absurdly tall cards */
+      max-height: 240px;
       background: var(--bg);
       position: relative;
       overflow: hidden;
@@ -193,7 +181,7 @@
       width: 100%;
       height: auto;
       max-height: 100%;
-      object-fit: contain;          /* show the whole image, no cropping */
+      object-fit: contain;
       display: block;
       transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
@@ -229,7 +217,7 @@
     .btn-card:hover { background: var(--text-main); color: var(--bg); transform: scale(1.1); }
     .btn-card.copied { background: var(--green); color: white; border-color: var(--green); }
     .btn-card.download-card { background: var(--cyan); color: var(--bg); border: none; box-shadow: 0 4px 12px var(--cyan-glow); }
-    .btn-card.download-card:hover { background: #0891B2; transform: scale(1.1); }
+    .btn-card.download-card:hover { opacity: 0.8; }  /* hover respects theme via opacity */
     .btn-card.support-card { color: var(--featured-pink); border-color: var(--featured-pink); background: rgba(236, 72, 153, 0.1); }
     .btn-card.support-card:hover { background: var(--featured-pink); color: white; transform: scale(1.1); }
 
@@ -265,16 +253,32 @@
     .modal-x { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
     
+    /* PACK DETAIL MODAL */
     .pack-modal { max-width: 1100px; }
-    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; overflow: hidden; }
-    .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; transition: transform 0.5s; }
+    .modal-img-container {
+      width: 100%;
+      background: var(--bg);
+      position: relative;
+      display: none;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      transition: transform 0.5s;
+    }
     .modal-img:hover { transform: scale(1.03); }
     .modal-body { padding: 32px; flex: 1; overflow-y: auto; }
     
     @media (min-width: 900px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
       .modal-img-container { width: 55%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { height: 100%; max-height: 650px; }
+      .modal-img { max-height: 650px; }
       .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; }
     }
     
@@ -290,7 +294,7 @@
       .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 85vh; }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
       .modal-img-container { display: block; height: auto; max-height: 35vh; }
-      .modal-img { height: 100%; max-height: 35vh; object-fit: contain; }
+      .modal-img { max-height: 100%; }
       .drawer.right { max-width: 100%; border-radius: 0; }
     }
 
@@ -406,7 +410,7 @@
       <button class="modal-x" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
-      <!-- Theme engine will inject here -->
+      <!-- Theme engine injects here -->
       <div class="toggle-row">
         <span style="font-weight:700;font-size:1.05rem;">Infinite Scroll</span>
         <label class="toggle-switch">
@@ -828,7 +832,8 @@ function openModalDirect(p) {
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
-    img.src = p.image; imgContainer.style.display = 'block'; img.style.display = 'block';
+    img.src = p.image; imgContainer.style.display = 'flex';  // flex to centre
+    img.style.display = 'block';
     img.onerror = () => { imgContainer.style.display = 'none'; };
   } else { imgContainer.style.display = 'none'; }
   
