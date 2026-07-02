@@ -263,13 +263,37 @@
     }
     
     /* MOBILE RESPONSIVENESS */
-    @media (max-width: 768px) {
-      header { padding: 12px 5%; }
-      .packs-grid { grid-template-columns: 1fr; gap: 20px; }
-      .image-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-      .hero h1 { font-size: 1.15rem; }
-      .hero { padding: 40px 5% 20px 5%; }
-      .stats-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 12px 5%; }
+@media (max-width: 768px) {
+  header { padding: 12px 5%; }
+  .packs-grid { grid-template-columns: 1fr; gap: 20px; }
+  .image-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .hero h1 { font-size: 1.15rem; }
+  .hero { padding: 40px 5% 20px 5%; }
+  .stats-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 12px 5%; }
+  
+  /* Bottom Sheet Mobile Modals */
+  .overlay { align-items: flex-end; padding: 0; }
+  .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 85vh; }
+  .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
+  
+  /* FIXED: Prevents image clipping shown in 1000001705.png & 1000001706.png */
+  .modal-img-container { 
+    display: block; 
+    width: 100%; 
+    height: auto; 
+    max-height: none; 
+  }
+  .modal-img { 
+    width: 100%; 
+    height: auto; 
+    max-height: 240px; /* Perfectly balances image presentation on mobile screens */
+    object-fit: cover; 
+    object-position: center;
+  }
+  
+  .drawer.right { max-width: 100%; border-radius: 0; }
+}
+
       
       /* Bottom Sheet Mobile Modals */
       .overlay { align-items: flex-end; padding: 0; }
