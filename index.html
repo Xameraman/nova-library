@@ -137,7 +137,7 @@
     .results-count { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
     .results-count b { color: var(--text-main); font-weight: 800; }
 
-    /* CARDS – premium style */
+    /* CARDS – completely unchanged */
     .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; margin-bottom: 40px; }
     .pack-card {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
@@ -200,7 +200,7 @@
     .pg-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); box-shadow: 0 4px 12px var(--cyan-glow); }
     .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* OVERLAYS & MODALS – general */
+    /* OVERLAYS & MODALS */
     .overlay { position: fixed; inset: 0; background: rgba(var(--overlay-rgb), 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .overlay.open { opacity: 1; pointer-events: auto; }
 
@@ -215,15 +215,15 @@
     .modal-x { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s; }
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
 
-    /* PACK MODAL – more breathing room */
-    .pack-modal { max-width: 750px; }  /* reduced from 900px */
+    /* PACK MODAL – smaller, breathing space added */
+    .pack-modal { max-width: 650px; }  /* reduced further for a compact, airy pop-up */
     .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; }
     .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; }
 
     @media (min-width: 768px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
       .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { height: 100%; max-height: 600px; object-fit: contain; }
+      .modal-img { height: 100%; max-height: 550px; object-fit: contain; }  /* slightly lower for more breathing room */
       .modal-content-wrapper { width: 50%; display: flex; flex-direction: column; }
     }
     @media (max-width: 767px) {
@@ -374,7 +374,7 @@
   </div>
 </div>
 
-<!-- PACK DETAIL MODAL – image handling restored, icon added -->
+<!-- PACK DETAIL MODAL – smaller, breathing room added -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal pack-modal">
     <div class="modal-img-container" id="mImgContainer">
@@ -385,7 +385,7 @@
         <span class="modal-name" id="mName"></span>
         <button class="modal-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="modal-body" style="padding-top:0;">
+      <div class="modal-body" style="padding-top:0; padding-left: 20px; padding-right: 20px;"> <!-- extra horizontal padding for breathing room -->
         <div class="tags-grid" id="mTags"></div>
         <div class="modal-desc" id="mDesc"></div>
         <div class="action-stack">
@@ -396,7 +396,6 @@
             <button class="btn-full btn-share" id="mShare" onclick="triggerCopyShare(currentModalPack, this)"><i class="fa-solid fa-link"></i></button>
           </div>
         </div>
-        <!-- Added user icon next to "Added by" -->
         <div style="padding-top:32px;font-size:0.85rem;color:var(--text-muted);display:flex;justify-content:space-between;font-weight:600;">
           <span><i class="fa-solid fa-user"></i> <span id="mAddedBy"></span></span>
           <span id="mDate"></span>
@@ -752,7 +751,6 @@ function openModalDirect(p) {
   document.getElementById('mSupport').href = sup;
   document.getElementById('mArchive').style.display = (arch && arch.toLowerCase()!=='none') ? 'flex' : 'none';
   document.getElementById('mArchive').href = arch;
-  // Updated to set text after the icon
   document.getElementById('mAddedBy').textContent = `Added by ${p.added_by || 'Staff'}`;
   document.getElementById('mDate').textContent = p.date_added || '';
   const shareBtn = document.getElementById('mShare');
