@@ -154,14 +154,20 @@
 
     const settingsBody = document.querySelector('#settingsOverlay .modal-body');
     if (settingsBody) {
-      // Remove the hardcoded theme toggle to avoid duplication
-      const oldThemeRow = settingsBody.querySelector('.toggle-row');
+      // Remove the hardcoded theme toggle (the one with id="themeSelect")
+      const oldThemeRow = document.getElementById('themeSelect')?.closest('.toggle-row');
       if (oldThemeRow) oldThemeRow.remove();
 
+      // Insert the dynamic engine theme section at the top of the settings body
       settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
-      document.getElementById('themeEngineSelect').addEventListener('change', (e) => {
-        applyTheme(e.target.value);
-      });
+
+      // Listen for changes
+      const engineSelect = document.getElementById('themeEngineSelect');
+      if (engineSelect) {
+        engineSelect.addEventListener('change', (e) => {
+          applyTheme(e.target.value);
+        });
+      }
     }
   }
 
