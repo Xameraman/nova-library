@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nova's Library — Premium Asset Nexus</title>
+  <title>Nova's Library — Nexus of Verified Assets</title>
   <meta name="description" content="Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits." />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
-  
+
   <style>
-    /* PREMIUM MINIMALIST COLOR PALETTE */
     :root {
       --bg: #09090B;
       --bg-surface: #18181B;
@@ -21,18 +20,17 @@
       --border-light: #3F3F46;
       --text-main: #FAFAFA;
       --text-muted: #A1A1AA;
-      
       --cyan: #06B6D4;
       --cyan-glow: rgba(6, 182, 212, 0.2);
       --gold: #F59E0B;
       --purple: #8B5CF6;
       --red: #EF4444;
       --green: #10B981;
-      
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
       --radius-xl: 24px;
+      --overlay-rgb: 0,0,0;
     }
 
     [data-theme="light"] {
@@ -43,53 +41,66 @@
       --border-light: #CBD5E1;
       --text-main: #0F172A;
       --text-muted: #64748B;
+      --cyan: #0284C7;
+      --overlay-rgb: 15,23,42;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
     body {
       background: var(--bg); color: var(--text-main); font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh; overflow-x: hidden; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
     }
-
-    /* HARDWARE ACCELERATED TRANSITIONS */
-    button, a, .cat-pill, .pack-card, .image-card { 
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); 
-      will-change: transform, opacity;
+    button, a, .cat-pill, .pack-card, .image-card {
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform, opacity;
     }
     button:active:not(:disabled), .cat-pill:active { transform: scale(0.97); }
 
-    /* SLEEK NAVBAR */
+    /* HEADER */
     header {
       background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border); padding: 16px 5%; display: flex; align-items: center;
       justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
     [data-theme="light"] header { background: rgba(248, 250, 252, 0.8); }
-
     .header-left { display: flex; align-items: center; gap: 16px; }
     .server-icon { width: 40px; height: 40px; border-radius: var(--radius-md); object-fit: cover; }
     .header-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
     .header-title p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
-    
     .header-right { display: flex; align-items: center; gap: 12px; }
     .icon-btn {
       background: transparent; border: 1px solid var(--border); color: var(--text-main);
-      border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; cursor: pointer; text-decoration: none;
+      border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem; cursor: pointer; text-decoration: none;
     }
     .icon-btn:hover { background: var(--bg-surface-hover); border-color: var(--border-light); color: var(--cyan); }
 
-    /* PREMIUM HERO SECTION */
+    /* LOAD BAR */
+    .load-bar { height: 3px; background: var(--border); position: sticky; top: 72px; z-index: 110; }
+    .load-bar-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 10px var(--cyan); }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 10px 5%;
+      display: flex; gap: 20px; flex-wrap: wrap; align-items: center; font-size: 0.75rem;
+      font-weight: 500; color: var(--text-muted); overflow-x: auto; white-space: nowrap;
+      scrollbar-width: none; z-index: 100; position: relative;
+    }
+    .stats-bar::-webkit-scrollbar { display: none; }
+    .stat { display: flex; align-items: center; gap: 6px; }
+    .stat i { color: var(--cyan); font-size: 0.8rem; }
+    .stat b { color: var(--text-main); }
+
+    /* HERO / DESCRIPTION */
     .hero { padding: 40px 5% 20px 5%; text-align: center; max-width: 800px; margin: 0 auto; }
-    .hero h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -1px; background: linear-gradient(to right, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero p { color: var(--text-muted); font-size: 1rem; margin-bottom: 32px; line-height: 1.5; }
 
-    /* SEARCH & FILTERS */
+    main { max-width: 1600px; margin: 0 auto; padding: 0 5% 60px 5%; }
+
+    /* SEARCH BOX */
     .search-container {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
-      padding: 8px; display: flex; gap: 8px; align-items: center; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      margin-bottom: 24px; position: relative;
+      padding: 8px; display: flex; gap: 8px; align-items: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2); margin-bottom: 24px;
     }
     .search-input-wrapper { flex: 1; display: flex; align-items: center; position: relative; }
     .search-input-wrapper i { position: absolute; left: 20px; color: var(--text-muted); font-size: 1.1rem; }
@@ -98,7 +109,7 @@
       color: var(--text-main); font-size: 1rem; font-weight: 500; outline: none; font-family: inherit;
     }
     .search-input::placeholder { color: var(--text-muted); }
-    
+
     .modern-select {
       background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
       padding: 12px 36px 12px 16px; color: var(--text-main); font-size: 0.9rem; font-weight: 600;
@@ -112,7 +123,7 @@
     .btn-secondary { background: var(--bg-surface-hover); color: var(--text-main); border: none; padding: 12px 20px; border-radius: var(--radius-lg); font-weight: 600; cursor: pointer; }
     .btn-secondary:hover { background: var(--border-light); }
 
-    /* CATEGORIES & RECENT SCROLL */
+    /* SCROLL BARS (categories, recents) */
     .scroll-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
     .scroll-bar::-webkit-scrollbar { display: none; }
     .cat-pill {
@@ -122,49 +133,40 @@
     }
     .cat-pill:hover { border-color: var(--text-muted); color: var(--text-main); }
     .cat-pill.active { background: var(--text-main); color: var(--bg); border-color: var(--text-main); }
-    
+
     .section-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: block; text-align: left; }
 
-    main { padding: 0 5% 60px 5%; max-width: 1600px; margin: 0 auto; }
-
-    /* PREMIUM GRID CARDS */
+    /* VIEW BAR */
     .view-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
-    
-    .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-    
+    .results-count { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+    .results-count b { color: var(--text-main); font-weight: 700; }
+
+    /* GRID CARDS */
+    .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
     .pack-card {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
-      overflow: hidden; display: flex; flex-direction: column; cursor: pointer; position: relative;
-      /* OBSERVER ANIMATION START STATE */
+      overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
       opacity: 0; transform: translateY(20px);
     }
-    .pack-card.visible { opacity: 1; transform: translateY(0); } /* Added via IntersectionObserver */
-    
+    .pack-card.visible { opacity: 1; transform: translateY(0); }
     .pack-card:hover { border-color: var(--border-light); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-    .pack-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05); pointer-events: none; }
-
     .card-img { width: 100%; aspect-ratio: 16/9; background: var(--bg); position: relative; overflow: hidden; padding: 1px; }
-    .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: calc(var(--radius-xl) - 2px) calc(var(--radius-xl) - 2px) 0 0; }
+    .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: calc(var(--radius-xl) - 2px) calc(var(--radius-xl) - 2px) 0 0; transition: transform 0.3s ease; }
     .pack-card:hover .card-img img { transform: scale(1.03); }
-
     .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; color: var(--text-main); }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
     .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; }
-    
     .card-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto; }
     .dev-tag { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; }
-    
-    .card-quick-actions { display: flex; gap: 8px; }
-    .btn-quick { 
+    .btn-quick {
       background: var(--bg); border: 1px solid var(--border); color: var(--text-main);
-      width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; transition: 0.2s; 
+      width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.85rem; transition: 0.2s;
     }
     .btn-quick:hover { background: var(--text-main); color: var(--bg); }
     .btn-quick.copied { background: var(--green); color: white; border-color: var(--green); }
 
-    /* IMAGE ONLY VIEW */
-    .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
     .image-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--bg-surface); border: 1px solid var(--border); opacity: 0; transform: translateY(15px); }
     .image-card.visible { opacity: 1; transform: translateY(0); }
     .image-card img { width: 100%; height: 100%; object-fit: contain; }
@@ -172,89 +174,85 @@
     .image-card:hover .image-card-overlay { opacity: 1; }
     .image-card-name { font-size: 0.9rem; font-weight: 700; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
-    /* PREMIUM MODAL / BOTTOM SHEET */
+    /* PAGINATION */
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+    .pg-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); border-radius: var(--radius-md); padding: 8px 16px; font-weight: 600; }
+    .pg-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
+    .pg-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); }
+    .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* MODALS */
     .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-      z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      position: fixed; inset: 0; background: rgba(var(--overlay-rgb), 0.6); backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center;
+      justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
     .overlay.open { opacity: 1; pointer-events: auto; }
-
     .modal {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
       max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
-      transform: translateY(20px) scale(0.98); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translateY(20px) scale(0.98); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex; flex-direction: column;
     }
     .overlay.open .modal { transform: translateY(0) scale(1); }
-    
-    .drawer.right {
-      position: absolute; right: 0; top: 0; bottom: 0; max-width: 400px; width: 100%;
-      border-radius: var(--radius-xl) 0 0 var(--radius-xl); transform: translateX(100%); margin: 0; max-height: 100vh;
-    }
+    .drawer.right { position: absolute; right: 0; top: 0; bottom: 0; max-width: 400px; width: 100%; border-radius: var(--radius-xl) 0 0 var(--radius-xl); transform: translateX(100%); margin: 0; max-height: 100vh; }
     .overlay.open .drawer.right { transform: translateX(0); }
-
     .modal-head { padding: 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-surface); z-index: 10; }
-    .modal-name { font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
+    .modal-name { font-size: 1.25rem; font-weight: 800; }
     .modal-x { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
     .modal-x:hover { background: var(--text-main); color: var(--bg); }
-
     .pack-modal { max-width: 900px; }
     .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; }
     .modal-img { width: 100%; height: auto; max-height: 400px; object-fit: contain; display: block; margin: 0 auto; }
     .modal-body { padding: 24px; flex: 1; overflow-y: auto; }
-    
     @media (min-width: 768px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
       .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { height: 100%; max-height: 600px; object-fit: contain; }
+      .modal-img { height: 100%; max-height: 600px; }
       .modal-content-wrapper { width: 50%; display: flex; flex-direction: column; }
     }
     @media (max-width: 767px) {
-      .hero { padding: 20px 5%; }
-      .hero h2 { font-size: 2rem; }
       .overlay { align-items: flex-end; padding: 0; }
-      .modal.pack-modal, .modal.stats-modal { 
-        border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; 
-        max-height: 88vh;
-      }
+      .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 88vh; }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
       .modal-img-container { display: block; height: auto; max-height: 35vh; }
       .modal-img { height: 100%; max-height: 35vh; object-fit: contain; }
     }
 
-    .modal-desc { 
-      font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; 
-    }
-    
+    .modal-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
     .tags-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
     .tag { background: var(--bg); border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; color: var(--text-main); display: inline-flex; align-items: center; gap: 6px; }
     .tag i { color: var(--cyan); }
-
     .action-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
     .btn-full { width: 100%; text-align: center; border-radius: var(--radius-lg); padding: 14px; font-weight: 700; font-size: 0.95rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; }
     .btn-dl { background: var(--text-main); color: var(--bg); }
-    .btn-dl:hover { opacity: 0.9; }
     .btn-support { background: var(--purple); color: white; }
     .btn-archive { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); }
-    
     .share-row { display: flex; gap: 12px; }
     .btn-share { background: var(--bg-surface-hover); color: var(--text-main); flex: 0.3; }
 
-    /* FLOATING TOAST NOTIFICATION */
+    /* TOAST */
     .toast {
       position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: var(--text-main); color: var(--bg); padding: 14px 24px;
-      border-radius: 30px; font-size: 0.9rem; font-weight: 700; z-index: 999;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background: var(--text-main); color: var(--bg); padding: 14px 24px; border-radius: 30px;
+      font-size: 0.9rem; font-weight: 700; z-index: 999; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast i { color: var(--green); font-size: 1.1rem; }
-    [data-theme="light"] .toast i { color: var(--bg); }
+    .toast i { color: var(--green); }
 
-    /* SETTINGS TOGGLES */
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed; bottom: 24px; right: 24px; z-index: 150;
+      background: var(--cyan); color: var(--bg); border: none;
+      border-radius: 16px; width: 48px; height: 48px; font-size: 1.2rem;
+      box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3); cursor: pointer;
+      opacity: 0; pointer-events: none; transition: all 0.3s;
+    }
+    .back-to-top.show { opacity: 1; pointer-events: auto; }
+
+    /* TOGGLE */
     .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); }
     .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -270,7 +268,7 @@
 
 <header>
   <div class="header-left">
-    <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="Nova Logo" onerror="this.style.display='none'" />
+    <img class="server-icon" src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="Nova" onerror="this.style.display='none'" />
     <div class="header-title">
       <h1>Nova's Library</h1>
       <p>Nexus of Verified Assets</p>
@@ -282,10 +280,18 @@
   </div>
 </header>
 
+<div class="load-bar"><div class="load-bar-fill" id="loadBar"></div></div>
+
+<div class="stats-bar">
+  <div class="stat"><i class="fa-solid fa-box"></i> <b id="sTot">—</b> Packs</div>
+  <div class="stat"><i class="fa-solid fa-folder-open"></i> <b>23</b> Categories</div>
+  <div class="stat"><i class="fa-solid fa-clock-rotate-left"></i> <b id="sLast">—</b></div>
+  <div class="stat"><i class="fa-solid fa-file-lines"></i> <b id="sPages">—</b> Pages</div>
+  <div class="stat"><i class="fa-solid fa-rotate"></i> <b id="sSynced">—</b></div>
+</div>
+
 <div class="hero">
-  <h2>Find Your Next Favorite Pack.</h2>
-  <p>Browse a premium collection of verified Minecraft Bedrock packs, addons, worlds, and skins. No ads. No shorteners. Direct downloads.</p>
-  
+  <p>Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
   <div class="search-container">
     <div class="search-input-wrapper">
       <i class="fa-solid fa-magnifying-glass"></i>
@@ -298,28 +304,26 @@
       <option value="recent">History</option>
     </select>
   </div>
-
   <span class="section-label" id="recentLabel" style="display:none;">Recently Viewed</span>
   <div class="scroll-bar" id="recentChips" style="margin-bottom: 24px;"></div>
-  
   <span class="section-label">Browse by Category</span>
   <div class="scroll-bar" id="categoryBar"></div>
 </div>
 
 <main>
   <div class="view-bar">
-    <div class="stats-text" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
-      Showing <b id="rCount" style="color: var(--text-main);">0</b> results
-    </div>
-    <div style="display:flex; gap: 8px;">
-      <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius: var(--radius-sm);"><i class="fa-solid fa-grid-2"></i></button>
-      <button class="icon-btn" onclick="setView('image')" id="btnImage" style="border-radius: var(--radius-sm);"><i class="fa-regular fa-image"></i></button>
+    <div class="results-count">Showing <b id="rCount">0</b> results</div>
+    <div style="display:flex; gap:8px;">
+      <button class="icon-btn" onclick="setView('grid')" id="btnGrid" style="border-radius:var(--radius-sm);"><i class="fa-solid fa-grid-2"></i></button>
+      <button class="icon-btn" onclick="setView('image')" id="btnImage" style="border-radius:var(--radius-sm);"><i class="fa-regular fa-image"></i></button>
     </div>
   </div>
-
   <div class="packs-grid" id="grid"></div>
   <div class="image-grid" id="imageGrid" style="display:none"></div>
+  <div class="pagination" id="pag"></div>
 </main>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
 
 <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
   <div class="modal drawer right">
@@ -328,33 +332,40 @@
       <button class="modal-x" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
-      
       <div class="toggle-row">
-        <span style="font-weight: 600; font-size: 0.95rem;">Theme</span>
-        <select class="modern-select" id="themeSelect" onchange="changeTheme(this.value)" style="padding: 8px 32px 8px 16px;">
+        <span style="font-weight:600;font-size:0.95rem;">Theme</span>
+        <select class="modern-select" id="themeSelect" onchange="changeTheme(this.value)" style="padding:8px 32px 8px 16px;">
           <option value="dark">OLED Dark</option>
           <option value="light">Clean Light</option>
         </select>
       </div>
-      
       <div class="toggle-row">
-        <span style="font-weight: 600; font-size: 0.95rem;">Infinite Scroll</span>
+        <span style="font-weight:600;font-size:0.95rem;">Infinite Scroll</span>
         <label class="toggle-switch">
           <input type="checkbox" id="infiniteToggle" onchange="toggleInfinite(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
-
-      <div style="margin-top: 32px; display:flex; flex-direction:column; gap:12px;">
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;">
         <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" class="btn-full btn-secondary"><i class="fa-solid fa-book"></i> Read Guides</a>
         <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" class="btn-full btn-secondary"><i class="fa-solid fa-handshake"></i> Partnerships</a>
+        <button class="btn-full btn-secondary" onclick="openStatsModal()"><i class="fa-solid fa-chart-pie"></i> Statistics</button>
       </div>
-
-      <div style="margin-top: 40px;">
-        <h4 style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Contributors</h4>
-        <div id="sharersList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+      <div style="margin-top:40px;">
+        <h4 style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Contributors</h4>
+        <div id="sharersList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="overlay" id="statsOverlay" onclick="closeStats(event)">
+  <div class="modal stats-modal">
+    <div class="modal-head">
+      <span class="modal-name"><i class="fa-solid fa-chart-column"></i> Library Statistics</span>
+      <button class="modal-x" onclick="closeStats()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="statsContent">Loading…</div>
   </div>
 </div>
 
@@ -364,25 +375,22 @@
       <img class="modal-img" id="mImg" src="" alt="" />
     </div>
     <div class="modal-content-wrapper">
-      <div class="modal-head" style="border-bottom: none; padding-bottom: 8px;">
+      <div class="modal-head" style="border-bottom:none;padding-bottom:8px;">
         <span class="modal-name" id="mName"></span>
         <button class="modal-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      
-      <div class="modal-body" style="padding-top: 0;">
+      <div class="modal-body" style="padding-top:0;">
         <div class="tags-grid" id="mTags"></div>
         <div class="modal-desc" id="mDesc"></div>
-        
         <div class="action-stack">
           <a class="btn-full btn-support" id="mSupport" href="#" target="_blank" style="display:none"><i class="fa-solid fa-heart"></i> Support Creator</a>
           <a class="btn-full btn-archive" id="mArchive" href="#" target="_blank" style="display:none"><i class="fa-solid fa-box-archive"></i> Download Archive</a>
           <div class="share-row">
-            <a class="btn-full btn-dl" id="mLink" href="#" target="_blank" style="flex: 1;"><i class="fa-solid fa-download"></i> Download</a>
+            <a class="btn-full btn-dl" id="mLink" href="#" target="_blank" style="flex:1;"><i class="fa-solid fa-download"></i> Download</a>
             <button class="btn-full btn-share" id="mShare" onclick="triggerCopyShare(currentModalPack, this)"><i class="fa-solid fa-link"></i></button>
           </div>
         </div>
-        
-        <div style="padding-top: 24px; font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+        <div style="padding-top:24px;font-size:0.75rem;color:var(--text-muted);display:flex;justify-content:space-between;">
           <span id="mAddedBy"></span>
           <span id="mDate"></span>
         </div>
@@ -394,17 +402,17 @@
 <script>
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
-let PER_PAGE = 30;
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbzbHGChQRyj-aKkgPq0g5m136a6PgCIp7qYRc7kreAEKxk_LOIpDqTMPkkcFPWErdl4/exec';
 
+let PER_PAGE = 30;
 let allPacks = [], filtered = [], currentPage = 1, totalPages = 0;
-let currentView = 'grid';
-let currentCat = '';
+let currentView = 'grid', currentCat = '';
 let currentModalPack = null;
 let recentlyViewed = [];
 let infiniteMode = false;
 let scrollThrottle = null;
+let searchDebounce = null;
 
-// Intersection Observer for Premium Fade-in Performance
 const cardObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -425,69 +433,129 @@ const CATEGORIES = [
   { val: 'Shader', label: 'Shader' },
   { val: 'Structure', label: 'Structure' },
   { val: 'Weapon', label: 'Weapon' },
+  { val: 'Bosses', label: 'Bosses' },
+  { val: 'Vehicle', label: 'Vehicle' },
+  { val: 'Visual', label: 'Visual' },
+  { val: 'Survival', label: 'Survival' },
   { val: 'Client', label: 'Client' },
   { val: 'GUI & UI', label: 'GUI & UI' },
-  { val: 'Survival', label: 'Survival' },
-  { val: 'Fps Booster', label: 'FPS' }
+  { val: 'Adventure', label: 'Adventure' },
+  { val: 'Minigame', label: 'Minigame' },
+  { val: 'Food', label: 'Food' },
+  { val: 'Environment', label: 'Environment' },
+  { val: 'Animation', label: 'Animation' },
+  { val: 'Skins', label: 'Skins' },
+  { val: 'Fps Booster', label: 'Fps Booster' }
 ];
 
 try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 const savedInfinite = localStorage.getItem('nova_infinite');
 if (savedInfinite === 'true') infiniteMode = true;
 
-function changeTheme(val) { document.documentElement.setAttribute('data-theme', val); localStorage.setItem('nova_theme', val); }
-document.documentElement.setAttribute('data-theme', localStorage.getItem('nova_theme') || 'dark');
-document.getElementById('themeSelect').value = localStorage.getItem('nova_theme') || 'dark';
+function changeTheme(val) {
+  document.documentElement.setAttribute('data-theme', val);
+  localStorage.setItem('nova_theme', val);
+}
+const savedTheme = localStorage.getItem('nova_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+document.getElementById('themeSelect').value = savedTheme;
+
+function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
 
 window.handleImgErr = function(img) { img.style.display = 'none'; };
 
 function renderCategories() {
-  document.getElementById('categoryBar').innerHTML = CATEGORIES.map(c => 
+  document.getElementById('categoryBar').innerHTML = CATEGORIES.map(c =>
     `<button class="cat-pill ${currentCat === c.val ? 'active' : ''}" onclick="selectCat('${c.val}')">${c.label}</button>`
   ).join('');
 }
 
 function selectCat(val) { currentCat = val; renderCategories(); applyFilters(); }
 
+async function pingPackView(pack) {
+  try {
+    if (!pack || (!pack.id && !pack.name)) return;
+    const id = encodeURIComponent(String(pack.id || ''));
+    const name = encodeURIComponent(String(pack.name || ''));
+    await fetch(`${VIEW_PING_URL}?action=view&id=${id}&name=${name}&source=web`, { method: 'GET', mode: 'no-cors' });
+  } catch (err) {}
+}
+
 async function loadAllPacks() {
+  setBar(10);
   try {
     const idxRes = await fetch(BASE_URL + 'packs_index.json?_=' + Date.now());
     if (idxRes.ok) {
       const index = await idxRes.json();
-      const promises = Array.from({ length: index.pages }, (_, i) => fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now()).then(r => r.json()).catch(() => []));
+      document.getElementById('sSynced').textContent = new Date(index.updated).toLocaleDateString();
+      document.getElementById('sPages').textContent = index.pages;
+      const promises = Array.from({ length: index.pages }, (_, i) =>
+        fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now()).then(r => r.json()).catch(() => [])
+      );
       allPacks = (await Promise.all(promises)).flat();
+      setBar(90);
     } else {
       allPacks = await (await fetch(BASE_URL + 'packs.json?_=' + Date.now())).json();
+      document.getElementById('sSynced').textContent = new Date().toLocaleDateString();
+      document.getElementById('sPages').textContent = '1';
     }
   } catch (err) { console.error(err); return false; }
-  
-  renderSharers();
+
+  if (allPacks.length) {
+    const dates = allPacks.map(p => p.date_added).filter(Boolean);
+    if (dates.length) {
+      const newest = dates.reduce((a,b) => a > b ? a : b);
+      document.getElementById('sLast').textContent = new Date(newest).toLocaleDateString();
+    }
+    document.getElementById('sTot').textContent = allPacks.length;
+    renderSharers();
+  }
+  setBar(100); setTimeout(() => setBar(0), 500);
   return true;
 }
 
 function renderSharers() {
   const sharers = [...new Set(allPacks.map(p => p.added_by).filter(Boolean))].sort();
-  document.getElementById('sharersList').innerHTML = sharers.map(s => `<span class="tag"><i class="fa-solid fa-user"></i> ${esc(s)}</span>`).join('');
+  document.getElementById('sharersList').innerHTML = sharers.map(s =>
+    `<span class="tag"><i class="fa-solid fa-user"></i> ${esc(s)}</span>`
+  ).join('');
 }
 
 function openSettings() { document.getElementById('settingsOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; document.getElementById('infiniteToggle').checked = infiniteMode; }
 function closeSettings(e) { if (e && e.target !== document.getElementById('settingsOverlay')) return; document.getElementById('settingsOverlay').classList.remove('open'); document.body.style.overflow = ''; }
 
+function openStatsModal() {
+  closeSettings();
+  setTimeout(() => {
+    if (!allPacks.length) return;
+    const total = allPacks.length;
+    const catCount = {};
+    allPacks.forEach(p => { const cat = p.category || 'Unknown'; catCount[cat] = (catCount[cat] || 0) + 1; });
+    const formatEntries = (obj) => Object.entries(obj).sort((a,b) => b[1]-a[1]).map(([k,v]) => `<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>${k}</span><b>${v}</b></div>`).join('');
+    document.getElementById('statsContent').innerHTML = `<div style="margin-bottom:16px;"><b>Total Packs:</b> ${total}</div><div style="font-weight:600;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px;">By Category</div>${formatEntries(catCount)}`;
+    document.getElementById('statsOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }, 300);
+}
+function closeStats(e) { if (e && e.target !== document.getElementById('statsOverlay')) return; document.getElementById('statsOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+
 function toggleInfinite(val) { infiniteMode = val; localStorage.setItem('nova_infinite', val); currentPage = 1; applyFilters(); }
 
 function handleScroll() {
-  if (!infiniteMode || currentPage >= totalPages) return;
-  if (scrollThrottle) return;
+  if (!infiniteMode || currentPage >= totalPages || scrollThrottle) return;
   scrollThrottle = setTimeout(() => {
-    const activeContainer = currentView === 'grid' ? document.getElementById('grid') : document.getElementById('imageGrid');
-    if (activeContainer && activeContainer.getBoundingClientRect().bottom <= window.innerHeight + 800) {
-      currentPage++; appendCards(filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE));
+    const container = currentView === 'grid' ? document.getElementById('grid') : document.getElementById('imageGrid');
+    if (container && container.getBoundingClientRect().bottom <= window.innerHeight + 800) {
+      currentPage++;
+      appendCards(filtered.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE));
     }
     scrollThrottle = null;
-  }, 100); // 100ms throttle for low-end device performance
+  }, 100);
 }
-
-window.addEventListener('scroll', handleScroll, { passive: true });
+window.addEventListener('scroll', () => {
+  handleScroll();
+  document.getElementById('backToTop').classList.toggle('show', window.scrollY > 500);
+}, { passive: true });
 
 function applyFilters() {
   const q = document.getElementById('q').value.toLowerCase().trim();
@@ -496,8 +564,8 @@ function applyFilters() {
   const cat = featuredOnly ? '' : currentCat.toLowerCase();
 
   filtered = allPacks.filter(p => {
-    const mq = !q || [p.name, p.credits, p.description, p.category].some(val => (val || '').toLowerCase().includes(q));
-    const mc = !cat || (p.category || '').toLowerCase() === cat;
+    const mq = !q || [p.name, p.credits, p.description, p.category].some(val => (val||'').toLowerCase().includes(q));
+    const mc = !cat || (p.category||'').toLowerCase() === cat;
     const sup = String(p.support_link || p.support || '').trim();
     const mf = !featuredOnly || (sup !== '' && sup.toLowerCase() !== 'none');
     return mq && mc && mf;
@@ -505,18 +573,19 @@ function applyFilters() {
 
   if (srt === 'recent') {
     const recentNames = recentlyViewed.map(r => r.name);
-    filtered = filtered.filter(p => recentNames.includes(p.name)).sort((a, b) => recentNames.indexOf(a.name) - recentNames.indexOf(b.name));
+    filtered = filtered.filter(p => recentNames.includes(p.name)).sort((a,b) => recentNames.indexOf(a.name) - recentNames.indexOf(b.name));
   } else if (srt === 'newest') {
-    filtered.sort((a, b) => { const d = (b.date_added || '').localeCompare(a.date_added || ''); return d !== 0 ? d : (Number(b.id) || 0) - (Number(a.id) || 0); });
+    filtered.sort((a,b) => { const d = (b.date_added||'').localeCompare(a.date_added||''); return d !== 0 ? d : (Number(b.id)||0)-(Number(a.id)||0); });
   } else if (srt === 'oldest') {
-    filtered.sort((a, b) => (a.date_added || '').localeCompare(b.date_added || ''));
+    filtered.sort((a,b) => (a.date_added||'').localeCompare(b.date_added||''));
   } else if (srt === 'az') {
-    filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    filtered.sort((a,b) => (a.name||'').localeCompare(b.name||''));
   }
 
   totalPages = Math.ceil(filtered.length / PER_PAGE);
   currentPage = 1;
   document.getElementById('rCount').textContent = filtered.length;
+  document.getElementById('pag').style.display = (infiniteMode || totalPages <= 1) ? 'none' : 'flex';
   render();
 }
 
@@ -524,154 +593,149 @@ function render() {
   document.getElementById('grid').innerHTML = '';
   document.getElementById('imageGrid').innerHTML = '';
   appendCards(filtered.slice(0, PER_PAGE));
+  if (!infiniteMode && totalPages > 1) renderPag();
 }
 
 function appendCards(slice) {
   const frag = document.createDocumentFragment();
-  
   if (currentView === 'grid') {
     slice.forEach((p, i) => {
-      const absIdx = (currentPage - 1) * PER_PAGE + i;
+      const absIdx = (currentPage-1)*PER_PAGE + i;
       const card = document.createElement('div');
       card.className = 'pack-card';
       card.onclick = () => openModalDirect(filtered[absIdx]);
-      
       card.innerHTML = `
-        <div class="card-img">${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)" />` : ''}</div>
+        <div class="card-img">${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : ''}</div>
         <div class="card-body">
           <div class="card-title">${esc(p.name)}</div>
           <div class="card-desc">${esc(p.description || 'No description provided.')}</div>
           <div class="card-footer">
             <span class="dev-tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>
-            <div class="card-quick-actions">
-              <button class="btn-quick" onclick="event.stopPropagation(); triggerCopyShare(filtered[${absIdx}], this)" title="Copy Link"><i class="fa-solid fa-link"></i></button>
-            </div>
+            <button class="btn-quick" onclick="event.stopPropagation(); triggerCopyShare(filtered[${absIdx}], this)" title="Copy link"><i class="fa-solid fa-link"></i></button>
           </div>
         </div>`;
       frag.appendChild(card);
-      cardObserver.observe(card); // Attach performant fade-in
+      cardObserver.observe(card);
     });
     document.getElementById('grid').appendChild(frag);
   } else {
     slice.forEach((p, i) => {
-      const absIdx = (currentPage - 1) * PER_PAGE + i;
+      const absIdx = (currentPage-1)*PER_PAGE + i;
       const card = document.createElement('div');
       card.className = 'image-card';
       card.onclick = () => openModalDirect(filtered[absIdx]);
-      
-      card.innerHTML = p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)" />` : '';
+      card.innerHTML = p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : '';
       card.innerHTML += `<div class="image-card-overlay"><div class="image-card-name">${esc(p.name)}</div></div>`;
       frag.appendChild(card);
       cardObserver.observe(card);
     });
     document.getElementById('imageGrid').appendChild(frag);
   }
-  
   document.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
 }
 
-function setView(v) { 
-  currentView = v; 
-  document.getElementById('grid').style.display = v === 'grid' ? 'grid' : 'none'; 
-  document.getElementById('imageGrid').style.display = v === 'image' ? 'grid' : 'none'; 
-  applyFilters(); 
+function renderPag() {
+  const pag = document.getElementById('pag');
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  let h = `<button class="pg-btn" onclick="go(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>`;
+  for (let i=1; i<=totalPages; i++) {
+    if (i===1 || i===totalPages || Math.abs(i-currentPage)<=1) {
+      h += `<button class="pg-btn ${i===currentPage?'active':''}" onclick="go(${i})">${i}</button>`;
+    } else if (i===currentPage-2 || i===currentPage+2) {
+      h += `<span style="color:var(--text-muted);padding:0 4px;">…</span>`;
+    }
+  }
+  h += `<button class="pg-btn" onclick="go(${currentPage+1})" ${currentPage===totalPages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>`;
+  pag.innerHTML = h;
+}
+function go(p) { if (p<1 || p>totalPages) return; currentPage = p; applyFilters(); window.scrollTo({top:0, behavior:'smooth'}); }
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('grid').style.display = v==='grid' ? 'grid' : 'none';
+  document.getElementById('imageGrid').style.display = v==='image' ? 'grid' : 'none';
+  applyFilters();
 }
 
 function openModalDirect(p) {
   if (!p) return;
-  currentModalPack = p; addRecent(p);
-  
+  currentModalPack = p; addRecent(p); pingPackView(p);
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
-  
-  let tagsHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>
-                  <span class="tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>`;
-  document.getElementById('mTags').innerHTML = tagsHTML;
-  
-  const supVal = String(p.support_link || p.support || '').trim();
-  const archVal = String(p.archive_link || p.archive || '').trim();
-  document.getElementById('mSupport').style.display = (supVal && supVal.toLowerCase() !== 'none') ? 'flex' : 'none';
-  document.getElementById('mSupport').href = supVal;
-  document.getElementById('mArchive').style.display = (archVal && archVal.toLowerCase() !== 'none') ? 'flex' : 'none';
-  document.getElementById('mArchive').href = archVal;
-  
+  document.getElementById('mTags').innerHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span> <span class="tag"><i class="fa-solid fa-palette"></i> ${esc(p.credits || 'Unknown')}</span>`;
+  const sup = String(p.support_link || p.support || '').trim();
+  const arch = String(p.archive_link || p.archive || '').trim();
+  document.getElementById('mSupport').style.display = (sup && sup.toLowerCase()!=='none') ? 'flex' : 'none';
+  document.getElementById('mSupport').href = sup;
+  document.getElementById('mArchive').style.display = (arch && arch.toLowerCase()!=='none') ? 'flex' : 'none';
+  document.getElementById('mArchive').href = arch;
   document.getElementById('mAddedBy').textContent = `Added by ${p.added_by || 'Staff'}`;
   document.getElementById('mDate').textContent = p.date_added || '';
-  
-  const shareBtn = document.getElementById('mShare');
-  shareBtn.innerHTML = '<i class="fa-solid fa-link"></i>'; shareBtn.classList.remove('copied');
-  
+  const btn = document.getElementById('mShare');
+  btn.innerHTML = '<i class="fa-solid fa-link"></i>';
+  btn.classList.remove('copied');
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
-  if (p.image) { 
-    img.src = p.image; imgContainer.style.display = 'block'; img.style.display = 'block'; 
-    img.onerror = () => { imgContainer.style.display = 'none'; }; 
+  if (p.image) {
+    img.src = p.image; imgContainer.style.display = 'block'; img.style.display = 'block';
+    img.onerror = () => { imgContainer.style.display = 'none'; };
   } else { imgContainer.style.display = 'none'; }
-  
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal(e) { if (!e || e.target === document.getElementById('overlay')) { document.getElementById('overlay').classList.remove('open'); document.body.style.overflow = ''; } }
 
-// -------------------------------------------------------------
-// PREMIUM UNIFIED COPY & SHARE FEATURE (Fix applied here)
-// -------------------------------------------------------------
 function triggerCopyShare(pack, btnElement) {
   if (!pack) return;
-  
-  // Strict format requiring < > around the nova link as requested
   const text = `📝 Name: ${pack.name}\n🎨 Devs: ${pack.credits}\n🚀 Download: ${pack.link || 'N/A'}\n\n🌐 Browse Nova's Library: <${NOVA_URL}>`;
-  
-  navigator.clipboard.writeText(text).then(() => { 
+  navigator.clipboard.writeText(text).then(() => {
     const toast = document.getElementById('toast');
     toast.classList.add('show');
-    
-    const originalHTML = btnElement.innerHTML;
-    btnElement.innerHTML = '<i class="fa-solid fa-check"></i>'; 
-    btnElement.classList.add('copied'); 
-    
-    setTimeout(() => { 
-      toast.classList.remove('show'); 
-      btnElement.innerHTML = originalHTML; 
-      btnElement.classList.remove('copied'); 
-    }, 2000); 
+    const original = btnElement.innerHTML;
+    btnElement.innerHTML = '<i class="fa-solid fa-check"></i>';
+    btnElement.classList.add('copied');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      btnElement.innerHTML = original;
+      btnElement.classList.remove('copied');
+    }, 2000);
   });
 }
 
-function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function addRecent(pack) {
   recentlyViewed = recentlyViewed.filter(r => r.name !== pack.name);
   recentlyViewed.unshift({ name: pack.name });
-  if (recentlyViewed.length > 10) recentlyViewed = recentlyViewed.slice(0, 10);
+  if (recentlyViewed.length > 12) recentlyViewed = recentlyViewed.slice(0,12);
   localStorage.setItem('nova_recent', JSON.stringify(recentlyViewed));
   renderRecent();
 }
-
 function renderRecent() {
   const container = document.getElementById('recentChips');
   const label = document.getElementById('recentLabel');
   if (!recentlyViewed.length) { container.style.display = 'none'; label.style.display = 'none'; return; }
-  
   container.style.display = 'flex'; label.style.display = 'block';
-  container.innerHTML = recentlyViewed.map(r => `<button class="cat-pill" style="border-style: dashed;" onclick='openByName("${esc(r.name)}")'><i class="fa-solid fa-clock-rotate-left" style="font-size:0.75rem"></i> ${esc(r.name)}</button>`).join('');
+  container.innerHTML = recentlyViewed.map(r => `<button class="cat-pill" style="border-style:dashed;" onclick='openByName("${esc(r.name)}")'><i class="fa-solid fa-clock-rotate-left"></i> ${esc(r.name)}</button>`).join('');
 }
-
 function openByName(name) { const pack = allPacks.find(p => p.name === name); if (pack) openModalDirect(pack); }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); closeSettings(); });
-let searchDebounce;
-document.getElementById('q').addEventListener('input', () => { 
-  clearTimeout(searchDebounce); 
-  searchDebounce = setTimeout(applyFilters, 250); 
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); } });
+
+document.getElementById('q').addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(applyFilters, 300);
 });
 
 async function init() {
   renderCategories();
   const ok = await loadAllPacks();
-  if (ok) { document.getElementById('infiniteToggle').checked = infiniteMode; renderRecent(); applyFilters(); }
+  if (!ok) { document.getElementById('grid').innerHTML = '<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i><h3>Failed to load</h3></div>'; return; }
+  document.getElementById('infiniteToggle').checked = infiniteMode;
+  renderRecent();
+  applyFilters();
 }
 init();
 </script>
