@@ -733,7 +733,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-22T16:00:00.000Z",
-    "last_viewed": "2026-06-25T16:00:00.000Z"
+    "last_viewed": "2026-06-30T16:00:00.000Z"
   },
   {
     "id": 48,
@@ -1229,7 +1229,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
-    "last_viewed": "2026-06-29T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
   },
   {
     "id": 79,
@@ -1261,7 +1261,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
-    "last_viewed": "2026-06-30T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
   },
   {
     "id": 81,
@@ -1309,7 +1309,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-27T16:00:00.000Z",
-    "last_viewed": "2026-06-29T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
   },
   {
     "id": 84,
@@ -1453,7 +1453,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
-    "last_viewed": "2026-06-30T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
   },
   {
     "id": 93,
@@ -1469,7 +1469,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
-    "last_viewed": "2026-06-30T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
   },
   {
     "id": 94,
@@ -1485,7 +1485,7 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-29T16:00:00.000Z",
-    "last_viewed": "2026-06-30T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
   },
   {
     "id": 95,
@@ -1517,6 +1517,22 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-29T16:00:00.000Z",
-    "last_viewed": "2026-06-30T16:00:00.000Z"
+    "last_viewed": "2026-07-01T16:00:00.000Z"
+  },
+  {
+    "id": 97,
+    "name": "Dark Fantasy Visuals",
+    "link": "https://mcpedl.com/dark-visuals-resource-pack/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Shader",
+    "secondary_tag": "Texture Pack",
+    "credits": "StarfishStudios",
+    "description": "Dark Fantasy Visuals is a Minecraft Vibrant Visuals pack which reimagines the world with the moody atmosphere of Elden Ring and Dark Souls.",
+    "image": "https://i.ibb.co/KxQjZQTK/f6e3958746e1.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-01T16:00:00.000Z",
+    "last_viewed": ""
   }
 ]
