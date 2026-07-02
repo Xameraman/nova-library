@@ -249,58 +249,56 @@
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
     
     .pack-modal { max-width: 1100px; }
-    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; overflow: hidden; }
-    .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; transition: transform 0.5s; }
+    
+    /* MODAL IMAGE BASE FIX */
+    .modal-img-container { 
+      width: 100%; 
+      background: var(--bg); 
+      position: relative; 
+      display: none; 
+      align-items: center; 
+      justify-content: center;
+      overflow: hidden; 
+    }
+    .modal-img { 
+      width: 100%; 
+      height: auto; 
+      max-height: 50vh; 
+      object-fit: contain; /* Guarantees the image never crops */
+      display: block; 
+      margin: 0 auto; 
+      transition: transform 0.5s; 
+    }
     .modal-img:hover { transform: scale(1.03); }
+    
     .modal-body { padding: 32px; flex: 1; overflow-y: auto; }
     
     /* MODAL SPLIT VIEW (PC/LAPTOPS) */
     @media (min-width: 900px) {
-      .pack-modal { flex-direction: row; overflow: hidden; }
+      .pack-modal { flex-direction: row; overflow: hidden; align-items: stretch; }
       .modal-img-container { width: 55%; display: flex; border-right: 1px solid var(--border); }
-      .modal-img { height: 100%; max-height: 650px; }
-      .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; }
+      .modal-img { width: 100%; height: 100%; max-height: 85vh; object-fit: contain; }
+      .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; max-height: 85vh; }
     }
     
     /* MOBILE RESPONSIVENESS */
-@media (max-width: 768px) {
-  header { padding: 12px 5%; }
-  .packs-grid { grid-template-columns: 1fr; gap: 20px; }
-  .image-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-  .hero h1 { font-size: 1.15rem; }
-  .hero { padding: 40px 5% 20px 5%; }
-  .stats-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 12px 5%; }
-  
-  /* Bottom Sheet Mobile Modals */
-  .overlay { align-items: flex-end; padding: 0; }
-  .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 85vh; }
-  .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
-  
-  /* FIXED: Prevents image clipping shown in 1000001705.png & 1000001706.png */
-  .modal-img-container { 
-    display: block; 
-    width: 100%; 
-    height: auto; 
-    max-height: none; 
-  }
-  .modal-img { 
-    width: 100%; 
-    height: auto; 
-    max-height: 240px; /* Perfectly balances image presentation on mobile screens */
-    object-fit: cover; 
-    object-position: center;
-  }
-  
-  .drawer.right { max-width: 100%; border-radius: 0; }
-}
-
+    @media (max-width: 768px) {
+      header { padding: 12px 5%; }
+      .packs-grid { grid-template-columns: 1fr; gap: 20px; }
+      .image-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+      .hero h1 { font-size: 1.15rem; }
+      .hero { padding: 40px 5% 20px 5%; }
+      .stats-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 12px 5%; }
       
       /* Bottom Sheet Mobile Modals */
       .overlay { align-items: flex-end; padding: 0; }
       .modal.pack-modal, .modal.stats-modal { border-radius: var(--radius-xl) var(--radius-xl) 0 0; transform: translateY(100%); margin-top: auto; max-height: 85vh; }
       .overlay.open .modal.pack-modal, .overlay.open .modal.stats-modal { transform: translateY(0); }
-      .modal-img-container { display: block; height: auto; max-height: 35vh; }
-      .modal-img { height: 100%; max-height: 35vh; object-fit: contain; }
+      
+      /* Mobile Image Fix */
+      .modal-img-container { display: flex; height: auto; max-height: 40vh; }
+      .modal-img { height: 100%; max-height: 40vh; object-fit: contain; }
+      
       .drawer.right { max-width: 100%; border-radius: 0; }
     }
 
@@ -417,7 +415,6 @@
       <button class="modal-x" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
-      <!-- Old Theme Select Removed: handled dynamically via nova-themes.js now -->
       <div class="toggle-row">
         <span style="font-weight:700;font-size:1.05rem;">Infinite Scroll</span>
         <label class="toggle-switch">
@@ -841,7 +838,7 @@ function openModalDirect(p) {
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
-    img.src = p.image; imgContainer.style.display = 'block'; img.style.display = 'block';
+    img.src = p.image; imgContainer.style.display = 'flex'; img.style.display = 'block';
     img.onerror = () => { imgContainer.style.display = 'none'; };
   } else { imgContainer.style.display = 'none'; }
   
