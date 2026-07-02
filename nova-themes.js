@@ -1,124 +1,106 @@
 // =================================================================
-// NovaEngine.js – The core library for Theme & UI Interactivity
+// NovaEngine.js – The core library for Theme Engine
 // =================================================================
 
 (function () {
   'use strict';
 
   const STORAGE_THEME = 'nova_event_theme';
-  const STORAGE_FULL = 'nova_event_full';
 
-  // Expanded Theme Engine Options
   const THEMES = {
-    default: {
-      name: 'Standard Dark',
+    dark: {
+      name: 'OLED Dark (Default)',
       vars: {
-        '--gold': '#FFD700',
-        '--cyan': '#00E5FF',
-        '--purple': '#9B59B6'
+        '--bg': '#09090B',
+        '--bg-surface': '#18181B',
+        '--bg-surface-hover': '#27272A',
+        '--border': '#27272A',
+        '--border-light': '#3F3F46',
+        '--text-main': '#FAFAFA',
+        '--text-muted': '#A1A1AA',
+        '--cyan': '#06B6D4'
       }
     },
-    winter: {
-      name: 'Winter',
+    light: {
+      name: 'Clean Light',
       vars: {
-        '--gold': '#C62828',
-        '--cyan': '#2E7D32',
-        '--purple': '#1565C0'
+        '--bg': '#F8FAFC',
+        '--bg-surface': '#FFFFFF',
+        '--bg-surface-hover': '#F1F5F9',
+        '--border': '#E2E8F0',
+        '--border-light': '#CBD5E1',
+        '--text-main': '#0F172A',
+        '--text-muted': '#64748B',
+        '--cyan': '#0284C7'
       }
     },
-    spooky: {
-      name: 'Spooky',
+    midnight: {
+      name: 'Midnight Blue',
       vars: {
-        '--gold': '#FF9800',
-        '--cyan': '#7E57C2',
-        '--purple': '#4E342E'
+        '--bg': '#020617',
+        '--bg-surface': '#0F172A',
+        '--bg-surface-hover': '#1E293B',
+        '--border': '#1E293B',
+        '--border-light': '#334155',
+        '--text-main': '#F8FAFC',
+        '--text-muted': '#94A3B8',
+        '--cyan': '#38BDF8'
       }
     },
-    ocean: {
-      name: 'Ocean Depths',
+    cyber: {
+      name: 'Cyberpunk Neon',
       vars: {
-        '--gold': '#00B4D8',
-        '--cyan': '#0077B6',
-        '--purple': '#03045E'
-      }
-    },
-    cyberpunk: {
-      name: 'Cyberpunk',
-      vars: {
-        '--gold': '#FCEE09',
-        '--cyan': '#00F0FF',
-        '--purple': '#FF003C'
-      }
-    },
-    forest: {
-      name: 'Enchanted Forest',
-      vars: {
-        '--gold': '#A7C957',
-        '--cyan': '#386641',
-        '--purple': '#6A994E'
-      }
-    },
-    sunset: {
-      name: 'Neon Sunset',
-      vars: {
-        '--gold': '#FFB703',
-        '--cyan': '#FB8500',
-        '--purple': '#8ECAE6'
+        '--bg': '#050505',
+        '--bg-surface': '#111111',
+        '--bg-surface-hover': '#222222',
+        '--border': '#333333',
+        '--border-light': '#E11D48',
+        '--text-main': '#FCEE09',
+        '--text-muted': '#999999',
+        '--cyan': '#00F0FF'
       }
     }
   };
 
-  const state = {
-    currentTheme: 'default',
-    fullEffects: true
-  };
-
-  // --- Theme Application ---
-  function applyTheme(themeKey, useEffects) {
-    const theme = THEMES[themeKey] || THEMES.default;
+  function applyTheme(themeKey) {
+    const theme = THEMES[themeKey] || THEMES.dark;
     const root = document.documentElement;
     
     Object.entries(theme.vars).forEach(([prop, val]) => {
       root.style.setProperty(prop, val);
     });
 
-    state.currentTheme = themeKey;
-    state.fullEffects = useEffects;
     localStorage.setItem(STORAGE_THEME, themeKey);
-    localStorage.setItem(STORAGE_FULL, useEffects);
-  }
-
-  // --- UI Engine Logic (NO CONFLICTS) ---
-  function initUIEngine() {
-    console.log("NovaEngine: UI Interactivity Initialized.");
-    // All overlay, modal, and image-retry behaviour is handled
-    // perfectly by the main index.html – nothing to do here.
   }
 
   function createThemeSettingsSection() {
     const div = document.createElement('div');
     div.className = 'toggle-row';
+    
+    const current = localStorage.getItem(STORAGE_THEME) || 'dark';
+    
     div.innerHTML = `
-      <span class="toggle-label"><i class="fa-solid fa-palette"></i> Seasonal Theme</span>
-      <select class="modern-select" id="themeEngineSelect" style="padding: 8px 30px 8px 12px;">
-        ${Object.entries(THEMES).map(([k, v]) => `<option value="${k}" ${state.currentTheme === k ? 'selected' : ''}>${v.name}</option>`).join('')}
+      <span style="font-weight: 600; font-size: 0.95rem;">Engine Theme</span>
+      <select class="modern-select" id="themeEngineSelect" style="padding: 8px 32px 8px 16px;">
+        ${Object.entries(THEMES).map(([k, v]) => `<option value="${k}" ${current === k ? 'selected' : ''}>${v.name}</option>`).join('')}
       </select>
     `;
     return div;
   }
 
   function start() {
-    state.currentTheme = localStorage.getItem(STORAGE_THEME) || 'default';
-    state.fullEffects = localStorage.getItem(STORAGE_FULL) !== 'false';
-    
-    applyTheme(state.currentTheme, state.fullEffects);
-    initUIEngine();
+    const savedTheme = localStorage.getItem(STORAGE_THEME) || 'dark';
+    applyTheme(savedTheme);
 
     const settingsBody = document.querySelector('#settingsOverlay .modal-body');
     if (settingsBody) {
+      // Overwrite the hardcoded theme toggle in HTML with this dynamic one
+      const oldThemeRow = settingsBody.querySelector('.toggle-row');
+      if(oldThemeRow) oldThemeRow.remove();
+      
       settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
       document.getElementById('themeEngineSelect').addEventListener('change', (e) => {
-        applyTheme(e.target.value, state.fullEffects);
+        applyTheme(e.target.value);
       });
     }
   }
