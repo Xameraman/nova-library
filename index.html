@@ -111,7 +111,7 @@
     }
     .modern-select:hover { border-color: var(--cyan); }
 
-    .surprise-filter-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .surprise-filter-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
     .surprise-btn {
       background: linear-gradient(135deg, #FF6F61, #FF9F4B);
       color: #fff; border: none; border-radius: 30px;
@@ -126,8 +126,6 @@
       70% { box-shadow: 0 0 0 12px rgba(255,111,97,0); }
       100% { box-shadow: 0 0 0 0 rgba(255,111,97,0); }
     }
-
-    .filter-row-below { display: flex; justify-content: center; margin-bottom: 24px; }
 
     .scroll-bar { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; margin-bottom: 16px; }
     .scroll-bar::-webkit-scrollbar { display: none; }
@@ -195,12 +193,18 @@
     }
     .card-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; }
 
+    /* New "box" style for devs + view count */
     .card-meta {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;
+      font-size: 0.8rem; color: var(--text-main);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      margin-bottom: 16px;
     }
-    .card-meta .dev-line { display: flex; align-items: center; gap: 6px; }
-    .card-meta .view-line { display: flex; align-items: center; gap: 4px; }
+    .card-meta .dev-line { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .card-meta .view-line { font-weight: 600; display: flex; align-items: center; gap: 4px; }
 
     .card-footer { display: flex; align-items: center; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto; }
     .card-actions { display: flex; gap: 10px; align-items: center; }
@@ -375,8 +379,6 @@
   </div>
   <div class="surprise-filter-row">
     <button class="surprise-btn" onclick="surpriseMe()"><i class="fa-solid fa-wand-magic-sparkles"></i> Surprise Me</button>
-  </div>
-  <div class="filter-row-below">
     <select class="modern-select" id="sortFilter" onchange="applyFilters()">
       <option value="newest">Newest</option>
       <option value="oldest">Oldest</option>
@@ -484,7 +486,7 @@
 <script>
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
-const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec'; // ⚠️ Update this
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec'; // Update if needed
 const VIEW_KEY = 'N0vaPingK3y2025';
 
 let PER_PAGE = 30;
@@ -602,6 +604,12 @@ async function pingPackView(pack) {
     localStorage.setItem('nova_viewed_packs', JSON.stringify(viewedPacks));
     await fetch(`${VIEW_PING_URL}?action=view&id=${encodeURIComponent(id)}&name=${encodeURIComponent(pack.name || '')}&source=web&key=${VIEW_KEY}`, { method: 'GET', mode: 'no-cors' });
     pack.view_count = (pack.view_count || 0) + 1;
+    // Update the card view count in DOM
+    const cardEl = document.querySelector(`.pack-card[data-packid="${id}"]`);
+    if (cardEl) {
+      const viewSpan = cardEl.querySelector('.view-line');
+      if (viewSpan) viewSpan.innerHTML = `<i class="fa-solid fa-eye"></i> ${pack.view_count}`;
+    }
   } catch (err) {}
 }
 
@@ -743,10 +751,12 @@ function appendCards(slice) {
       const secondaryTag = (p.secondary_tag && p.secondary_tag !== p.category) ? `<span class="card-tag"><i class="fa-solid fa-tag"></i> ${esc(p.secondary_tag)}</span>` : '';
       const isNew = p.date_added && (Date.now() - new Date(p.date_added).getTime() < 7*24*60*60*1000);
       const viewCount = p.view_count || 0;
-      const isFav = favorites.includes(p.id || p.name);
+      const packId = p.id || p.name;
+      const isFav = favorites.includes(packId);
 
       const card = document.createElement('div');
       card.className = 'pack-card' + (hasSupport ? ' featured-card' : '');
+      card.setAttribute('data-packid', p.id);   // for later DOM update
       card.onclick = (e) => {
         if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-bookmark')) return;
         openModalDirect(filtered[absIdx]);
@@ -755,7 +765,7 @@ function appendCards(slice) {
       card.innerHTML = `
         <div class="card-img">
           ${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : ''}
-          <div class="card-bookmark ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${esc(p.id || p.name)}', this)" title="Favorite">
+          <div class="card-bookmark ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${packId.replace(/'/g, "\\'")}', this)" title="Favorite">
             <i class="fa-solid fa-bookmark"></i>
           </div>
         </div>
