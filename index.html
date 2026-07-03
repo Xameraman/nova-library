@@ -101,9 +101,27 @@
     }
     .search-input::placeholder { color: var(--border-light); font-weight: 400; }
 
+    /* FIXED LAYOUT FOR SURPRISE & FILTER */
+    .surprise-filter-row { 
+      display: flex; align-items: center; justify-content: center; 
+      gap: 12px; margin-bottom: 32px; flex-wrap: nowrap; 
+      width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;
+    }
+    .surprise-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #FF6F61, #FF9F4B);
+      color: #fff; border: none; border-radius: 30px;
+      padding: 14px 20px; font-size: 0.95rem; font-weight: 700;
+      box-shadow: 0 8px 20px rgba(255,111,97,0.3);
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      animation: softPulse 2.5s infinite; white-space: nowrap;
+    }
+    .surprise-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(255,111,97,0.4); animation: none; }
+    
     .modern-select {
-      background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 14px 40px 14px 20px; color: var(--text-main); font-size: 0.95rem; font-weight: 600;
+      flex: 1;
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 30px;
+      padding: 14px 35px 14px 20px; color: var(--text-main); font-size: 0.95rem; font-weight: 600;
       outline: none; cursor: pointer; appearance: none;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
       background-repeat: no-repeat; background-position: right 14px center; background-size: 18px;
@@ -111,20 +129,16 @@
     }
     .modern-select:hover { border-color: var(--cyan); }
 
-    .surprise-filter-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-    .surprise-btn {
-      background: linear-gradient(135deg, #FF6F61, #FF9F4B);
-      color: #fff; border: none; border-radius: 30px;
-      padding: 14px 32px; font-size: 1rem; font-weight: 700;
-      box-shadow: 0 8px 20px rgba(255,111,97,0.3);
-      cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
-      animation: softPulse 2.5s infinite;
-    }
-    .surprise-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(255,111,97,0.4); animation: none; }
     @keyframes softPulse {
       0% { box-shadow: 0 0 0 0 rgba(255,111,97,0.5); }
       70% { box-shadow: 0 0 0 12px rgba(255,111,97,0); }
       100% { box-shadow: 0 0 0 0 rgba(255,111,97,0); }
+    }
+    
+    @media (max-width: 450px) {
+      .surprise-filter-row { gap: 8px; }
+      .surprise-btn, .modern-select { font-size: 0.85rem; padding-left: 12px; padding-right: 12px; }
+      .modern-select { padding-right: 28px; }
     }
 
     .scroll-bar { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; margin-bottom: 16px; }
@@ -145,7 +159,7 @@
 
     .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; margin-bottom: 40px; }
     .pack-card {
-      background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
+      background: var(--bg-surface); border: 1px solid var(--border); border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: var(--radius-xl);
       overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
       opacity: 0; transform: translateY(30px); transition: var(--theme-transition), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s, box-shadow 0.4s;
     }
@@ -193,7 +207,6 @@
     }
     .card-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; }
 
-    /* New "box" style for devs + view count */
     .card-meta {
       display: flex; justify-content: space-between; align-items: center;
       font-size: 0.8rem; color: var(--text-main);
@@ -264,23 +277,41 @@
       border-bottom: 1px solid var(--border); position: sticky; top: 0;
       background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px); z-index: 10;
     }
-    .modal-name { font-size: 1.35rem; font-weight: 800; }
+    
+    /* Beautiful Modal Styling */
+    .modal-name { 
+      font-size: 1.4rem; font-weight: 800; 
+      background: linear-gradient(135deg, var(--text-main), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
     .modal-x {
       background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
       width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: 0.3s;
     }
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
 
-    .pack-modal { max-width: 750px; }
-    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; }
-    .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; }
+    .pack-modal { max-width: 850px; }
+    
+    /* Glassmorphism Blur Background for Image */
+    .modal-img-container { 
+      width: 100%; background: #000; position: relative; display: none; overflow: hidden;
+    }
+    .modal-img-bg {
+      position: absolute; inset: -30px; background-size: cover; background-position: center; 
+      filter: blur(25px); opacity: 0.4; z-index: 0;
+    }
+    .modal-img { 
+      width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; 
+      position: relative; z-index: 1; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+    }
+    
     .modal-body { padding: 32px; flex: 1; overflow-y: auto; }
 
     @media (min-width: 768px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
-      .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); }
+      .modal-img-container { width: 55%; display: flex; align-items: center; border-right: 1px solid var(--border); }
       .modal-img { height: 100%; max-height: 600px; object-fit: contain; }
-      .modal-content-wrapper { width: 50%; display: flex; flex-direction: column; }
+      .modal-content-wrapper { width: 45%; display: flex; flex-direction: column; }
     }
 
     @media (max-width: 767px) {
@@ -307,7 +338,13 @@
       .drawer.right { max-width: 100%; border-radius: var(--radius-xl) 0 0 var(--radius-xl); }
     }
 
-    .modal-desc { font-size: 1.05rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 32px; }
+    /* Premium Modal Description */
+    .modal-desc { 
+      font-size: 1.05rem; color: var(--text-main); line-height: 1.7; margin-bottom: 32px; 
+      background: rgba(0,0,0,0.2); padding: 20px; border-radius: var(--radius-md); 
+      border: 1px solid var(--border); box-shadow: inset 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
     .tags-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; align-items: center; }
     .tag { background: var(--bg); border: 1px solid var(--border); padding: 8px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; color: var(--text-main); display: inline-flex; align-items: center; gap: 8px; }
     .tag i { color: var(--cyan); }
@@ -455,6 +492,8 @@
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal pack-modal">
     <div class="modal-img-container" id="mImgContainer">
+      <!-- The new blur background layer -->
+      <div class="modal-img-bg" id="mImgBg"></div>
       <img class="modal-img" id="mImg" src="" alt="" />
     </div>
     <div class="modal-content-wrapper">
@@ -578,8 +617,8 @@ function resumeTyping() { typingPaused = false; startTypingAnimation(); }
 document.getElementById('q').addEventListener('focus', () => { pauseTyping(); document.getElementById('q').placeholder = "Search Nova Library"; });
 document.getElementById('q').addEventListener('blur', () => { resumeTyping(); });
 
-try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 try { favorites = JSON.parse(localStorage.getItem('nova_favorites') || '[]'); } catch {}
+try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 const savedInfinite = localStorage.getItem('nova_infinite');
 if (savedInfinite === 'true') infiniteMode = true;
 
@@ -604,7 +643,6 @@ async function pingPackView(pack) {
     localStorage.setItem('nova_viewed_packs', JSON.stringify(viewedPacks));
     await fetch(`${VIEW_PING_URL}?action=view&id=${encodeURIComponent(id)}&name=${encodeURIComponent(pack.name || '')}&source=web&key=${VIEW_KEY}`, { method: 'GET', mode: 'no-cors' });
     pack.view_count = (pack.view_count || 0) + 1;
-    // Update the card view count in DOM
     const cardEl = document.querySelector(`.pack-card[data-packid="${id}"]`);
     if (cardEl) {
       const viewSpan = cardEl.querySelector('.view-line');
@@ -716,7 +754,8 @@ function applyFilters() {
   } else if (srt === 'mostviewed') {
     filtered.sort((a,b) => (b.view_count || 0) - (a.view_count || 0));
   } else if (srt === 'favorites') {
-    filtered = filtered.filter(p => favorites.includes(p.id || p.name));
+    // FIXED: Ensured ids are converted to strings so array.includes() works accurately
+    filtered = filtered.filter(p => favorites.includes(String(p.id || p.name)));
   }
 
   totalPages = Math.ceil(filtered.length / PER_PAGE);
@@ -751,8 +790,11 @@ function appendCards(slice) {
       const secondaryTag = (p.secondary_tag && p.secondary_tag !== p.category) ? `<span class="card-tag"><i class="fa-solid fa-tag"></i> ${esc(p.secondary_tag)}</span>` : '';
       const isNew = p.date_added && (Date.now() - new Date(p.date_added).getTime() < 7*24*60*60*1000);
       const viewCount = p.view_count || 0;
-      const packId = (p.id || p.name).toString();
+      const packId = String(p.id || p.name);
       const isFav = favorites.includes(packId);
+
+      // Secure escaping for inline HTML attribute
+      const safeId = packId.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
       const card = document.createElement('div');
       card.className = 'pack-card' + (hasSupport ? ' featured-card' : '');
@@ -765,7 +807,7 @@ function appendCards(slice) {
       card.innerHTML = `
         <div class="card-img">
           ${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : ''}
-          <div class="card-bookmark ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${packId.replace(/'/g, "\\'")}', this)" title="Favorite">
+          <div class="card-bookmark ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${safeId}', this)" title="Favorite">
             <i class="fa-solid fa-bookmark"></i>
           </div>
         </div>
@@ -812,7 +854,9 @@ function appendCards(slice) {
   document.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
 }
 
-function toggleFavorite(packId, btn) {
+// FIXED: Receives actual event object and properly checks toggle
+function toggleFavorite(e, packId, btn) {
+  e.stopPropagation();
   if (!packId) return;
   const idx = favorites.indexOf(packId);
   if (idx > -1) {
@@ -890,12 +934,15 @@ function openModalDirect(p) {
   shareBtn.classList.remove('copied');
 
   const img = document.getElementById('mImg');
+  const imgBg = document.getElementById('mImgBg');
   const imgContainer = document.getElementById('mImgContainer');
   if (p.image) {
     imgContainer.style.display = 'block';
     img.style.display = 'block';
-    img.onerror = () => { img.style.display = 'none'; };
+    img.onerror = () => { img.style.display = 'none'; imgBg.style.display = 'none'; };
     img.src = p.image;
+    imgBg.style.display = 'block';
+    imgBg.style.backgroundImage = `url('${p.image}')`; // Apply blur background layer
   } else {
     imgContainer.style.display = 'none';
   }
