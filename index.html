@@ -486,7 +486,7 @@
 <script>
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
-const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec'; // Update if needed
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 const VIEW_KEY = 'N0vaPingK3y2025';
 
 let PER_PAGE = 30;
@@ -751,12 +751,12 @@ function appendCards(slice) {
       const secondaryTag = (p.secondary_tag && p.secondary_tag !== p.category) ? `<span class="card-tag"><i class="fa-solid fa-tag"></i> ${esc(p.secondary_tag)}</span>` : '';
       const isNew = p.date_added && (Date.now() - new Date(p.date_added).getTime() < 7*24*60*60*1000);
       const viewCount = p.view_count || 0;
-      const packId = p.id || p.name;
+      const packId = (p.id || p.name).toString();
       const isFav = favorites.includes(packId);
 
       const card = document.createElement('div');
       card.className = 'pack-card' + (hasSupport ? ' featured-card' : '');
-      card.setAttribute('data-packid', p.id);   // for later DOM update
+      card.setAttribute('data-packid', p.id);
       card.onclick = (e) => {
         if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-bookmark')) return;
         openModalDirect(filtered[absIdx]);
