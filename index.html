@@ -111,7 +111,6 @@
     }
     .modern-select:hover { border-color: var(--cyan); }
 
-    /* Filter next to Surprise Me */
     .surprise-filter-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
     .surprise-btn {
       background: linear-gradient(135deg, #FF6F61, #FF9F4B);
@@ -451,7 +450,7 @@
   </div>
 </div>
 
-<!-- PACK DETAIL MODAL (SIMPLE, RELIABLE IMAGE) -->
+<!-- PACK DETAIL MODAL -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal pack-modal">
     <div class="modal-img-container" id="mImgContainer">
@@ -476,6 +475,9 @@
         <div style="padding-top:32px;font-size:0.85rem;color:var(--text-muted);display:flex;justify-content:space-between;font-weight:600;">
           <span><i class="fa-solid fa-user"></i> <span id="mAddedBy"></span></span>
           <span id="mDate"></span>
+        </div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">
+          <i class="fa-solid fa-eye"></i> <span id="mViews">0</span> views
         </div>
         <div class="view-disclaimer" style="margin-top:8px;">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms.</div>
       </div>
@@ -774,7 +776,7 @@ function appendCards(slice) {
           <div class="card-tags">
             <span class="card-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>
             ${secondaryTag}
-            ${hasSupport ? `<span class="featured-badge" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])">Packmaker</span>` : ''}
+            ${hasSupport ? `<span class="featured-badge" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])">Featured</span>` : ''}
             ${isNew ? '<span class="new-badge">New</span>' : ''}
           </div>
           <div class="card-desc">${esc(p.description || 'No description provided.')}</div>
@@ -885,6 +887,9 @@ function openModalDirect(p) {
   document.getElementById('mArchive').href = arch;
   document.getElementById('mAddedBy').textContent = `Added by ${p.added_by || 'Staff'}`;
   document.getElementById('mDate').textContent = p.date_added || '';
+
+  // Show view count in modal
+  document.getElementById('mViews').textContent = p.view_count || 0;
 
   const shareBtn = document.getElementById('mShare');
   shareBtn.innerHTML = '<i class="fa-solid fa-link"></i>';
