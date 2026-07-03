@@ -466,8 +466,8 @@
 <script>
 const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/main/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
-// Use the updated view-ping script with VIEW_KEY
-const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbx2oa0Qg5k9czqlo9Kw2syMfoD_DVXZ-DZdFWTDSsLU90P9o5Xt0rLnBvP_zmMa2Qk2Nw/exec';  // replace with your actual view-ping deployment URL
+// ⚠️ REPLACE THIS WITH YOUR ACTUAL VIEW‑PING DEPLOYMENT URL
+const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 const VIEW_KEY = 'N0vaPingK3y2025';
 
 let PER_PAGE = 30;
@@ -580,15 +580,12 @@ async function pingPackView(pack) {
   try {
     if (!pack || (!pack.id && !pack.name)) return;
     const id = String(pack.id || '');
-    // Check if already viewed by this browser
     const viewedPacks = JSON.parse(localStorage.getItem('nova_viewed_packs') || '{}');
-    if (viewedPacks[id]) return; // already counted
+    if (viewedPacks[id]) return;
     viewedPacks[id] = true;
     localStorage.setItem('nova_viewed_packs', JSON.stringify(viewedPacks));
 
-    // Send view ping with view key
     await fetch(`${VIEW_PING_URL}?action=view&id=${encodeURIComponent(id)}&name=${encodeURIComponent(pack.name || '')}&source=web&key=${VIEW_KEY}`, { method: 'GET', mode: 'no-cors' });
-    // Increment local count (optimistic)
     pack.view_count = (pack.view_count || 0) + 1;
   } catch (err) {}
 }
@@ -766,7 +763,18 @@ function appendCards(slice) {
     });
     document.getElementById('grid').appendChild(frag);
   } else {
-    // Image view unchanged – add view count if desired, but skipping for brevity
+    // Image view – simplified
+    slice.forEach((p, i) => {
+      const absIdx = (currentPage-1)*PER_PAGE + i;
+      const card = document.createElement('div');
+      card.className = 'image-card';
+      card.onclick = () => openModalDirect(filtered[absIdx]);
+      card.innerHTML = p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : '';
+      card.innerHTML += `<div class="image-card-overlay"><div class="image-card-name">${esc(p.name)}</div></div>`;
+      frag.appendChild(card);
+      cardObserver.observe(card);
+    });
+    document.getElementById('imageGrid').appendChild(frag);
   }
   document.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
 }
@@ -784,7 +792,43 @@ function toggleFavorite(packId, btn) {
   localStorage.setItem('nova_favorites', JSON.stringify(favorites));
 }
 
-// … (renderPag, go, surpriseMe, setView, openModalDirect, closeModal, etc. unchanged, only openModalDirect now includes secondary tag) …
+function renderPag() {
+  const pag = document.getElementById('pag');
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  let h = `<button class="pg-btn" onclick="go(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>`;
+  for (let i=1; i<=totalPages; i++) {
+    if (i===1 || i===totalPages || Math.abs(i-currentPage)<=1) {
+      h += `<button class="pg-btn ${i===currentPage?'active':''}" onclick="go(${i})">${i}</button>`;
+    } else if (i===currentPage-2 || i===currentPage+2) {
+      h += `<span style="color:var(--text-muted);padding:0 8px;">…</span>`;
+    }
+  }
+  h += `<button class="pg-btn" onclick="go(${currentPage+1})" ${currentPage===totalPages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>`;
+  pag.innerHTML = h;
+}
+
+function go(p) {
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderCurrentPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function surpriseMe() {
+  if (!allPacks.length) return;
+  openModalDirect(allPacks[Math.floor(Math.random() * allPacks.length)]);
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('grid').style.display = v==='grid' ? 'grid' : 'none';
+  document.getElementById('imageGrid').style.display = v==='image' ? 'grid' : 'none';
+  document.getElementById('btnGrid').style.color = v === 'grid' ? 'var(--cyan)' : 'var(--text-main)';
+  document.getElementById('btnGrid').style.borderColor = v === 'grid' ? 'var(--cyan)' : 'var(--border)';
+  document.getElementById('btnImage').style.color = v === 'image' ? 'var(--cyan)' : 'var(--text-main)';
+  document.getElementById('btnImage').style.borderColor = v === 'image' ? 'var(--cyan)' : 'var(--border)';
+  applyFilters();
+}
 
 function openModalDirect(p) {
   if (!p) return;
@@ -798,10 +842,87 @@ function openModalDirect(p) {
   }
   tagsHTML += `<span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
   document.getElementById('mTags').innerHTML = tagsHTML;
-  // … rest unchanged …
+
+  const sup = String(p.support_link || p.support || '').trim();
+  const arch = String(p.archive_link || p.archive || '').trim();
+  document.getElementById('mSupport').style.display = (sup && sup.toLowerCase()!=='none') ? 'flex' : 'none';
+  document.getElementById('mSupport').href = sup;
+  document.getElementById('mArchive').style.display = (arch && arch.toLowerCase()!=='none') ? 'flex' : 'none';
+  document.getElementById('mArchive').href = arch;
+  document.getElementById('mAddedBy').textContent = `Added by ${p.added_by || 'Staff'}`;
+  document.getElementById('mDate').textContent = p.date_added || '';
+
+  const shareBtn = document.getElementById('mShare');
+  shareBtn.innerHTML = '<i class="fa-solid fa-link"></i>';
+  shareBtn.classList.remove('copied');
+
+  const img = document.getElementById('mImg');
+  const imgContainer = document.getElementById('mImgContainer');
+  if (p.image) {
+    imgContainer.style.display = 'block';
+    img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; };
+    img.src = p.image;
+  } else {
+    imgContainer.style.display = 'none';
+  }
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
-// … (rest of functions unchanged) …
+function closeModal(e) { if (!e || e.target === document.getElementById('overlay')) { document.getElementById('overlay').classList.remove('open'); document.body.style.overflow = ''; } }
+
+function triggerCopyShare(pack, btnElement) {
+  if (!pack) return;
+  const text = `📝 Name: ${pack.name}\n🎨 Devs: ${pack.credits}\n🚀 Download: ${pack.link || 'N/A'}\n\n🌐 Browse Nova's Library: <${NOVA_URL}>`;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    const original = btnElement.innerHTML;
+    btnElement.innerHTML = '<i class="fa-solid fa-check"></i>';
+    btnElement.classList.add('copied');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      btnElement.innerHTML = original;
+      btnElement.classList.remove('copied');
+    }, 2500);
+  });
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function addRecent(pack) {
+  recentlyViewed = recentlyViewed.filter(r => r.name !== pack.name);
+  recentlyViewed.unshift({ name: pack.name });
+  if (recentlyViewed.length > 12) recentlyViewed = recentlyViewed.slice(0,12);
+  localStorage.setItem('nova_recent', JSON.stringify(recentlyViewed));
+  renderRecent();
+}
+function renderRecent() {
+  const container = document.getElementById('recentChips');
+  const label = document.getElementById('recentLabel');
+  if (!recentlyViewed.length) { container.style.display = 'none'; label.style.display = 'none'; return; }
+  container.style.display = 'flex'; label.style.display = 'block';
+  container.innerHTML = recentlyViewed.map(r => `<button class="cat-pill" style="border-style:dashed;" onclick='openByName("${esc(r.name)}")'><i class="fa-solid fa-clock-rotate-left"></i> ${esc(r.name)}</button>`).join('');
+}
+function openByName(name) { const pack = allPacks.find(p => p.name === name); if (pack) openModalDirect(pack); }
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); } });
+
+document.getElementById('q').addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(applyFilters, 350);
+});
+
+async function init() {
+  renderCategories();
+  const ok = await loadAllPacks();
+  if (!ok) { document.getElementById('grid').innerHTML = '<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i><h3>Failed to load</h3></div>'; return; }
+  document.getElementById('infiniteToggle').checked = infiniteMode;
+  renderRecent();
+  setView('grid');
+}
+init();
 </script>
 <script src="nova-themes.js"></script>
 </body>
