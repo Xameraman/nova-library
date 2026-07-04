@@ -12,14 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload only site files (exclude heavy packs data)
+      # Remove all pack data so it doesn't bloat the Pages artifact
+      - name: Clean up large data files
+        run: |
+          rm -f packs_*.json
+          rm -f packs_index.json
+          echo "Cleaned up packs data"
+
+      - name: Upload only site files
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-          exclude: |
-            packs*.json
-            packs_index.json
-            **/node_modules
 
   deploy:
     needs: build
