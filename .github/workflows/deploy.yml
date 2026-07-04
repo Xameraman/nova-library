@@ -12,14 +12,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Remove all pack data so the Pages artifact stays tiny
-      - name: Clean up large data files
+      # Remove ALL files EXCEPT the ones we need for the website
+      - name: Keep only website files
         run: |
-          rm -f packs_*.json
-          rm -f packs_index.json
-          echo "Cleaned up packs data"
+          shopt -s extglob
+          rm -rf !(index.html|nova-themes.js|.github|*.png|*.jpg|*.svg|*.ico)
+          echo "Artifact will contain:"
+          ls -la
 
-      - name: Upload only site files
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
