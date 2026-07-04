@@ -1633,7 +1633,7 @@
   },
   {
     "id": 98,
-    "name": "Real FPS Counter | In-game FPS Counter on HUD",
+    "name": "Real FPS Counter",
     "link": "https://mcpedl.com/real-fps-counter/",
     "support_link": "https://discord.gg/na3tKVXFpn",
     "archive_link": "",
@@ -1715,5 +1715,22 @@
     "date_added": "2026-07-03T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
     "view_count": 1
+  },
+  {
+    "id": 103,
+    "name": "Delight 4x4 Texture Pack",
+    "link": "https://mcpedl.com/delight-4x4/",
+    "support_link": "https://discord.gg/na3tKVXFpn",
+    "archive_link": "",
+    "category": "Visual",
+    "secondary_tag": "Texture Pack",
+    "credits": "Mod MCPE",
+    "description": "A low-res beautiful texture pack makes your Minecraft world not only lag free but enhances the textures and look. With the 4x4 texture pack, the world looks like a miniblock world. Cool thing it also adds new 4x4 Ui/GUI.",
+    "image": "https://i.ibb.co/RGK7Y7T1/357cdd2e961c.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-03T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
