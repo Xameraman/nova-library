@@ -1664,5 +1664,22 @@
     "date_added": "2026-07-02T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
     "view_count": 4
+  },
+  {
+    "id": 100,
+    "name": "Small Items",
+    "link": "https://mcpedl.com/small-items-2/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Visual",
+    "secondary_tag": "Texture Pack",
+    "credits": "voxenMC2",
+    "description": "This pack makes all the tools and items in Minecraft smaller so that they cover less of your screen and give you a clearer and cleaner view while playing.",
+    "image": "https://i.ibb.co/zTcJDt13/368fa10b99b3.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-03T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
