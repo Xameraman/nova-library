@@ -1,22 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Titanium Add-on",
-    "link": "https://www.curseforge.com/minecraft-bedrock/addons/titanium-add-on",
-    "support_link": "https://discord.gg/r6ym9cfcKw",
-    "archive_link": "",
-    "category": "Survival",
-    "secondary_tag": "Addon",
-    "credits": "Teen Titans Go!",
-    "description": "A complete Titanium progression tier for Minecraft Bedrock — mine it, smelt it, forge it, and upgrade it into endgame Titanium+ gear via the Smithing Table.",
-    "image": "https://i.ibb.co/Kx7mYqND/8e8487fea62b.png",
-    "image_credit": "",
-    "added_by": "xameraman5022",
-    "date_added": "2026-06-20T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 1
-  },
-  {
     "id": 2,
     "name": "BladeX PvP Practice Map",
     "link": "https://mcpedl.com/bladex-pvp-practice-map/",
@@ -779,7 +762,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-22T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 2
+    "view_count": 3
   },
   {
     "id": 48,
@@ -931,8 +914,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-02T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 2
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 3
   },
   {
     "id": 57,
@@ -1271,8 +1254,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 1
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 2
   },
   {
     "id": 77,
@@ -1306,7 +1289,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 2
+    "view_count": 3
   },
   {
     "id": 79,
@@ -1322,8 +1305,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
-    "last_viewed": "2026-07-01T16:00:00.000Z",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 80,
@@ -1340,7 +1323,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-26T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 1
+    "view_count": 2
   },
   {
     "id": 81,
@@ -1373,8 +1356,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-27T16:00:00.000Z",
-    "last_viewed": "2026-07-01T16:00:00.000Z",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 83,
@@ -1390,8 +1373,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-27T16:00:00.000Z",
-    "last_viewed": "2026-07-01T16:00:00.000Z",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 84,
@@ -1459,7 +1442,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 1
+    "view_count": 2
   },
   {
     "id": 88,
@@ -1492,8 +1475,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-01T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 1
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 2
   },
   {
     "id": 90,
@@ -1510,7 +1493,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-07-01T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 4
+    "view_count": 5
   },
   {
     "id": 91,
@@ -1526,8 +1509,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
-    "last_viewed": "2026-07-01T16:00:00.000Z",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 92,
@@ -1543,8 +1526,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 2
   },
   {
     "id": 93,
@@ -1560,8 +1543,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-28T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 1
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 2
   },
   {
     "id": 94,
@@ -1577,8 +1560,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-29T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 1
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 2
   },
   {
     "id": 95,
@@ -1629,7 +1612,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-07-01T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 5
+    "view_count": 6
   },
   {
     "id": 98,
@@ -1645,8 +1628,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-02T16:00:00.000Z",
-    "last_viewed": "2026-07-02T16:00:00.000Z",
-    "view_count": 4
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 5
   },
   {
     "id": 99,
@@ -1663,7 +1646,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-07-02T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 4
+    "view_count": 5
   },
   {
     "id": 100,
