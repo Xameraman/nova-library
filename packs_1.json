@@ -302,8 +302,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-06-16T16:00:00.000Z",
-    "last_viewed": "2026-06-30T16:00:00.000Z",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 20,
@@ -762,7 +762,7 @@
     "added_by": "xameraman5022",
     "date_added": "2026-06-21T16:00:00.000Z",
     "last_viewed": "2026-07-03T16:00:00.000Z",
-    "view_count": 1
+    "view_count": 2
   },
   {
     "id": 47,
@@ -1679,8 +1679,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-03T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-07-03T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 101,
@@ -1693,6 +1693,23 @@
     "credits": "Vortexlab",
     "description": "Tired of the boring vanilla outline? Rainbow Outline Selection replaces it with a vibrant animated rainbow effect for a more beautiful and immersive Bedrock experience.",
     "image": "https://i.ibb.co/q3MhDpG3/cb6b47151c11.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-03T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
+  },
+  {
+    "id": 102,
+    "name": "Enchantment Glint Customizer",
+    "link": "https://mcpedl.com/enchantment-glint-customizer/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Visual",
+    "secondary_tag": "Texture Pack",
+    "credits": "GotATrashCan",
+    "description": "Allows you to customize the enchantment glint color and adds the option for a smoother glint.",
+    "image": "https://i.ibb.co/rf6Qh8C3/e1f4cfae78ef.png",
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-03T16:00:00.000Z",
