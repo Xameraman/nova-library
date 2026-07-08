@@ -157,6 +157,25 @@
     .card-img { width: 100%; aspect-ratio: 16/9; background: var(--bg); position: relative; overflow: hidden; }
     .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .pack-card:hover .card-img img { transform: scale(1.05); }
+    .empty-img-icon {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; color: var(--text-muted);
+    }
+
+    /* Image Retry UI */
+    .retry-ui {
+      position: absolute; inset: 0;
+      background: rgba(var(--bg-surface-rgb, 24, 24, 27), 0.85);
+      backdrop-filter: blur(4px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      z-index: 2;
+    }
+    .retry-ui i { font-size: 2rem; color: var(--text-muted); }
+    .btn-retry-img {
+      background: var(--cyan); color: var(--bg); border: none;
+      border-radius: 20px; padding: 6px 14px; font-size: 0.75rem; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    }
 
     .card-bookmark {
       position: absolute; top: 12px; right: 12px;
@@ -196,11 +215,8 @@
     .card-meta {
       display: flex; justify-content: space-between; align-items: center;
       font-size: 0.8rem; color: var(--text-main);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 8px 12px;
-      margin-bottom: 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 8px 12px; margin-bottom: 16px;
     }
     .card-meta .dev-line { font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .card-meta .view-line { font-weight: 600; display: flex; align-items: center; gap: 4px; }
@@ -476,9 +492,6 @@
           <span><i class="fa-solid fa-user"></i> <span id="mAddedBy"></span></span>
           <span id="mDate"></span>
         </div>
-        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">
-          <i class="fa-solid fa-eye"></i> <span id="mViews">0</span> views
-        </div>
         <div class="view-disclaimer" style="margin-top:8px;">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms.</div>
       </div>
     </div>
@@ -586,7 +599,24 @@ const savedInfinite = localStorage.getItem('nova_infinite');
 if (savedInfinite === 'true') infiniteMode = true;
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
-window.handleImgErr = function(img) { img.style.display = 'none'; };
+
+// ─── IMAGE ERROR HANDLING (Retry Button) ──────────────────
+window.handleImgErr = function(img, originalSrc) {
+  // Only attach retry once
+  if (img.parentElement.querySelector('.retry-ui')) return;
+  img.style.display = 'none';
+  const retryUi = document.createElement('div');
+  retryUi.className = 'retry-ui';
+  retryUi.innerHTML = '<i class="fa-solid fa-image-slash"></i><button class="btn-retry-img"><i class="fa-solid fa-rotate-right"></i> Retry</button>';
+  retryUi.querySelector('.btn-retry-img').onclick = (e) => {
+    e.stopPropagation();
+    img.src = originalSrc + (originalSrc.includes('?') ? '&' : '?') + 'retry=' + Date.now();
+    img.style.display = 'block';
+    img.onerror = () => handleImgErr(img, originalSrc); // re-attach if still broken
+    retryUi.remove();
+  };
+  img.parentElement.appendChild(retryUi);
+};
 
 function renderCategories() {
   document.getElementById('categoryBar').innerHTML = CATEGORIES.map(c =>
@@ -623,7 +653,6 @@ async function loadAllPacks() {
       const index = await idxRes.json();
       document.getElementById('sSynced').textContent = new Date(index.updated).toLocaleDateString();
       document.getElementById('sPages').textContent = index.pages;
-
       const promises = Array.from({ length: index.pages }, (_, i) =>
         (async () => {
           for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -636,10 +665,9 @@ async function loadAllPacks() {
             }
           }
           console.warn(`Failed to load packs_${i+1}.json after ${MAX_RETRIES} attempts`);
-          return []; // fallback to empty array – doesn’t break everything
+          return [];
         })()
       );
-
       const results = await Promise.all(promises);
       allPacks = results.flat();
       setBar(90);
@@ -648,10 +676,7 @@ async function loadAllPacks() {
       document.getElementById('sSynced').textContent = new Date().toLocaleDateString();
       document.getElementById('sPages').textContent = '1';
     }
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+  } catch (err) { console.error(err); return false; }
 
   if (allPacks.length) {
     const dates = allPacks.map(p => p.date_added).filter(Boolean);
@@ -662,8 +687,7 @@ async function loadAllPacks() {
     document.getElementById('sTot').textContent = allPacks.length;
     renderSharers();
   }
-  setBar(100);
-  setTimeout(() => setBar(0), 600);
+  setBar(100); setTimeout(() => setBar(0), 600);
   startTypingAnimation();
   return true;
 }
@@ -780,13 +804,17 @@ function appendCards(slice) {
       card.className = 'pack-card' + (hasSupport ? ' featured-card' : '');
       card.setAttribute('data-packid', p.id);
       card.onclick = (e) => {
-        if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-bookmark')) return;
+        if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-bookmark') || e.target.closest('.retry-ui')) return;
         openModalDirect(filtered[absIdx]);
       };
 
+      const imgTag = p.image
+        ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this, '${esc(p.image)}')">`
+        : '<div class="empty-img-icon"><i class="fa-solid fa-box-open"></i></div>';
+
       card.innerHTML = `
         <div class="card-img">
-          ${p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : ''}
+          ${imgTag}
           <div class="card-bookmark ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${safeId}', this)" title="Favorite">
             <i class="fa-solid fa-bookmark"></i>
           </div>
@@ -824,7 +852,7 @@ function appendCards(slice) {
       const card = document.createElement('div');
       card.className = 'image-card';
       card.onclick = () => openModalDirect(filtered[absIdx]);
-      card.innerHTML = p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this)">` : '';
+      card.innerHTML = p.image ? `<img data-src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="handleImgErr(this, '${esc(p.image)}')">` : '';
       card.innerHTML += `<div class="image-card-overlay"><div class="image-card-name">${esc(p.name)}</div></div>`;
       frag.appendChild(card);
       cardObserver.observe(card);
