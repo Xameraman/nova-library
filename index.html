@@ -161,7 +161,6 @@
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
       font-size: 3rem; color: var(--text-muted);
     }
-
     /* Image Retry UI */
     .retry-ui {
       position: absolute; inset: 0;
@@ -492,6 +491,10 @@
           <span><i class="fa-solid fa-user"></i> <span id="mAddedBy"></span></span>
           <span id="mDate"></span>
         </div>
+        <!-- View count inside modal -->
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">
+          <i class="fa-solid fa-eye"></i> <span id="mViews">0</span> views
+        </div>
         <div class="view-disclaimer" style="margin-top:8px;">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms.</div>
       </div>
     </div>
@@ -602,7 +605,6 @@ function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%
 
 // ─── IMAGE ERROR HANDLING (Retry Button) ──────────────────
 window.handleImgErr = function(img, originalSrc) {
-  // Only attach retry once
   if (img.parentElement.querySelector('.retry-ui')) return;
   img.style.display = 'none';
   const retryUi = document.createElement('div');
