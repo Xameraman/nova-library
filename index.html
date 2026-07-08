@@ -16,7 +16,7 @@
       --bg: #09090B;
       --bg-surface: #18181B;
       --bg-surface-hover: #27272A;
-      --bg-surface-rgb: 24, 24, 27;          /* for rgba usage */
+      --bg-surface-rgb: 24, 24, 27;
       --border: #27272A;
       --border-light: #3F3F46;
       --text-main: #FAFAFA;
@@ -156,7 +156,6 @@
     .results-count { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
     .results-count b { color: var(--text-main); font-weight: 800; }
 
-    /* ── PACK CARDS ──────────────────────────── */
     .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; margin-bottom: 40px; }
     .pack-card {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
@@ -173,13 +172,10 @@
     .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .pack-card:hover .card-img img { transform: scale(1.05); }
 
-    /* box fallback */
     .empty-img-icon {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
       font-size: 3rem; color: var(--text-muted);
     }
-
-    /* Retry overlay – follows theme */
     .retry-ui {
       position: absolute; inset: 0;
       background: rgba(var(--bg-surface-rgb), 0.85);
@@ -249,7 +245,6 @@
     .btn-card.support-card { color: var(--featured-pink); border-color: var(--featured-pink); background: rgba(236, 72, 153, 0.1); }
     .btn-card.support-card:hover { background: var(--featured-pink); color: white; transform: scale(1.1); }
 
-    /* ── IMAGE GRID ──────────────────────────── */
     .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
     .image-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--bg-surface); border: 1px solid var(--border); opacity: 0; transform: translateY(20px); }
     .image-card.visible { opacity: 1; transform: translateY(0); }
@@ -264,14 +259,12 @@
     .image-card:hover .image-card-overlay { opacity: 1; }
     .image-card-name { font-size: 1rem; font-weight: 800; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
 
-    /* ── PAGINATION ─────────────────────────── */
     .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 50px; flex-wrap: wrap; }
     .pg-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); border-radius: var(--radius-md); padding: 10px 20px; font-weight: 700; cursor: pointer; transition: 0.3s; }
     .pg-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
     .pg-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); box-shadow: 0 4px 12px var(--cyan-glow); }
     .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── MODALS ─────────────────────────────── */
     .overlay {
       position: fixed; inset: 0; background: rgba(var(--overlay-rgb), 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       z-index: 200; display: flex; align-items: center; justify-content: center;
@@ -524,7 +517,7 @@
 </div>
 
 <script>
-const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/packs/'; // ✅ packs branch
+const BASE_URL = 'https://raw.githubusercontent.com/Xameraman/nova-library/packs/';
 const NOVA_URL = 'https://nova-library.pages.dev/';
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 const VIEW_KEY = 'N0vaPingK3y2025';
@@ -538,9 +531,8 @@ let favorites = [];
 let infiniteMode = false;
 let scrollThrottle = null;
 let searchDebounce = null;
-let typingInterval = null;
-let typingPaused = false;
 
+// Lightweight Intersection Observer for fade-in
 const cardObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -548,7 +540,7 @@ const cardObserver = new IntersectionObserver((entries) => {
       cardObserver.unobserve(entry.target);
     }
   });
-}, { rootMargin: '100px 0px', threshold: 0.1 });
+}, { rootMargin: '100px 0px', threshold: 0.05 });
 
 const CATEGORIES = [
   { val: '', label: 'All' },
@@ -566,35 +558,6 @@ const CATEGORIES = [
   { val: 'Fps Booster', label: 'Fps Booster' }
 ];
 
-const PLACEHOLDER_PHRASES = [
-  "Search Nova Library", "100% Creator Trusted!", "Looking For Something?",
-  "100% Free", "100% No Ads & Shorteners", "Direct downloads only",
-  "Nexus of Verified Assets"
-];
-let phraseIndex = 0, charIndex = 0, isDeleting = false;
-
-function startTypingAnimation() {
-  const input = document.getElementById('q');
-  if (!input || typingPaused) return;
-  const phrase = PLACEHOLDER_PHRASES[phraseIndex];
-  if (!isDeleting) {
-    input.placeholder = phrase.substring(0, charIndex + 1);
-    charIndex++;
-    if (charIndex === phrase.length) { isDeleting = true; setTimeout(() => requestAnimationFrame(startTypingAnimation), 2500); return; }
-    typingInterval = setTimeout(() => requestAnimationFrame(startTypingAnimation), 50);
-  } else {
-    input.placeholder = phrase.substring(0, charIndex - 1);
-    charIndex--;
-    if (charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % PLACEHOLDER_PHRASES.length; setTimeout(() => requestAnimationFrame(startTypingAnimation), 400); return; }
-    typingInterval = setTimeout(() => requestAnimationFrame(startTypingAnimation), 20);
-  }
-}
-function pauseTyping() { typingPaused = true; if (typingInterval) { clearTimeout(typingInterval); typingInterval = null; } }
-function resumeTyping() { typingPaused = false; startTypingAnimation(); }
-
-document.getElementById('q').addEventListener('focus', () => { pauseTyping(); document.getElementById('q').placeholder = "Search Nova Library"; });
-document.getElementById('q').addEventListener('blur', () => { resumeTyping(); });
-
 try { favorites = JSON.parse(localStorage.getItem('nova_favorites') || '[]'); } catch {}
 try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 const savedInfinite = localStorage.getItem('nova_infinite');
@@ -602,7 +565,7 @@ if (savedInfinite === 'true') infiniteMode = true;
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
 
-// ── IMAGE ERROR HANDLER (retry button) ──────────
+// Theme‑aware image error retry
 window.handleImgErr = function(img, originalSrc) {
   if (img.parentElement.querySelector('.retry-ui')) return;
   img.style.display = 'none';
@@ -624,7 +587,6 @@ function renderCategories() {
     `<button class="cat-pill ${currentCat === c.val ? 'active' : ''}" onclick="selectCat('${c.val}')">${c.label}</button>`
   ).join('');
 }
-
 function selectCat(val) { currentCat = val; renderCategories(); applyFilters(); }
 
 async function pingPackView(pack) {
@@ -647,26 +609,20 @@ async function pingPackView(pack) {
 
 async function loadAllPacks() {
   setBar(20);
-  const MAX_RETRIES = 2;
   try {
     const idxRes = await fetch(BASE_URL + 'packs_index.json?_=' + Date.now());
     if (idxRes.ok) {
       const index = await idxRes.json();
       document.getElementById('sSynced').textContent = new Date(index.updated).toLocaleDateString();
       document.getElementById('sPages').textContent = index.pages;
-      const promises = Array.from({ length: index.pages }, (_, i) =>
-        (async () => {
-          for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-            try {
-              const res = await fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now());
-              if (res.ok) return await res.json();
-            } catch (e) {}
-            if (attempt < MAX_RETRIES - 1) await new Promise(r => setTimeout(r, 1000));
-          }
-          console.warn(`Failed to load packs_${i+1}.json after ${MAX_RETRIES} attempts`);
-          return [];
-        })()
-      );
+      const promises = [];
+      for (let i = 0; i < index.pages; i++) {
+        promises.push(
+          fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now())
+            .then(r => r.ok ? r.json() : [])
+            .catch(() => [])
+        );
+      }
       const results = await Promise.all(promises);
       allPacks = results.flat();
       setBar(90);
@@ -687,7 +643,6 @@ async function loadAllPacks() {
     renderSharers();
   }
   setBar(100); setTimeout(() => setBar(0), 600);
-  startTypingAnimation();
   return true;
 }
 
@@ -771,17 +726,15 @@ function applyFilters() {
 }
 
 function renderCurrentPage() {
+  document.getElementById('grid').innerHTML = '';
+  document.getElementById('imageGrid').innerHTML = '';
   if (infiniteMode) {
-    document.getElementById('grid').innerHTML = '';
-    document.getElementById('imageGrid').innerHTML = '';
     currentPage = 1;
     appendCards(filtered.slice(0, PER_PAGE));
   } else {
-    document.getElementById('grid').innerHTML = '';
-    document.getElementById('imageGrid').innerHTML = '';
     const slice = filtered.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
     appendCards(slice);
-    renderPag();
+    if (totalPages > 1) renderPag();
   }
 }
 
@@ -883,7 +836,6 @@ function renderPag() {
 }
 
 function go(p) { if (p < 1 || p > totalPages) return; currentPage = p; renderCurrentPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
 function surpriseMe() { if (!allPacks.length) return; openModalDirect(allPacks[Math.floor(Math.random() * allPacks.length)]); }
 
 function setView(v) {
@@ -967,7 +919,7 @@ function renderRecent() {
 function openByName(name) { const pack = allPacks.find(p => p.name === name); if (pack) openModalDirect(pack); }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); } });
-document.getElementById('q').addEventListener('input', () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(applyFilters, 350); });
+document.getElementById('q').addEventListener('input', () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(applyFilters, 300); });
 
 async function init() {
   renderCategories();
