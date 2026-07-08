@@ -616,23 +616,42 @@ async function pingPackView(pack) {
 
 async function loadAllPacks() {
   setBar(20);
+  const MAX_RETRIES = 2;
   try {
     const idxRes = await fetch(BASE_URL + 'packs_index.json?_=' + Date.now());
     if (idxRes.ok) {
       const index = await idxRes.json();
       document.getElementById('sSynced').textContent = new Date(index.updated).toLocaleDateString();
       document.getElementById('sPages').textContent = index.pages;
+
       const promises = Array.from({ length: index.pages }, (_, i) =>
-        fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now()).then(r => r.json()).catch(() => [])
+        (async () => {
+          for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+            try {
+              const res = await fetch(BASE_URL + `packs_${i+1}.json?_=` + Date.now());
+              if (res.ok) return await res.json();
+            } catch (e) {}
+            if (attempt < MAX_RETRIES - 1) {
+              await new Promise(r => setTimeout(r, 1000)); // wait 1 second before retry
+            }
+          }
+          console.warn(`Failed to load packs_${i+1}.json after ${MAX_RETRIES} attempts`);
+          return []; // fallback to empty array – doesn’t break everything
+        })()
       );
-      allPacks = (await Promise.all(promises)).flat();
+
+      const results = await Promise.all(promises);
+      allPacks = results.flat();
       setBar(90);
     } else {
       allPacks = await (await fetch(BASE_URL + 'packs.json?_=' + Date.now())).json();
       document.getElementById('sSynced').textContent = new Date().toLocaleDateString();
       document.getElementById('sPages').textContent = '1';
     }
-  } catch (err) { console.error(err); return false; }
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 
   if (allPacks.length) {
     const dates = allPacks.map(p => p.date_added).filter(Boolean);
@@ -643,7 +662,8 @@ async function loadAllPacks() {
     document.getElementById('sTot').textContent = allPacks.length;
     renderSharers();
   }
-  setBar(100); setTimeout(() => setBar(0), 600);
+  setBar(100);
+  setTimeout(() => setBar(0), 600);
   startTypingAnimation();
   return true;
 }
