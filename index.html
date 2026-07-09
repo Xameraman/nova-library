@@ -52,7 +52,6 @@
       position: relative;
     }
 
-    /* Premium Ambient Background */
     body::before {
       content: '';
       position: fixed;
@@ -118,7 +117,6 @@
 
     main { max-width: 1600px; margin: 0 auto; padding: 0 5% 60px 5%; }
 
-    /* Enhanced Search Container */
     .search-container {
       background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl);
       padding: 6px; display: flex; gap: 8px; align-items: center;
@@ -159,11 +157,7 @@
       animation: softPulse 2.5s infinite;
     }
     .surprise-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(255,111,97,0.4); animation: none; }
-    @keyframes softPulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,111,97,0.5); }
-      70% { box-shadow: 0 0 0 12px rgba(255,111,97,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,111,97,0); }
-    }
+    @keyframes softPulse { 0% { box-shadow: 0 0 0 0 rgba(255,111,97,0.5); } 70% { box-shadow: 0 0 0 12px rgba(255,111,97,0); } 100% { box-shadow: 0 0 0 0 rgba(255,111,97,0); } }
 
     .scroll-bar { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; margin-bottom: 16px; }
     .scroll-bar::-webkit-scrollbar { display: none; }
@@ -188,7 +182,6 @@
       overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
       opacity: 0; transform: translateY(20px); 
       transition: var(--theme-transition), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s, box-shadow 0.4s;
-      /* Massive Performance Boost for Mobile */
       content-visibility: auto; contain-intrinsic-size: 380px;
     }
     
@@ -197,9 +190,17 @@
     .pack-card.featured-card { border-color: var(--gold); background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(245, 158, 11, 0.05) 100%); }
     .pack-card.featured-card:hover { box-shadow: 0 24px 48px var(--gold-glow); }
 
-    .card-img { width: 100%; aspect-ratio: 16/9; background: var(--bg); position: relative; overflow: hidden; }
+    .card-img { width: 100%; aspect-ratio: 16/9; background: var(--bg); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
     .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .pack-card:hover .card-img img { transform: scale(1.05); }
+
+    /* Premium Fallback for Broken Images */
+    .fallback-img {
+      width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--bg-surface-hover); color: var(--border-light); gap: 10px; transition: var(--theme-transition);
+    }
+    .fallback-img i { font-size: 2.5rem; opacity: 0.6; }
+    .fallback-img span { font-size: 0.8rem; font-weight: 700; opacity: 0.6; text-transform: uppercase; letter-spacing: 1.5px; }
 
     .card-bookmark {
       position: absolute; top: 12px; right: 12px;
@@ -263,7 +264,7 @@
     .btn-card.support-card:hover { background: var(--featured-pink); color: white; transform: scale(1.1); }
 
     .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
-    .image-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--bg-surface); border: 1px solid var(--border); opacity: 0; transform: translateY(20px); content-visibility: auto; contain-intrinsic-size: 250px; }
+    .image-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; aspect-ratio: 16/10; background: var(--bg-surface); border: 1px solid var(--border); opacity: 0; transform: translateY(20px); content-visibility: auto; contain-intrinsic-size: 250px; display:flex; align-items:center; justify-content:center;}
     .image-card.visible { opacity: 1; transform: translateY(0); }
     .image-card img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s; }
     .image-card:hover img { transform: scale(1.08); }
@@ -314,13 +315,13 @@
     .modal-x:hover { background: var(--red); color: white; border-color: var(--red); transform: rotate(90deg); }
 
     .pack-modal { max-width: 750px; }
-    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: none; }
+    .modal-img-container { width: 100%; background: var(--bg); position: relative; display: flex; align-items:center; justify-content:center; }
     .modal-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; margin: 0 auto; }
     .modal-body { padding: 32px; flex: 1; overflow-y: auto; }
 
     @media (min-width: 768px) {
       .pack-modal { flex-direction: row; overflow: hidden; }
-      .modal-img-container { width: 50%; display: flex; border-right: 1px solid var(--border); }
+      .modal-img-container { width: 50%; border-right: 1px solid var(--border); }
       .modal-img { height: 100%; max-height: 600px; object-fit: contain; }
       .modal-content-wrapper { width: 50%; display: flex; flex-direction: column; }
     }
@@ -330,7 +331,7 @@
       .image-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
       .overlay { align-items: center; padding: 16px; }
       .modal { max-width: calc(100vw - 32px); margin: 0 auto; max-height: 85vh; border-radius: var(--radius-xl); }
-      .modal-img-container { display: block; height: auto; max-height: 35vh; }
+      .modal-img-container { display: flex; height: auto; min-height: 250px; max-height: 35vh; }
       .modal-img { height: 100%; max-height: 35vh; object-fit: contain; }
       .drawer.right { max-width: 100%; border-radius: var(--radius-xl) 0 0 var(--radius-xl); }
     }
@@ -494,6 +495,7 @@
   <div class="modal pack-modal">
     <div class="modal-img-container" id="mImgContainer">
       <img class="modal-img" id="mImg" src="" alt="" />
+      <div class="fallback-img" id="mImgFallback" style="display:none;"><i class="fa-solid fa-image-slash"></i><span>Image Unavailable</span></div>
     </div>
     <div class="modal-content-wrapper">
       <div class="modal-head" style="border-bottom:none;padding-bottom:12px;">
@@ -542,7 +544,6 @@ let searchDebounce = null;
 let typingInterval = null;
 let typingPaused = false;
 
-// Optimization: Use intersection observer purely for animation to visible class.
 const cardObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -579,13 +580,8 @@ const CATEGORIES = [
 ];
 
 const PLACEHOLDER_PHRASES = [
-  "Search Nova Library",
-  "100% Creator Trusted!",
-  "Looking For Something?",
-  "100% Free",
-  "100% No Ads & Shorteners",
-  "Direct downloads only",
-  "Nexus of Verified Assets"
+  "Search Nova Library", "100% Creator Trusted!", "Looking For Something?", 
+  "100% Free", "100% No Ads & Shorteners", "Direct downloads only", "Nexus of Verified Assets"
 ];
 let phraseIndex = 0, charIndex = 0, isDeleting = false;
 
@@ -616,7 +612,7 @@ function startTypingAnimation() {
 
 function pauseTyping() { typingPaused = true; if (typingInterval) { clearTimeout(typingInterval); typingInterval = null; } }
 function resumeTyping() { 
-  if(document.getElementById('q').value.trim() !== "") return; // Don't resume if text exists
+  if(document.getElementById('q').value.trim() !== "") return;
   typingPaused = false; 
   startTypingAnimation(); 
 }
@@ -630,7 +626,11 @@ const savedInfinite = localStorage.getItem('nova_infinite');
 if (savedInfinite === 'true') infiniteMode = true;
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
-window.handleImgErr = function(img) { img.style.display = 'none'; };
+
+// PREMIUM ERROR FALLBACK: Graceful placeholder instead of hidden content
+window.handleImgErr = function(img) {
+  img.outerHTML = `<div class="fallback-img"><i class="fa-solid fa-image-slash"></i><span>Unavailable</span></div>`;
+};
 
 function renderCategories() {
   document.getElementById('categoryBar').innerHTML = CATEGORIES.map(c =>
@@ -663,59 +663,73 @@ async function fetchStatsUI(index) {
   document.getElementById('sPages').textContent = index.pages || 1;
 }
 
-// SPEED OPTIMIZATION: Progressive Data Fetching
+// SAFE FETCH HELPER: Intercepts timeouts/errors so the site never crashes.
+async function safeFetch(url) {
+  try {
+    const res = await fetch(url);
+    if (res.ok) return await res.json();
+  } catch (e) {
+    console.warn("Network error fetching:", url);
+  }
+  return []; // Returns an empty array if the connection drops, keeping logic intact.
+}
+
+// INDESTRUCTIBLE PROGRESSIVE LOAD
 async function loadAllPacks() {
   setBar(20);
+  let index = { pages: 1 };
+
+  // Attempt to fetch index
   try {
     const idxRes = await fetch(BASE_URL + 'packs_index.json?_=' + Date.now());
-    
     if (idxRes.ok) {
-      const index = await idxRes.json();
+      index = await idxRes.json();
       fetchStatsUI(index);
-      
-      // 1. Fetch only the first page immediately for instant UI render
-      const p1Res = await fetch(BASE_URL + `packs_1.json?_=` + Date.now());
-      const firstPageData = await p1Res.json();
-      allPacks = firstPageData;
-      
-      // Render page 1 so user isn't stuck waiting
-      setView('grid');
-      setBar(60);
-
-      // 2. Fetch the remaining pages silently in the background
-      if (index.pages > 1) {
-        setTimeout(async () => {
-          const promises = Array.from({ length: index.pages - 1 }, (_, i) =>
-            fetch(BASE_URL + `packs_${i+2}.json?_=` + Date.now()).then(r => r.json()).catch(() => [])
-          );
-          const rest = (await Promise.all(promises)).flat();
-          allPacks = [...allPacks, ...rest];
-          
-          updateGlobalStats();
-          
-          // Re-apply filters quietly without resetting view unless search is active
-          if (document.getElementById('q').value.trim() === '') {
-            applyFilters(false); 
-          }
-        }, 300); // Slight delay gives UI thread room to breathe
-      } else {
-        updateGlobalStats();
-      }
-      
-    } else {
-      // Fallback
-      allPacks = await (await fetch(BASE_URL + 'packs.json?_=' + Date.now())).json();
-      document.getElementById('sSynced').textContent = new Date().toLocaleDateString();
-      document.getElementById('sPages').textContent = '1';
-      setView('grid');
-      updateGlobalStats();
     }
-  } catch (err) { 
-    console.error(err); 
-    document.getElementById('grid').innerHTML = '<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i><h3>Failed to load</h3></div>';
-    return false; 
+  } catch (err) {
+    console.warn("Index fetch failed. Resorting to fallback.");
   }
+
+  setBar(40);
   
+  // 1. Fetch Page 1 (Or Fallback) Safely
+  if (index.pages > 1) {
+    allPacks = await safeFetch(BASE_URL + `packs_1.json?_=` + Date.now());
+  } else {
+    allPacks = await safeFetch(BASE_URL + 'packs.json?_=' + Date.now());
+    updateGlobalStats();
+  }
+
+  // Pure Failure State (Network completely dead)
+  if (allPacks.length === 0) {
+    document.getElementById('grid').innerHTML = `<div class="empty" style="text-align:center; padding: 60px 20px; grid-column: 1 / -1;"><i class="fa-solid fa-wifi" style="font-size:3rem; color:var(--border-light); margin-bottom:16px; display:block;"></i><h3 style="font-size:1.2rem; margin-bottom:8px;">Network Error</h3><p style="color:var(--text-muted);">Nova could not be reached. Please check your connection and refresh.</p></div>`;
+    setBar(100); setTimeout(() => setBar(0), 600);
+    return false;
+  }
+
+  // Display Phase 1 safely
+  setView('grid');
+  setBar(60);
+
+  // 2. Background Load Phase 2+ Safely
+  if (index.pages > 1) {
+    setTimeout(async () => {
+      const promises = Array.from({ length: index.pages - 1 }, (_, i) =>
+        safeFetch(BASE_URL + `packs_${i+2}.json?_=` + Date.now())
+      );
+      
+      const rest = (await Promise.all(promises)).flat();
+      
+      if (rest.length > 0) {
+        allPacks = [...allPacks, ...rest];
+        updateGlobalStats();
+        
+        // Re-apply quietly if no active search is happening
+        if (document.getElementById('q').value.trim() === '') applyFilters(false);
+      }
+    }, 400); // 400ms breather for the UI to paint
+  }
+
   setBar(100); setTimeout(() => setBar(0), 600);
   startTypingAnimation();
   return true;
@@ -816,7 +830,6 @@ function renderCurrentPage() {
   if (infiniteMode) {
     document.getElementById('grid').innerHTML = '';
     document.getElementById('imageGrid').innerHTML = '';
-    // Append from page 1 up to currentPage to maintain scroll state
     const slice = filtered.slice(0, currentPage * PER_PAGE);
     appendCards(slice);
   } else {
@@ -850,10 +863,10 @@ function appendCards(slice) {
         openModalDirect(filtered[absIdx]);
       };
 
-      // PERFORMANCE FIX: using native loading="lazy" and decoding="async" rather than swapping via JS.
+      // IMPLEMENTED 2B: Network resilient image fallback logic inline
       card.innerHTML = `
         <div class="card-img">
-          ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="handleImgErr(this)">` : ''}
+          ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="handleImgErr(this)">` : `<div class="fallback-img"><i class="fa-solid fa-image-slash"></i><span>Unavailable</span></div>`}
           <div class="card-bookmark ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${safeId}', this)" title="Favorite">
             <i class="fa-solid fa-bookmark"></i>
           </div>
@@ -882,7 +895,7 @@ function appendCards(slice) {
           </div>
         </div>`;
       frag.appendChild(card);
-      cardObserver.observe(card); // Now strictly used for fade-in animation
+      cardObserver.observe(card); 
     });
     document.getElementById('grid').appendChild(frag);
   } else {
@@ -891,7 +904,7 @@ function appendCards(slice) {
       const card = document.createElement('div');
       card.className = 'image-card';
       card.onclick = () => openModalDirect(filtered[absIdx]);
-      card.innerHTML = p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="handleImgErr(this)">` : '';
+      card.innerHTML = p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="handleImgErr(this)">` : `<div class="fallback-img" style="background:transparent;"><i class="fa-solid fa-image-slash"></i><span>Unavailable</span></div>`;
       card.innerHTML += `<div class="image-card-overlay"><div class="image-card-name">${esc(p.name)}</div></div>`;
       frag.appendChild(card);
       cardObserver.observe(card);
@@ -980,16 +993,24 @@ function openModalDirect(p) {
   shareBtn.innerHTML = '<i class="fa-solid fa-link"></i>';
   shareBtn.classList.remove('copied');
 
+  // MODAL PREMIUM FALLBACK LOGIC
   const img = document.getElementById('mImg');
   const imgContainer = document.getElementById('mImgContainer');
+  const fallback = document.getElementById('mImgFallback');
+
   if (p.image) {
-    imgContainer.style.display = 'block';
-    img.style.display = 'block';
-    img.onerror = () => { img.style.display = 'none'; };
     img.src = p.image;
+    img.style.display = 'block';
+    fallback.style.display = 'none';
+    img.onerror = () => { 
+      img.style.display = 'none'; 
+      fallback.style.display = 'flex'; // Triggers premium broken image fallback
+    };
   } else {
-    imgContainer.style.display = 'none';
+    img.style.display = 'none';
+    fallback.style.display = 'flex';
   }
+  
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1034,7 +1055,7 @@ function openByName(name) { const pack = allPacks.find(p => p.name === name); if
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); closeStats(); } });
 
 document.getElementById('q').addEventListener('input', () => {
-  pauseTyping(); // Stop typing animation immediately if user starts typing
+  pauseTyping(); 
   clearTimeout(searchDebounce);
   searchDebounce = setTimeout(applyFilters, 350);
 });
@@ -1044,7 +1065,6 @@ async function init() {
   document.getElementById('infiniteToggle').checked = infiniteMode;
   renderRecent();
   
-  // Triggers the progressive load strategy
   await loadAllPacks(); 
 }
 init();
