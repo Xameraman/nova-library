@@ -194,7 +194,6 @@
     .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .pack-card:hover .card-img img { transform: scale(1.05); }
 
-    /* Premium Fallback for Broken Images */
     .fallback-img {
       width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
       background: var(--bg-surface-hover); color: var(--border-light); gap: 10px; transition: var(--theme-transition);
@@ -528,7 +527,7 @@
 
 <script>
 const BASE_URL = '/';
-const NOVA_URL = 'https://nova-library.pages.dev/';
+const NOVA_URL = 'https://nova-library.vercel.app';
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 const VIEW_KEY = 'N0vaPingK3y2025';
 
@@ -671,10 +670,10 @@ async function safeFetch(url) {
   } catch (e) {
     console.warn("Network error fetching:", url);
   }
-  return []; // Returns an empty array if the connection drops, keeping logic intact.
+  return [];
 }
 
-// INDESTRUCTIBLE PROGRESSIVE LOAD
+// INDESTRUCTIBLE PROGRESSIVE LOAD (no more packs.json fallback)
 async function loadAllPacks() {
   setBar(20);
   let index = { pages: 1 };
@@ -692,12 +691,9 @@ async function loadAllPacks() {
 
   setBar(40);
   
-  // 1. Fetch Page 1 (Or Fallback) Safely
-  if (index.pages > 1) {
+  // Fetch first chunk (or all packs if only one file)
+  if (index.pages > 0) {
     allPacks = await safeFetch(BASE_URL + `packs_1.json?_=` + Date.now());
-  } else {
-    allPacks = await safeFetch(BASE_URL + 'packs.json?_=' + Date.now());
-    updateGlobalStats();
   }
 
   // Pure Failure State (Network completely dead)
@@ -707,11 +703,10 @@ async function loadAllPacks() {
     return false;
   }
 
-  // Display Phase 1 safely
-  setView('grid');
   setBar(60);
+  updateGlobalStats();
 
-  // 2. Background Load Phase 2+ Safely
+  // Background load remaining chunks
   if (index.pages > 1) {
     setTimeout(async () => {
       const promises = Array.from({ length: index.pages - 1 }, (_, i) =>
@@ -723,11 +718,9 @@ async function loadAllPacks() {
       if (rest.length > 0) {
         allPacks = [...allPacks, ...rest];
         updateGlobalStats();
-        
-        // Re-apply quietly if no active search is happening
         if (document.getElementById('q').value.trim() === '') applyFilters(false);
       }
-    }, 400); // 400ms breather for the UI to paint
+    }, 400);
   }
 
   setBar(100); setTimeout(() => setBar(0), 600);
@@ -863,7 +856,6 @@ function appendCards(slice) {
         openModalDirect(filtered[absIdx]);
       };
 
-      // IMPLEMENTED 2B: Network resilient image fallback logic inline
       card.innerHTML = `
         <div class="card-img">
           ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="handleImgErr(this)">` : `<div class="fallback-img"><i class="fa-solid fa-image-slash"></i><span>Unavailable</span></div>`}
@@ -993,9 +985,7 @@ function openModalDirect(p) {
   shareBtn.innerHTML = '<i class="fa-solid fa-link"></i>';
   shareBtn.classList.remove('copied');
 
-  // MODAL PREMIUM FALLBACK LOGIC
   const img = document.getElementById('mImg');
-  const imgContainer = document.getElementById('mImgContainer');
   const fallback = document.getElementById('mImgFallback');
 
   if (p.image) {
@@ -1004,7 +994,7 @@ function openModalDirect(p) {
     fallback.style.display = 'none';
     img.onerror = () => { 
       img.style.display = 'none'; 
-      fallback.style.display = 'flex'; // Triggers premium broken image fallback
+      fallback.style.display = 'flex';
     };
   } else {
     img.style.display = 'none';
@@ -1065,7 +1055,8 @@ async function init() {
   document.getElementById('infiniteToggle').checked = infiniteMode;
   renderRecent();
   
-  await loadAllPacks(); 
+  const ok = await loadAllPacks();
+  if (ok) applyFilters();          // ← ensures cards render after data loads
 }
 init();
 </script>
