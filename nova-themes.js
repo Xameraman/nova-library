@@ -69,7 +69,6 @@
     }
   }
 
-  // Ensure execution happens as rapidly as possible based on document readiness
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start);
   } else {
