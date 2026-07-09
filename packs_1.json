@@ -1919,5 +1919,22 @@
     "date_added": "2026-07-06T16:00:00.000Z",
     "last_viewed": "2026-07-08T16:00:00.000Z",
     "view_count": 9
+  },
+  {
+    "id": 117,
+    "name": "ASMR - Mechanical Keyboard Sounds",
+    "link": "https://mcpedl.com/mechanical-keyboard-sounds-bedrock-edition/",
+    "support_link": "https://discord.gg/ZqBkcStcSK",
+    "archive_link": "",
+    "category": "Visual",
+    "secondary_tag": "Texture Pack",
+    "credits": "oSkullo",
+    "description": "Replaces Minecraft's default sounds with 800+ real mechanical keyboard click recordings — footsteps, block breaking/placing, combat, armor, potions, and more.",
+    "image": "https://i.ibb.co/7Fk2BLQ/38e0dc484fe3.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-08T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
