@@ -2480,5 +2480,22 @@
     "date_added": "2026-07-22T16:00:00.000Z",
     "last_viewed": "2026-07-22T16:00:00.000Z",
     "view_count": 2
+  },
+  {
+    "id": 150,
+    "name": "NovaFX Visuals",
+    "link": "https://mcpedl.com/novafx-shader/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Shader",
+    "secondary_tag": "Texture Pack",
+    "credits": "xiaocraft",
+    "description": "NovaFX is a shader pack designed for Minecraft Bedrock Edition's Vibrant Visuals. It completely overhauls the game's lighting, atmosphere, water, fog, and materials to create a cinematic and immersive look, without sacrificing the Minecraft feel.",
+    "image": "https://i.ibb.co/qFRJFvvx/9acb7a33bc7f.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-22T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
