@@ -2565,5 +2565,22 @@
     "date_added": "2026-07-22T16:00:00.000Z",
     "last_viewed": "",
     "view_count": 0
+  },
+  {
+    "id": 155,
+    "name": "CraftEdge Client",
+    "link": "https://mcpedl.com/craftedge-client/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Client",
+    "secondary_tag": "Texture Pack",
+    "credits": "CraftEdgeClient",
+    "description": "CraftEdge Client transforms your vanilla Bedrock experience with a powerful in-game mod menu, fully customizable HUD modules, a cosmetics system, and deep game enhancements — all packed into a single resource pack.",
+    "image": "https://i.ibb.co/x8H5nJPy/81e0dd497834.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-23T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
