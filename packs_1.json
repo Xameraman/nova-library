@@ -2784,8 +2784,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-29T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-07-31T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 168,
@@ -2836,6 +2836,23 @@
     "added_by": "xameraman5022",
     "date_added": "2026-07-31T16:00:00.000Z",
     "last_viewed": "2026-07-31T16:00:00.000Z",
-    "view_count": 2
+    "view_count": 3
+  },
+  {
+    "id": 171,
+    "name": "Sulfur x Turbo FPS",
+    "link": "https://mcpedl.com/sulfur-x-turbo/",
+    "support_link": "https://discord.gg/AMHkW2Szvp",
+    "archive_link": "",
+    "category": "Fps Booster",
+    "secondary_tag": "Texture Pack",
+    "credits": "Sulfur Studios",
+    "description": "Sulfur x Turbo FPS is a carefully optimized resource pack for Minecraft Bedrock, designed to reduce lag, lower rendering load, and improve overall gameplay smoothness on low-end and mid-range devices.",
+    "image": "https://i.ibb.co/gZFbmdy5/7a092c67613c.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-07-31T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
