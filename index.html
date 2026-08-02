@@ -841,6 +841,13 @@ function appendCards(slice) {
       const isFav = favorites.includes(packId);
       const safeId = packId.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
+      // 🖼️ NEW: Show image credit directly on the card
+      const imgCreditLine = (p.image_credit && String(p.image_credit).trim())
+        ? `<div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted); margin-top:8px;">
+             <i class="fa-solid fa-image"></i> 🖼️ Image By: ${esc(p.image_credit)}
+           </div>`
+        : '';
+
       const card = document.createElement('div');
       card.className = 'pack-card' + (hasSupport ? ' featured-card' : '');
       card.setAttribute('data-packid', p.id);
@@ -870,7 +877,7 @@ function appendCards(slice) {
             <span class="dev-line"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>
             <span class="view-line" title="Unique views"><i class="fa-solid fa-eye"></i> ${viewCount}</span>
           </div>
-
+          ${imgCreditLine}  <!-- 🖼️ Image credit shown here -->
           <div class="card-footer">
             <div class="card-actions">
               ${hasSupport ? `<button class="btn-card support-card" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Support Creator"><i class="fa-solid fa-heart"></i></button>` : ''}
@@ -963,9 +970,9 @@ function openModalDirect(p) {
   }
   tagsHTML += `<span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
-  // ⚠️ NEW: Add image credit tag if available
+  // 🖼️ NEW: Image credit tag in modal with new icon & text
   if (p.image_credit && String(p.image_credit).trim()) {
-    tagsHTML += `<span class="tag"><i class="fa-solid fa-camera"></i> Image: ${esc(p.image_credit)}</span>`;
+    tagsHTML += `<span class="tag"><i class="fa-solid fa-image"></i> 🖼️ Image By: ${esc(p.image_credit)}</span>`;
   }
 
   document.getElementById('mTags').innerHTML = tagsHTML;
@@ -1009,10 +1016,10 @@ function closeModal(e) { if (!e || e.target === document.getElementById('overlay
 function triggerCopyShare(pack, btnElement) {
   if (!pack) return;
 
-  // ⚠️ NEW: include image credit line only if it exists
+  // 🖼️ NEW: Share text uses "🖼️ Image By:" if image credit exists
   let text = `📝 Name: ${pack.name}\n🎨 Devs: ${pack.credits}\n`;
   if (pack.image_credit && String(pack.image_credit).trim()) {
-    text += `📸 Image Credit: ${pack.image_credit}\n`;
+    text += `🖼️ Image By: ${pack.image_credit}\n`;
   }
   text += `🚀 Download: ${pack.link || 'N/A'}\n\n🌐 Browse Nova's Library: <${NOVA_URL}>`;
 
