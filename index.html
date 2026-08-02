@@ -626,7 +626,6 @@ if (savedInfinite === 'true') infiniteMode = true;
 
 function setBar(pct) { document.getElementById('loadBar').style.width = pct + '%'; }
 
-// PREMIUM ERROR FALLBACK: Graceful placeholder instead of hidden content
 window.handleImgErr = function(img) {
   img.outerHTML = `<div class="fallback-img"><i class="fa-solid fa-image-slash"></i><span>Unavailable</span></div>`;
 };
@@ -662,7 +661,6 @@ async function fetchStatsUI(index) {
   document.getElementById('sPages').textContent = index.pages || 1;
 }
 
-// SAFE FETCH HELPER: Intercepts timeouts/errors so the site never crashes.
 async function safeFetch(url) {
   try {
     const res = await fetch(url);
@@ -673,12 +671,10 @@ async function safeFetch(url) {
   return [];
 }
 
-// INDESTRUCTIBLE PROGRESSIVE LOAD (no more packs.json fallback)
 async function loadAllPacks() {
   setBar(20);
   let index = { pages: 1 };
 
-  // Attempt to fetch index
   try {
     const idxRes = await fetch(BASE_URL + 'packs_index.json?_=' + Date.now());
     if (idxRes.ok) {
@@ -691,12 +687,10 @@ async function loadAllPacks() {
 
   setBar(40);
   
-  // Fetch first chunk (or all packs if only one file)
   if (index.pages > 0) {
     allPacks = await safeFetch(BASE_URL + `packs_1.json?_=` + Date.now());
   }
 
-  // Pure Failure State (Network completely dead)
   if (allPacks.length === 0) {
     document.getElementById('grid').innerHTML = `<div class="empty" style="text-align:center; padding: 60px 20px; grid-column: 1 / -1;"><i class="fa-solid fa-wifi" style="font-size:3rem; color:var(--border-light); margin-bottom:16px; display:block;"></i><h3 style="font-size:1.2rem; margin-bottom:8px;">Network Error</h3><p style="color:var(--text-muted);">Nova could not be reached. Please check your connection and refresh.</p></div>`;
     setBar(100); setTimeout(() => setBar(0), 600);
@@ -706,7 +700,6 @@ async function loadAllPacks() {
   setBar(60);
   updateGlobalStats();
 
-  // Background load remaining chunks
   if (index.pages > 1) {
     setTimeout(async () => {
       const promises = Array.from({ length: index.pages - 1 }, (_, i) =>
@@ -969,6 +962,12 @@ function openModalDirect(p) {
     tagsHTML += `<span class="tag"><i class="fa-solid fa-tag"></i> ${esc(p.secondary_tag)}</span>`;
   }
   tagsHTML += `<span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
+
+  // ⚠️ NEW: Add image credit tag if available
+  if (p.image_credit && String(p.image_credit).trim()) {
+    tagsHTML += `<span class="tag"><i class="fa-solid fa-camera"></i> Image: ${esc(p.image_credit)}</span>`;
+  }
+
   document.getElementById('mTags').innerHTML = tagsHTML;
 
   const sup = String(p.support_link || p.support || '').trim();
@@ -1009,7 +1008,14 @@ function closeModal(e) { if (!e || e.target === document.getElementById('overlay
 
 function triggerCopyShare(pack, btnElement) {
   if (!pack) return;
-  const text = `📝 Name: ${pack.name}\n🎨 Devs: ${pack.credits}\n🚀 Download: ${pack.link || 'N/A'}\n\n🌐 Browse Nova's Library: <${NOVA_URL}>`;
+
+  // ⚠️ NEW: include image credit line only if it exists
+  let text = `📝 Name: ${pack.name}\n🎨 Devs: ${pack.credits}\n`;
+  if (pack.image_credit && String(pack.image_credit).trim()) {
+    text += `📸 Image Credit: ${pack.image_credit}\n`;
+  }
+  text += `🚀 Download: ${pack.link || 'N/A'}\n\n🌐 Browse Nova's Library: <${NOVA_URL}>`;
+
   navigator.clipboard.writeText(text).then(() => {
     const toast = document.getElementById('toast');
     toast.classList.add('show');
@@ -1056,7 +1062,7 @@ async function init() {
   renderRecent();
   
   const ok = await loadAllPacks();
-  if (ok) applyFilters();          // ← ensures cards render after data loads
+  if (ok) applyFilters();
 }
 init();
 </script>
