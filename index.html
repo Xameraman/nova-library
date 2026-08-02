@@ -844,7 +844,7 @@ function appendCards(slice) {
       // 🖼️ NEW: Show image credit directly on the card
       const imgCreditLine = (p.image_credit && String(p.image_credit).trim())
         ? `<div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted); margin-top:8px;">
-             <i class="fa-solid fa-image"></i> 🖼️ Image By: ${esc(p.image_credit)}
+             <i class="fa-solid fa-image"></i> Image By: ${esc(p.image_credit)}
            </div>`
         : '';
 
@@ -972,7 +972,7 @@ function openModalDirect(p) {
 
   // 🖼️ NEW: Image credit tag in modal with new icon & text
   if (p.image_credit && String(p.image_credit).trim()) {
-    tagsHTML += `<span class="tag"><i class="fa-solid fa-image"></i> 🖼️ Image By: ${esc(p.image_credit)}</span>`;
+    tagsHTML += `<span class="tag"><i class="fa-solid fa-image"></i> Image By: ${esc(p.image_credit)}</span>`;
   }
 
   document.getElementById('mTags').innerHTML = tagsHTML;
