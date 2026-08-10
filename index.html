@@ -165,6 +165,7 @@
       background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted);
       border-radius: 30px; padding: 12px 24px; font-size: 0.9rem; font-weight: 600;
       white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      text-decoration: none;
     }
     .cat-pill:hover { border-color: var(--cyan); color: var(--text-main); background: var(--bg-surface-hover); }
     .cat-pill.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); box-shadow: 0 4px 12px var(--cyan-glow); }
@@ -376,6 +377,77 @@
     .skeleton-line.w-3/4 { width: 75%; height: 24px; margin-bottom: 8px;}
     .skeleton-line.w-1/2 { width: 50%; }
     @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+    /* AI Widget – now on the LEFT side */
+    #nova-widget-btn {
+      position:fixed; bottom:24px; left:24px; z-index:99999; width:58px; height:58px;
+      border-radius:50%; background:linear-gradient(135deg,#9B4FDB,#5865F2); border:none;
+      cursor:pointer; box-shadow:0 4px 20px rgba(155,79,219,0.5); display:flex;
+      align-items:center; justify-content:center; font-size:28px; line-height:1;
+      transition:transform .2s,box-shadow .2s; animation:nova-pulse-ring 2.5s ease-in-out infinite;
+      color:#fff;
+    }
+    @keyframes nova-pulse-ring { 0%,100%{box-shadow:0 4px 20px rgba(155,79,219,0.5);} 50%{box-shadow:0 4px 32px rgba(155,79,219,0.9),0 0 0 8px rgba(155,79,219,0.15);} }
+    #nova-widget-btn:hover { transform:scale(1.1); }
+    #nova-widget-panel {
+      position:fixed; bottom:94px; left:24px; z-index:99998; width:340px; max-width:calc(100vw - 48px);
+      background:rgba(12,18,32,0.97); border:1.5px solid rgba(155,79,219,0.4); border-radius:16px;
+      box-shadow:0 16px 48px rgba(0,0,0,0.6),0 0 30px rgba(155,79,219,0.15); display:flex;
+      flex-direction:column; transform:scale(0.9) translateY(16px); opacity:0; pointer-events:none;
+      transition:all 0.25s cubic-bezier(.4,0,.2,1); overflow:hidden; max-height:520px;
+    }
+    #nova-widget-panel.nova-open { transform:scale(1) translateY(0); opacity:1; pointer-events:all; }
+    #nova-panel-header {
+      background:linear-gradient(135deg,rgba(155,79,219,0.25),rgba(88,101,242,0.2));
+      padding:14px 16px; display:flex; align-items:center; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,0.07); flex-shrink:0;
+    }
+    #nova-avatar { width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0; box-shadow:0 0 12px rgba(155,79,219,0.5); background:linear-gradient(135deg,#9B4FDB,#5865F2); display:flex; align-items:center; justify-content:center; font-size:20px; }
+    #nova-avatar img { width:100%; height:100%; object-fit:cover; }
+    #nova-panel-title { font-weight:900; font-size:14px; color:#fff; line-height:1.2; }
+    #nova-panel-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
+    #nova-online-dot { width:8px; height:8px; border-radius:50%; background:#47C96B; margin-left:auto; flex-shrink:0; box-shadow:0 0 6px #47C96B; animation:nova-blink 2s ease-in-out infinite; }
+    @keyframes nova-blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    #nova-messages {
+      flex:1; overflow-y:auto; padding:14px 14px 8px; display:flex; flex-direction:column;
+      gap:10px; font-family:'Segoe UI',sans-serif; scrollbar-width:thin;
+      scrollbar-color:rgba(155,79,219,0.3) transparent;
+    }
+    #nova-messages::-webkit-scrollbar { width:4px; }
+    #nova-messages::-webkit-scrollbar-track { background:transparent; }
+    #nova-messages::-webkit-scrollbar-thumb { background:rgba(155,79,219,0.3); border-radius:2px; }
+    .nova-msg { max-width:85%; padding:10px 13px; border-radius:12px; font-size:13.5px; line-height:1.65; animation:nova-pop .2s ease; word-break:break-word; }
+    @keyframes nova-pop { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+    .nova-msg.user { align-self:flex-end; background:linear-gradient(135deg,#9B4FDB,#5865F2); color:#fff; border-bottom-right-radius:4px; }
+    .nova-msg.bot { align-self:flex-start; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#E0EAF0; border-bottom-left-radius:4px; }
+    .nova-msg.bot strong { color:#FFD700; }
+    .nova-msg.bot em { color:#47C96B; font-style:normal; }
+    .nova-msg.bot code { background:rgba(0,0,0,0.4); padding:1px 5px; border-radius:3px; font-size:12px; color:#FFD700; }
+    .nova-typing { align-self:flex-start; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; border-bottom-left-radius:4px; padding:10px 14px; display:flex; gap:5px; align-items:center; }
+    .nova-dot { width:7px; height:7px; border-radius:50%; background:rgba(155,79,219,0.8); animation:nova-bounce .9s ease-in-out infinite; }
+    .nova-dot:nth-child(2) { animation-delay:.15s; }
+    .nova-dot:nth-child(3) { animation-delay:.3s; }
+    @keyframes nova-bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    #nova-input-row { display:flex; gap:8px; padding:10px 12px; border-top:1px solid rgba(255,255,255,0.07); background:rgba(0,0,0,0.2); flex-shrink:0; }
+    #nova-input { flex:1; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.1); border-radius:10px; padding:9px 13px; color:#fff; font-size:13px; font-family:'Segoe UI',sans-serif; outline:none; resize:none; max-height:80px; overflow-y:auto; transition:border-color .2s; }
+    #nova-input:focus { border-color:rgba(155,79,219,0.6); }
+    #nova-input::placeholder { color:rgba(255,255,255,0.3); }
+    #nova-input:disabled { opacity:0.5; cursor:not-allowed; }
+    #nova-send { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#9B4FDB,#5865F2); border:none; cursor:pointer; color:#fff; font-size:17px; display:flex; align-items:center; justify-content:center; transition:transform .15s,opacity .15s; flex-shrink:0; align-self:flex-end; }
+    #nova-send:hover:not(:disabled) { transform:scale(1.08); }
+    #nova-send:disabled { opacity:0.4; cursor:not-allowed; }
+    #nova-footer-note { text-align:center; font-size:10px; color:rgba(255,255,255,0.2); padding:4px 0 8px; font-family:'Segoe UI',sans-serif; flex-shrink:0; }
+    #nova-captcha-wrap { padding:12px; display:none; text-align:center; border-top:1px solid rgba(255,255,255,0.07); background:rgba(0,0,0,0.16); }
+
+    /* Adjust widget on small screens */
+    @media (max-width: 600px) {
+      #nova-widget-btn { left:10px; bottom:14px; width:50px; height:50px; font-size:24px; }
+      #nova-widget-panel { left:10px; bottom:78px; width:calc(100vw - 20px); }
+    }
+    @media (max-width: 400px) {
+      #nova-widget-btn { left:4px; bottom:10px; width:44px; height:44px; font-size:20px; }
+      #nova-widget-panel { left:4px; bottom:66px; width:calc(100vw - 8px); }
+    }
   </style>
 </head>
 <body>
@@ -414,6 +486,21 @@
       <input class="search-input" id="q" type="text" placeholder="Search Nova Library" autocomplete="off" />
     </div>
   </div>
+
+  <!-- Non‑intrusive Discord request button – full width, text wraps, paper plane icon -->
+  <div style="margin-bottom: 24px;">
+    <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" rel="noopener" 
+       style="display: flex; align-items: center; justify-content: center; gap: 8px;
+              width: 100%; padding: 12px 24px; border-radius: 30px;
+              background: rgba(245,158,11,0.1); border: 1px solid var(--gold);
+              color: var(--text-main); font-size: 0.9rem; font-weight: 600;
+              text-decoration: none; white-space: normal; text-align: center;
+              box-sizing: border-box;">
+      <i class="fa-solid fa-paper-plane" style="color: var(--gold); flex-shrink: 0;"></i>
+      <span>Not seeing what you like? <strong style="color: var(--gold);">Request it on Discord</strong></span>
+    </a>
+  </div>
+
   <div class="surprise-filter-row">
     <button class="surprise-btn" onclick="surpriseMe()"><i class="fa-solid fa-wand-magic-sparkles"></i> Surprise Me</button>
     <select class="modern-select" id="sortFilter" onchange="applyFilters()">
@@ -525,23 +612,217 @@
   </div>
 </div>
 
+<!-- AI Chat Widget (floating – LEFT side) -->
+<button id="nova-widget-btn" title="Chat with NOVA Assistant">🤖</button>
+<div id="nova-widget-panel">
+  <div id="nova-panel-header">
+    <div id="nova-avatar"><img src="https://i.ibb.co/cK60Sp0h/b41e6534d3e9.png" alt="NOVA"></div>
+    <div>
+      <div id="nova-panel-title">NOVA Assistant</div>
+      <div id="nova-panel-sub">Nexus Of Verified Assets</div>
+    </div>
+    <button id="nova-close-chat" style="background:none; border:none; color:#fff; cursor:pointer; font-size:1.2rem; margin-left:auto;" onclick="closeChat()">✕</button>
+    <div id="nova-online-dot"></div>
+  </div>
+  <div id="nova-messages">
+    <div class="nova-msg bot">
+      Hey! 👋 I'm <strong>NOVA Assistant</strong>. Ask me anything about packs, the library, or Minecraft Bedrock!<br>
+      <em>No real people can see your chats. For concerns that need a human, join our Discord.</em>
+    </div>
+  </div>
+  <div id="nova-captcha-wrap">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAADQ644b2jjSd7BsB" data-callback="onCaptchaSuccess" data-theme="dark" data-size="flexible" style="max-width:300px;margin:0 auto;"></div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:6px;">Verify you're human to start chatting</div>
+  </div>
+  <div id="nova-input-row">
+    <textarea id="nova-input" placeholder="Ask me anything..." rows="1"></textarea>
+    <button id="nova-send">➤</button>
+  </div>
+  <div id="nova-footer-note">NOVA Assistance</div>
+</div>
+
+<!-- Turnstile API (for widget) -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<!-- NOVA Theme Engine (inlined) -->
+<script>
+// =================================================================
+// NovaEngine.js – Premium Theme Engine
+// =================================================================
+(function () {
+  'use strict';
+  const STORAGE_THEME = 'nova_event_theme';
+  const THEMES = {
+    dark: { name: 'OLED Dark', vars: { '--bg': '#09090B', '--bg-surface': '#18181B', '--bg-surface-hover': '#27272A', '--border': '#27272A', '--border-light': '#3F3F46', '--text-main': '#FAFAFA', '--text-muted': '#A1A1AA', '--cyan': '#06B6D4', '--cyan-glow': 'rgba(6, 182, 212, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '0, 0, 0' } },
+    pureblack: { name: 'Pure Black', vars: { '--bg': '#000000', '--bg-surface': '#0A0A0A', '--bg-surface-hover': '#1A1A1A', '--border': '#262626', '--border-light': '#404040', '--text-main': '#FFFFFF', '--text-muted': '#A0A0A0', '--cyan': '#22D3EE', '--cyan-glow': 'rgba(34, 211, 238, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '0, 0, 0' } },
+    midnight: { name: 'Midnight Blue', vars: { '--bg': '#020617', '--bg-surface': '#0F172A', '--bg-surface-hover': '#1E293B', '--border': '#1E293B', '--border-light': '#334155', '--text-main': '#F8FAFC', '--text-muted': '#94A3B8', '--cyan': '#38BDF8', '--cyan-glow': 'rgba(56, 189, 248, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '2, 6, 23' } },
+    aurora: { name: 'Aurora Teal', vars: { '--bg': '#042F2E', '--bg-surface': '#134E4A', '--bg-surface-hover': '#1E6F6B', '--border': '#115E59', '--border-light': '#2DD4BF', '--text-main': '#ECFDF5', '--text-muted': '#99F6E4', '--cyan': '#2DD4BF', '--cyan-glow': 'rgba(45, 212, 191, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '4, 47, 46' } },
+    cyber: { name: 'Cyber Neon', vars: { '--bg': '#050505', '--bg-surface': '#111111', '--bg-surface-hover': '#222222', '--border': '#333333', '--border-light': '#E11D48', '--text-main': '#FCEE09', '--text-muted': '#999999', '--cyan': '#00F0FF', '--cyan-glow': 'rgba(0, 240, 255, 0.3)', '--gold': '#FCEE09', '--gold-glow': 'rgba(252, 238, 9, 0.3)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '5, 5, 5' } },
+    sunset: { name: 'Sunset Luxe', vars: { '--bg': '#1A0C0C', '--bg-surface': '#2D1A1A', '--bg-surface-hover': '#3E2626', '--border': '#3E2626', '--border-light': '#FB923C', '--text-main': '#FFFBEB', '--text-muted': '#FED7AA', '--cyan': '#F97316', '--cyan-glow': 'rgba(249, 115, 22, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '26, 12, 12' } },
+    forest: { name: 'Forest Elite', vars: { '--bg': '#0B1E11', '--bg-surface': '#1A3B27', '--bg-surface-hover': '#2B543A', '--border': '#2B543A', '--border-light': '#4ADE80', '--text-main': '#F0FDF4', '--text-muted': '#BBF7D0', '--cyan': '#4ADE80', '--cyan-glow': 'rgba(74, 222, 128, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '11, 30, 17' } },
+    rosegold: { name: 'Rose Gold', vars: { '--bg': '#1C0F13', '--bg-surface': '#2D1F23', '--bg-surface-hover': '#3E2E32', '--border': '#3E2E32', '--border-light': '#FDA4AF', '--text-main': '#FFF1F2', '--text-muted': '#FECDD3', '--cyan': '#FB7185', '--cyan-glow': 'rgba(251, 113, 133, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '28, 15, 19' } },
+    light: { name: 'Clean Light', vars: { '--bg': '#F8FAFC', '--bg-surface': '#FFFFFF', '--bg-surface-hover': '#F1F5F9', '--border': '#E2E8F0', '--border-light': '#CBD5E1', '--text-main': '#0F172A', '--text-muted': '#64748B', '--cyan': '#0284C7', '--cyan-glow': 'rgba(2, 132, 199, 0.25)', '--gold': '#F59E0B', '--gold-glow': 'rgba(245, 158, 11, 0.2)', '--purple': '#8B5CF6', '--featured-pink': '#EC4899', '--overlay-rgb': '15, 23, 42' } }
+  };
+  const root = document.documentElement;
+  function applyTheme(themeKey) {
+    const theme = THEMES[themeKey] || THEMES.dark;
+    requestAnimationFrame(() => {
+      Object.entries(theme.vars).forEach(([prop, val]) => {
+        root.style.setProperty(prop, val);
+      });
+      root.setAttribute('data-theme', themeKey === 'light' ? 'light' : 'dark');
+    });
+    localStorage.setItem(STORAGE_THEME, themeKey);
+  }
+  function createThemeSettingsSection() {
+    const div = document.createElement('div');
+    div.className = 'toggle-row';
+    const current = localStorage.getItem(STORAGE_THEME) || 'dark';
+    div.innerHTML = `
+      <span style="font-weight:700;font-size:1.05rem;">Engine Theme</span>
+      <select class="modern-select" id="themeEngineSelect" style="padding:10px 40px 10px 20px;">
+        ${Object.entries(THEMES).map(([k, v]) => `<option value="${k}" ${current === k ? 'selected' : ''}>${v.name}</option>`).join('')}
+      </select>
+    `;
+    return div;
+  }
+  function start() {
+    const savedTheme = localStorage.getItem(STORAGE_THEME) || 'dark';
+    applyTheme(savedTheme);
+    const settingsBody = document.querySelector('#settingsOverlay .modal-body');
+    if (settingsBody) {
+      const oldThemeRow = document.getElementById('themeSelect')?.closest('.toggle-row');
+      if (oldThemeRow) oldThemeRow.remove();
+      if (!document.getElementById('themeEngineSelect')) {
+        settingsBody.insertBefore(createThemeSettingsSection(), settingsBody.firstChild);
+      }
+      const engineSelect = document.getElementById('themeEngineSelect');
+      if (engineSelect) {
+        engineSelect.addEventListener('change', (e) => applyTheme(e.target.value));
+      }
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+<!-- Main Script (Library + AI Widget – no request system) -->
 <script>
 const BASE_URL = '/';
 const NOVA_URL = 'https://nova-library-mu.vercel.app/';
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 const VIEW_KEY = 'N0vaPingK3y2025';
 
+// ========== AI CHAT WIDGET ==========
+(function() {
+  const API_URL = 'https://xameraman5022-nova-guides.hf.space/chat';
+  const STATUS_URL = 'https://xameraman5022-nova-guides.hf.space/status';
+  const SOURCE = 'nova-library';
+
+  let token = localStorage.getItem('nova_token');
+  if (!token) { token = crypto.randomUUID(); localStorage.setItem('nova_token', token); }
+  const fingerprint = navigator.userAgent + "_" + screen.width + "x" + screen.height + "_" + Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const HEADERS = { 'Content-Type': 'application/json', 'x-user-token': token, 'x-user-fp': fingerprint };
+
+  let captchaVerified = sessionStorage.getItem('nova_captcha') === 'yes';
+  let captchaToken = null;
+  window.onCaptchaSuccess = function(cfToken) {
+    captchaToken = cfToken;
+    captchaVerified = true;
+    sessionStorage.setItem('nova_captcha', 'yes');
+    document.getElementById('nova-captcha-wrap').style.display = 'none';
+    document.getElementById('nova-input-row').style.display = 'flex';
+    const footer = document.getElementById('nova-footer-note');
+    if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official';
+    document.getElementById('nova-input').focus();
+  };
+
+  const BAD_WORDS = ["fuck","f*ck","fck","fuk","fuq","fvck","shit","sh1t","sh*t","sht","bitch","b*tch","btch","biatch","bastard","cunt","c*nt","dick","d*ck","cock","c*ck","pussy","p*ssy","piss","p*ss","whore","wh*re","slut","sl*t","retard","retarded","i will kill","i'll kill","gonna kill","i hate you","hate you","shut up","stfu","go die","kys","kill yourself","you suck","sucks ass","useless bot","stupid bot","dumb bot","garbage bot","trash bot","worst bot","useless ai","stupid ai","dumb ai","this is trash","this is garbage","you're trash","you're garbage","you're useless","you're stupid","you're dumb","you're an idiot","you are trash","you are garbage","you are useless","you are stupid","you are dumb","you are an idiot","nsfw","porn","pornography","xxx","nude","naked","hentai","lewd","explicit","erotic","onlyfans","fetish","gore","self harm","self-harm","suicide method","how to kill","how to make bomb"];
+  const MULTI_WORD_BAD = BAD_WORDS.filter(w => w.includes(" "));
+  const SINGLE_BAD = BAD_WORDS.filter(w => !w.includes(" "));
+  function isBadMessage(text) { const l = text.toLowerCase(); for (const p of MULTI_WORD_BAD) if (l.includes(p)) return true; const t = new Set(l.match(/[a-z0-9*]+/g) || []); const c = new Set(l.replace(/\s+/g, '').match(/[a-z0-9*]+/g) || []); for (const w of SINGLE_BAD) if (t.has(w) || c.has(w)) return true; return false; }
+
+  const REPEAT_WINDOW = 5, REPEAT_LOCK_AT = 3, SHORT_LOCK_AT = 2, REPEAT_TIME_WIN = 60000;
+  let msgHistory = [], shortWarnShown = false;
+  function normMsg(t) { return t.toLowerCase().trim().replace(/\s+/g, ' '); }
+  function simil(a, b) { if (!a || !b) return 0; const L = Math.max(a.length, b.length), S = Math.min(a.length, b.length); if (!L) return 1; let m = 0; for (let i = 0; i < S; i++) if (a[i] === b[i]) m++; return m / L; }
+  function checkRepetitive(text) { const n = normMsg(text), now = Date.now(); msgHistory = msgHistory.filter(e => now - e.t <= REPEAT_TIME_WIN); if (n.length <= 2) { const sc = msgHistory.filter(e => e.m === n).length; if (sc >= SHORT_LOCK_AT) return { lock: true, reason: 'short' }; if (!shortWarnShown) { shortWarnShown = true; return { lock: false, warn: true }; } } const ec = msgHistory.filter(e => e.m === n).length; if (ec >= REPEAT_LOCK_AT - 1) return { lock: true, reason: 'exact' }; const sc = msgHistory.filter(e => simil(n, e.m) >= 0.85 && n !== e.m).length; if (sc >= 2) return { lock: true, reason: 'similar' }; msgHistory.push({ m: n, t: Date.now() }); if (msgHistory.length > REPEAT_WINDOW) msgHistory = msgHistory.slice(-REPEAT_WINDOW); return { lock: false }; }
+
+  let history = [], isOpen = false, isLoading = false, chatLocked = false, countdownInt = null;
+  const btn = document.getElementById('nova-widget-btn'), panel = document.getElementById('nova-widget-panel'), msgs = document.getElementById('nova-messages'), input = document.getElementById('nova-input'), sendBtn = document.getElementById('nova-send'), footer = document.getElementById('nova-footer-note');
+
+  function updateCaptchaState() { const cw = document.getElementById('nova-captcha-wrap'), ir = document.getElementById('nova-input-row'); if (captchaVerified) { if (cw) cw.style.display = 'none'; if (ir) ir.style.display = 'flex'; } else { if (cw) cw.style.display = 'block'; if (ir) ir.style.display = 'none'; if (footer) footer.textContent = '🔒 Verify to start chatting'; } }
+  let slowBanner = null;
+  function showSlowBanner(s) { if (slowBanner) return; slowBanner = document.createElement('div'); slowBanner.style.cssText = 'background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);color:#fbbf24;font-size:11px;font-weight:700;text-align:center;padding:6px 10px;flex-shrink:0;'; slowBanner.textContent = `🛡️ High load detected — slow mode active (${s}s)`; panel.insertBefore(slowBanner, msgs); }
+  function hideSlowBanner() { if (slowBanner) { slowBanner.remove(); slowBanner = null; } }
+
+  const header = document.getElementById('nova-panel-header');
+  if (header) { const nc = document.createElement('button'); nc.title = 'New conversation'; nc.textContent = '🔄'; nc.style.cssText = 'background:none;border:none;cursor:pointer;font-size:16px;opacity:0.45;transition:opacity .2s;padding:2px 4px;margin-left:auto;flex-shrink:0;'; nc.onmouseover = () => nc.style.opacity = '1'; nc.onmouseout = () => nc.style.opacity = '0.45'; nc.addEventListener('click', resetChat); const dot = document.getElementById('nova-online-dot'); if (dot) header.insertBefore(nc, dot); else header.appendChild(nc); }
+
+  function startCountdown(s) { clearInterval(countdownInt); let r = s; function tick() { if (r <= 0) { clearInterval(countdownInt); checkStatusOnLoad(); return; } const m = Math.floor(r / 60), sec = r % 60; if (footer) footer.textContent = m > 0 ? `⏳ Locked ${m}m ${sec}s` : `⏳ Locked ${sec}s`; r--; } tick(); countdownInt = setInterval(tick, 1000); }
+  function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock'; }
+  function unlockChat() { clearInterval(countdownInt); chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; addMessage('bot', '✅ Lock lifted! You can send messages again. Please keep it respectful. 😊'); }
+  function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); captchaVerified = false; captchaToken = null; sessionStorage.removeItem('nova_captcha'); updateCaptchaState(); if (window.turnstile) window.turnstile.reset(); }
+
+  async function checkStatusOnLoad() { try { const res = await fetch(STATUS_URL, { headers: HEADERS }); if (!res.ok) return; const data = await res.json(); if (data.slow_mode && data.slow_until > 0) showSlowBanner(data.slow_until); else hideSlowBanner(); if (data.locked && data.unlock_in > 0) { chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; startCountdown(data.unlock_in); if (isOpen) addMessage('bot', `⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`); } else if (chatLocked && !data.locked) unlockChat(); } catch (e) {} }
+  updateCaptchaState(); checkStatusOnLoad();
+
+  btn.addEventListener('click', () => { isOpen = !isOpen; panel.classList.toggle('nova-open', isOpen); btn.textContent = isOpen ? '✕' : '🤖'; if (isOpen) { scrollToBottom(); checkStatusOnLoad(); updateCaptchaState(); } });
+  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+  sendBtn.addEventListener('click', sendMessage);
+
+  async function sendMessage() {
+    if (chatLocked) return;
+    if (!captchaVerified) { updateCaptchaState(); return; }
+    const text = input.value.trim();
+    if (!text || isLoading) return;
+    if (text.length > 600) { lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 chars. 🔄', 15); return; }
+    if (isBadMessage(text)) { lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW, and rude behavior are not allowed. 🔄', 15); return; }
+    const rep = checkRepetitive(text);
+    if (rep.warn) { addMessage('bot', '💡 Please ask a proper question! Very short messages may be limited. 😊'); input.value = ''; input.style.height = 'auto'; return; }
+    if (rep.lock) { lockChat(rep.reason === 'short' ? '⛔ <strong>Chat locked</strong> — please type real questions. 🔄' : '⛔ <strong>Chat locked</strong> — stop repeating the same message. 🔄', 15); return; }
+
+    addMessage('user', text); history.push({ role: 'user', content: text }); input.value = ''; input.style.height = 'auto';
+    const typing = addTyping(); setLoading(true);
+    try {
+      const res = await fetch(API_URL, { method: 'POST', headers: HEADERS, body: JSON.stringify({ message: text, history: history.slice(0, -1), source: SOURCE, captcha_token: captchaToken || '' }) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.captcha) { typing.remove(); captchaVerified = false; captchaToken = null; sessionStorage.removeItem('nova_captcha'); updateCaptchaState(); if (window.turnstile) window.turnstile.reset(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
+      if (data.locked) { typing.remove(); lockChat(data.response || '⛔ You have been locked. Please wait.', data.unlock_in || 15); setLoading(false); return; }
+      if (data.slow_mode) { typing.remove(); showSlowBanner(data.unlock_in || 60); addMessage('bot', data.response || '🛡️ NOVA is under high load. Please wait.'); setLoading(false); return; }
+      if (data.spam) { typing.remove(); lockChat(data.response || '⛔ Chat locked. Refresh to unlock.', 0); setLoading(false); return; }
+      const reply = data.response || 'Sorry, no response. Please try again.';
+      history.push({ role: 'assistant', content: reply }); typing.remove(); addMessage('bot', reply);
+    } catch (err) { typing.remove(); addMessage('bot', '⚠️ Something went wrong. Please try again in a moment.'); console.error('[NOVA Widget]', err); }
+    finally { setLoading(false); input.focus(); }
+  }
+
+  function addMessage(role, text) { const div = document.createElement('div'); div.className = `nova-msg ${role}`; div.innerHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); msgs.appendChild(div); scrollToBottom(); return div; }
+  function addTyping() { const div = document.createElement('div'); div.className = 'nova-typing'; div.innerHTML = '<div class="nova-dot"></div><div class="nova-dot"></div><div class="nova-dot"></div>'; msgs.appendChild(div); scrollToBottom(); return div; }
+  function scrollToBottom() { msgs.scrollTop = msgs.scrollHeight; }
+  function setLoading(s) { isLoading = s; input.disabled = s; sendBtn.disabled = s; }
+  window.closeChat = function() { isOpen = false; panel.classList.remove('nova-open'); btn.textContent = '🤖'; };
+})();
+
+// ========== LIBRARY CODE ==========
 let PER_PAGE = 30;
 let allPacks = [], filtered = [], currentPage = 1, totalPages = 0;
 let currentView = 'grid', currentCat = '';
 let currentModalPack = null;
-let recentlyViewed = [];
-let favorites = [];
 let infiniteMode = false;
 let scrollThrottle = null;
 let searchDebounce = null;
 let typingInterval = null;
 let typingPaused = false;
+
+let favorites = JSON.parse(localStorage.getItem('nova_favorites') || '[]');
+let recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]');
 
 const cardObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -619,8 +900,6 @@ function resumeTyping() {
 document.getElementById('q').addEventListener('focus', () => { pauseTyping(); document.getElementById('q').placeholder = "Search Nova Library"; });
 document.getElementById('q').addEventListener('blur', () => { resumeTyping(); });
 
-try { favorites = JSON.parse(localStorage.getItem('nova_favorites') || '[]'); } catch {}
-try { recentlyViewed = JSON.parse(localStorage.getItem('nova_recent') || '[]'); } catch {}
 const savedInfinite = localStorage.getItem('nova_infinite');
 if (savedInfinite === 'true') infiniteMode = true;
 
@@ -841,7 +1120,6 @@ function appendCards(slice) {
       const isFav = favorites.includes(packId);
       const safeId = packId.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
-      // 🖼️ NEW: Show image credit directly on the card
       const imgCreditLine = (p.image_credit && String(p.image_credit).trim())
         ? `<div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted); margin-top:8px;">
              <i class="fa-solid fa-image"></i> Image By: ${esc(p.image_credit)}
@@ -877,7 +1155,7 @@ function appendCards(slice) {
             <span class="dev-line"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>
             <span class="view-line" title="Unique views"><i class="fa-solid fa-eye"></i> ${viewCount}</span>
           </div>
-          ${imgCreditLine}  <!-- 🖼️ Image credit shown here -->
+          ${imgCreditLine}
           <div class="card-footer">
             <div class="card-actions">
               ${hasSupport ? `<button class="btn-card support-card" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])" title="Support Creator"><i class="fa-solid fa-heart"></i></button>` : ''}
@@ -970,7 +1248,6 @@ function openModalDirect(p) {
   }
   tagsHTML += `<span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
-  // 🖼️ NEW: Image credit tag in modal with new icon & text
   if (p.image_credit && String(p.image_credit).trim()) {
     tagsHTML += `<span class="tag"><i class="fa-solid fa-image"></i> Image By: ${esc(p.image_credit)}</span>`;
   }
@@ -1015,8 +1292,6 @@ function closeModal(e) { if (!e || e.target === document.getElementById('overlay
 
 function triggerCopyShare(pack, btnElement) {
   if (!pack) return;
-
-  // 🖼️ NEW: Share text uses "🖼️ Image By:" if image credit exists
   let text = `📝 Name: ${pack.name}\n🎨 Devs: ${pack.credits}\n`;
   if (pack.image_credit && String(pack.image_credit).trim()) {
     text += `🖼️ Image By: ${pack.image_credit}\n`;
@@ -1073,6 +1348,18 @@ async function init() {
 }
 init();
 </script>
-<script src="nova-themes.js"></script>
+
+<!-- Service Worker registration (keeps storage tiny) -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('SW registered:', reg.scope);
+    }).catch(err => {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+</script>
 </body>
 </html>
