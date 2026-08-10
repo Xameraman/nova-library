@@ -22,15 +22,12 @@
 
   function applyTheme(themeKey) {
     const theme = THEMES[themeKey] || THEMES.dark;
-    
-    // Prevent FOUC during transition by ensuring the root applies swiftly
     requestAnimationFrame(() => {
       Object.entries(theme.vars).forEach(([prop, val]) => {
         root.style.setProperty(prop, val);
       });
       root.setAttribute('data-theme', themeKey === 'light' ? 'light' : 'dark');
     });
-    
     localStorage.setItem(STORAGE_THEME, themeKey);
   }
 
@@ -38,8 +35,6 @@
     const div = document.createElement('div');
     div.className = 'toggle-row';
     const current = localStorage.getItem(STORAGE_THEME) || 'dark';
-    
-    // Premium select box UI injection
     div.innerHTML = `
       <span style="font-weight:700;font-size:1.05rem;">Engine Theme</span>
       <select class="modern-select" id="themeEngineSelect" style="padding:10px 40px 10px 20px;">
