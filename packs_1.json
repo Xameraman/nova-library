@@ -2053,8 +2053,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-11T16:00:00.000Z",
-    "last_viewed": "",
-    "view_count": 0
+    "last_viewed": "2026-08-12T16:00:00.000Z",
+    "view_count": 1
   },
   {
     "id": 125,
@@ -2410,8 +2410,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-07-20T16:00:00.000Z",
-    "last_viewed": "2026-07-31T16:00:00.000Z",
-    "view_count": 3
+    "last_viewed": "2026-08-12T16:00:00.000Z",
+    "view_count": 4
   },
   {
     "id": 146,
@@ -3362,8 +3362,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-08-10T16:00:00.000Z",
-    "last_viewed": "2026-08-10T16:00:00.000Z",
-    "view_count": 1
+    "last_viewed": "2026-08-12T16:00:00.000Z",
+    "view_count": 2
   },
   {
     "id": 204,
@@ -3380,6 +3380,23 @@
     "added_by": "xameraman5022",
     "date_added": "2026-08-11T16:00:00.000Z",
     "last_viewed": "2026-08-12T16:00:00.000Z",
-    "view_count": 1
+    "view_count": 2
+  },
+  {
+    "id": 205,
+    "name": "Bladesmith Series",
+    "link": "https://mcpedl.com/bladesmith-series/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Survival",
+    "secondary_tag": "Addon",
+    "credits": "zussklint",
+    "description": "The blades await the worthy to wield them. Venture through different treacherous biome and defeat the Sentient Blades to obtain their abilities. Craft new armor and weapons to go against new adversities.",
+    "image": "https://i.ibb.co/pvdr2dnx/a17d5db07833.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-08-12T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
