@@ -3415,5 +3415,22 @@
     "date_added": "2026-08-12T16:00:00.000Z",
     "last_viewed": "2026-08-13T16:00:00.000Z",
     "view_count": 1
+  },
+  {
+    "id": 207,
+    "name": "Hardcore Cheater",
+    "link": "https://mcpedl.com/hardcore-cheater/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Utility",
+    "secondary_tag": "Addon",
+    "credits": "voxenMC2",
+    "description": "An all-in-one cheat menu for Hardcore mode. Immortal toggle, enchantments, effects, XP, teleport, waypoints, item repair, and a command console with history — all from a single stick.",
+    "image": "https://i.ibb.co/Y47fd5KT/9b898a7a0f95.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-08-13T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
