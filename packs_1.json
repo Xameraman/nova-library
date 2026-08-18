@@ -3500,5 +3500,22 @@
     "date_added": "2026-08-15T16:00:00.000Z",
     "last_viewed": "2026-08-16T16:00:00.000Z",
     "view_count": 1
+  },
+  {
+    "id": 212,
+    "name": "Shared Inventory - Achievement Friendly",
+    "link": "https://mcpedl.com/shared-inventory-voxen/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Survival",
+    "secondary_tag": "Addon",
+    "credits": "voxenMC2",
+    "description": "Shared Inventory syncs every player's inventory and equipment in real time — pick up an item and it appears for everyone instantly. Perfect for true co-op survival. Achievement friendly.",
+    "image": "https://i.ibb.co/d0dx94Fg/be95c26133b0.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-08-17T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0
   }
 ]
