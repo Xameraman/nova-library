@@ -1,21 +1,19 @@
 // Service Worker for Nova Library — minimal cache, self-cleaning
-const CACHE_NAME = 'nova-library-v1';
+const CACHE_NAME = 'nova-library-v2';
 
 // Only cache these local resources (no external images, no huge JSON)
 const PRECACHE_URLS = [
   '/',
-  '/index.html',
-  '/nova-themes.js',   // if you keep it external, otherwise remove
+  '/index.html'
 ];
 
 // Install event – precache tiny essentials only
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(PRECACHE_URLS);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(PRECACHE_URLS))
+      .catch(err => console.warn('SW precache failed (some assets may be offline):', err.message))
   );
-  // Activate immediately, don't wait for old tabs
   self.skipWaiting();
 });
 
@@ -28,7 +26,6 @@ self.addEventListener('activate', event => {
       );
     })
   );
-  // Take control of all clients immediately
   self.clients.claim();
 });
 
@@ -53,6 +50,12 @@ self.addEventListener('fetch', event => {
             cache.put(event.request, response.clone());
             return response;
           });
+        }).catch(() => {
+          // Offline fallback for navigation requests
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          return new Response('', { status: 503 });
         });
       })
     );
