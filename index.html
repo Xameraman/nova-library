@@ -483,7 +483,7 @@
     </div>
   </div>
 
-  <!-- Non‑intrusive Discord request button -->
+  <!-- Discord request button -->
   <div style="margin-bottom: 24px;">
     <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" rel="noopener" 
        style="display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -714,6 +714,17 @@ const BASE_URL = '/';
 const NOVA_URL = 'https://nova-library-mu.vercel.app/';
 const VIEW_PING_URL = 'https://script.google.com/macros/s/AKfycbwPN7-vRzQaXOuMQGlicRA5eums1Xney0zF5BhZ76c6xoUejn0mbqhDSr3AMQnQldPZjw/exec';
 const VIEW_KEY = 'N0vaPingK3y2025';
+
+// 🔥 Added missing helper
+function isValidLink(text) {
+  if (!text || text.toLowerCase() === 'none') return false;
+  try {
+    const u = new URL(text);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 
 // ========== AI CHAT WIDGET ==========
 (function() {
@@ -1237,12 +1248,6 @@ function setView(v) {
   if(allPacks.length > 0) applyFilters();
 }
 
-function getYouTubeEmbedUrl(url) {
-  if (!url) return null;
-  const videoId = extractYouTubeVideoId(url);
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-}
-
 function extractYouTubeVideoId(url) {
   try {
     const u = new URL(url);
@@ -1258,6 +1263,12 @@ function extractYouTubeVideoId(url) {
   return null;
 }
 
+function getYouTubeEmbedUrl(url) {
+  if (!url) return null;
+  const videoId = extractYouTubeVideoId(url);
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}
+
 function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p; addRecent(p); pingPackView(p);
@@ -1270,10 +1281,6 @@ function openModalDirect(p) {
   }
   tagsHTML += `<span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
-  if (p.image_credit && String(p.image_credit).trim()) {
-    tagsHTML += `<span class="tag"><i class="fa-solid fa-image"></i> Image By: ${esc(p.image_credit)}</span>`;
-  }
-
   const videoLink = String(p.video_link || '').trim();
   if (videoLink && isValidLink(videoLink)) {
     tagsHTML += `<span class="tag"><i class="fa-brands fa-youtube"></i> Video Available</span>`;
@@ -1281,7 +1288,6 @@ function openModalDirect(p) {
 
   document.getElementById('mTags').innerHTML = tagsHTML;
 
-  // Video embed
   const videoContainer = document.getElementById('mVideoContainer');
   if (videoContainer) {
     if (videoLink && isValidLink(videoLink)) {
@@ -1402,7 +1408,7 @@ async function init() {
 init();
 </script>
 
-<!-- Service Worker registration (keeps storage tiny) -->
+<!-- Service Worker registration -->
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
