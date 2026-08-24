@@ -230,6 +230,12 @@
       font-weight: 800; cursor: pointer; display: inline-flex; align-items: center;
       line-height: 1; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
     }
+    .video-badge {
+      background: linear-gradient(135deg, #FF6F61, #FF9F4B); color: white; border: none;
+      font-size: 0.75rem; padding: 4px 12px; border-radius: 20px;
+      font-weight: 800; cursor: pointer; display: inline-flex; align-items: center;
+      line-height: 1; box-shadow: 0 4px 10px rgba(255,111,97,0.3);
+    }
     .new-badge {
       background: var(--green); color: white; border: none;
       font-size: 0.65rem; padding: 2px 8px; border-radius: 20px;
@@ -378,7 +384,7 @@
     .skeleton-line.w-1/2 { width: 50%; }
     @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-    /* AI Widget – now on the LEFT side */
+    /* Widget styles (mirrored from guide page) */
     #nova-widget-btn {
       position:fixed; bottom:24px; left:24px; z-index:99999; width:58px; height:58px;
       border-radius:50%; background:linear-gradient(135deg,#9B4FDB,#5865F2); border:none;
@@ -438,16 +444,6 @@
     #nova-send:disabled { opacity:0.4; cursor:not-allowed; }
     #nova-footer-note { text-align:center; font-size:10px; color:rgba(255,255,255,0.2); padding:4px 0 8px; font-family:'Segoe UI',sans-serif; flex-shrink:0; }
     #nova-captcha-wrap { padding:12px; display:none; text-align:center; border-top:1px solid rgba(255,255,255,0.07); background:rgba(0,0,0,0.16); }
-
-    /* Adjust widget on small screens */
-    @media (max-width: 600px) {
-      #nova-widget-btn { left:10px; bottom:14px; width:50px; height:50px; font-size:24px; }
-      #nova-widget-panel { left:10px; bottom:78px; width:calc(100vw - 20px); }
-    }
-    @media (max-width: 400px) {
-      #nova-widget-btn { left:4px; bottom:10px; width:44px; height:44px; font-size:20px; }
-      #nova-widget-panel { left:4px; bottom:66px; width:calc(100vw - 8px); }
-    }
   </style>
 </head>
 <body>
@@ -487,7 +483,7 @@
     </div>
   </div>
 
-  <!-- Non‑intrusive Discord request button – full width, text wraps, paper plane icon -->
+  <!-- Non‑intrusive Discord request button -->
   <div style="margin-bottom: 24px;">
     <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" rel="noopener" 
        style="display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -590,6 +586,8 @@
       </div>
       <div class="modal-body" style="padding-top:0;">
         <div class="tags-grid" id="mTags"></div>
+        <!-- Video Showcase Section -->
+        <div id="mVideoContainer" style="margin-bottom:16px;"></div>
         <div class="modal-desc" id="mDesc"></div>
         <div class="action-stack">
           <a class="btn-full btn-support" id="mSupport" href="#" target="_blank" style="display:none"><i class="fa-solid fa-heart"></i> Support Creator</a>
@@ -612,7 +610,7 @@
   </div>
 </div>
 
-<!-- AI Chat Widget (floating – LEFT side) -->
+<!-- AI Chat Widget (floating) -->
 <button id="nova-widget-btn" title="Chat with NOVA Assistant">🤖</button>
 <div id="nova-widget-panel">
   <div id="nova-panel-header">
@@ -710,7 +708,7 @@
 })();
 </script>
 
-<!-- Main Script (Library + AI Widget – no request system) -->
+<!-- Main Script (Library + AI Widget – with video support) -->
 <script>
 const BASE_URL = '/';
 const NOVA_URL = 'https://nova-library-mu.vercel.app/';
@@ -1119,6 +1117,8 @@ function appendCards(slice) {
       const packId = String(p.id || p.name);
       const isFav = favorites.includes(packId);
       const safeId = packId.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+      const videoLink = String(p.video_link || '').trim();
+      const hasVideo = videoLink && isValidLink(videoLink);
 
       const imgCreditLine = (p.image_credit && String(p.image_credit).trim())
         ? `<div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted); margin-top:8px;">
@@ -1147,6 +1147,7 @@ function appendCards(slice) {
             <span class="card-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>
             ${secondaryTag}
             ${hasSupport ? `<span class="featured-badge" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])">Featured</span>` : ''}
+            ${hasVideo ? `<span class="video-badge" onclick="event.stopPropagation(); openModalDirect(filtered[${absIdx}])">🎬 Video</span>` : ''}
             ${isNew ? '<span class="new-badge">New</span>' : ''}
           </div>
           <div class="card-desc">${esc(p.description || 'No description provided.')}</div>
@@ -1236,6 +1237,27 @@ function setView(v) {
   if(allPacks.length > 0) applyFilters();
 }
 
+function getYouTubeEmbedUrl(url) {
+  if (!url) return null;
+  const videoId = extractYouTubeVideoId(url);
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}
+
+function extractYouTubeVideoId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1).split(/[/?#]/)[0];
+    if (u.hostname === 'www.youtube.com' || u.hostname === 'youtube.com' || u.hostname === 'm.youtube.com') {
+      const v = u.searchParams.get('v');
+      if (v) return v;
+      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/embed/')[1];
+      if (u.pathname.startsWith('/shorts/')) return u.pathname.split('/shorts/')[1];
+    }
+    if (u.pathname.startsWith('/v/')) return u.pathname.split('/v/')[1];
+  } catch {}
+  return null;
+}
+
 function openModalDirect(p) {
   if (!p) return;
   currentModalPack = p; addRecent(p); pingPackView(p);
@@ -1252,7 +1274,38 @@ function openModalDirect(p) {
     tagsHTML += `<span class="tag"><i class="fa-solid fa-image"></i> Image By: ${esc(p.image_credit)}</span>`;
   }
 
+  const videoLink = String(p.video_link || '').trim();
+  if (videoLink && isValidLink(videoLink)) {
+    tagsHTML += `<span class="tag"><i class="fa-brands fa-youtube"></i> Video Available</span>`;
+  }
+
   document.getElementById('mTags').innerHTML = tagsHTML;
+
+  // Video embed
+  const videoContainer = document.getElementById('mVideoContainer');
+  if (videoContainer) {
+    if (videoLink && isValidLink(videoLink)) {
+      const embedUrl = getYouTubeEmbedUrl(videoLink);
+      if (embedUrl) {
+        videoContainer.innerHTML = `
+          <div style="margin-bottom:16px; border-radius:12px; overflow:hidden;">
+            <iframe width="100%" height="315" src="${embedUrl}" 
+              title="YouTube video player" frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen></iframe>
+          </div>`;
+      } else {
+        videoContainer.innerHTML = `
+          <div style="margin-bottom:16px;">
+            <a href="${videoLink}" target="_blank" class="btn-full btn-support">
+              <i class="fa-brands fa-youtube"></i> Watch Showcase/Testing
+            </a>
+          </div>`;
+      }
+    } else {
+      videoContainer.innerHTML = '';
+    }
+  }
 
   const sup = String(p.support_link || p.support || '').trim();
   const arch = String(p.archive_link || p.archive || '').trim();
