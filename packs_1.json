@@ -3850,5 +3850,23 @@
     "last_viewed": "2026-08-23T16:00:00.000Z",
     "view_count": 3,
     "video_link": ""
+  },
+  {
+    "id": 220,
+    "name": "Bedrock Redstone+",
+    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/bedrock-redstone/download",
+    "support_link": "https://discord.gg/Er5sGUxbe2",
+    "archive_link": "",
+    "category": "Utility",
+    "secondary_tag": "Texture Pack",
+    "credits": "TsPlaysMCBE",
+    "description": "Just like Java's Redstone Tweaks but for Bedrock! Works for the latest version!",
+    "image": "https://i.ibb.co/ccx52cty/9b5c29a2bd75.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-08-24T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": ""
   }
 ]
