@@ -3307,8 +3307,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-08-05T16:00:00.000Z",
-    "last_viewed": "2026-08-17T16:00:00.000Z",
-    "view_count": 3,
+    "last_viewed": "2026-08-28T16:00:00.000Z",
+    "view_count": 4,
     "video_link": ""
   },
   {
@@ -4117,6 +4117,24 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-08-27T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": ""
+  },
+  {
+    "id": 235,
+    "name": "Cavern Calamity",
+    "link": "https://mcpedl.com/cavern-calamity-add-on-cave-update-add-on/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Environment",
+    "secondary_tag": "Addon",
+    "credits": "rune_the_shadowmage",
+    "description": "Cavern Calamity is made to completely redo the underground with new cave biomes, some new ores, weapons and increased cave sizes!",
+    "image": "https://i.ibb.co/XZxkPwQ0/1c3619d7204b.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-08-28T16:00:00.000Z",
     "last_viewed": "",
     "view_count": 0,
     "video_link": ""
