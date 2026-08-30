@@ -4189,8 +4189,8 @@
     "image_credit": "",
     "added_by": "xameraman5022",
     "date_added": "2026-08-28T16:00:00.000Z",
-    "last_viewed": "2026-08-28T16:00:00.000Z",
-    "view_count": 1,
+    "last_viewed": "2026-08-29T16:00:00.000Z",
+    "view_count": 2,
     "video_link": ""
   },
   {
@@ -4246,5 +4246,23 @@
     "last_viewed": "2026-08-29T16:00:00.000Z",
     "view_count": 3,
     "video_link": ""
+  },
+  {
+    "id": 242,
+    "name": "Lucky Skyblock V5",
+    "link": "https://mcpedl.com/lucky-tree-skyblock/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Minigame",
+    "secondary_tag": "World",
+    "credits": "INTOR",
+    "description": "Skyblock! Conquer, build, buy and sell! Find the lucky tree and earn bonuses! Map has: 5 biomes; Jungle, Taiga, Savannah, Nether and End / shop / old lava factory / 2 spawners. This world contains 3 packs: traders, void protector and lucky blocks!",
+    "image": "https://i.ibb.co/HsJSXRn/e6f365e8c0f1.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-08-29T16:00:00.000Z",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": "https://youtu.be/NOkzT7Ubtek?si=RMxbbsIl6uPHmys-"
   }
 ]
