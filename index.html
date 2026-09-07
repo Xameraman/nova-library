@@ -653,7 +653,7 @@
     </div>
   </div>
   <div id="nova-captcha-wrap">
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAADQ644b2jjSd7BsB" data-callback="onCaptchaSuccess" data-theme="dark" data-size="flexible" style="max-width:300px;margin:0 auto;"></div>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAADQ644b2jjSd7BsB5" data-callback="onCaptchaSuccess" data-theme="dark" data-size="flexible" style="max-width:300px;margin:0 auto;"></div>
     <div style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:6px;">Verify you're human to start chatting</div>
   </div>
   <div id="nova-input-row">
@@ -662,10 +662,6 @@
   </div>
   <div id="nova-footer-note">NOVA Assistance</div>
 </div>
-
-<!-- Turnstile API (for widget) -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
 <!-- NOVA Theme Engine (inlined) -->
 <script>
 // =================================================================
@@ -735,7 +731,7 @@
 <!-- Main Script (Library + AI Widget – with video support) -->
 <script>
 const BASE_URL = '/';
-const NOVA_URL = 'https://nova-library-mu.vercel.app/';
+const NOVA_URL = 'https://nova-library.pages.dev/';
 // Never put the database/admin secret in browser code. View tracking is intentionally unsigned here;
 // the production deployment should terminate this request at app.py and sign server-to-sheet traffic.
 const VIEW_KEY = ''; 
@@ -965,7 +961,19 @@ window.NovaPerformance = {
     finally { setLoading(false); input.focus(); }
   }
 
-  function addMessage(role, text) { const div = document.createElement('div'); div.className = `nova-msg ${role}`; div.innerHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); msgs.appendChild(div); scrollToBottom(); return div; }
+  function repairMojibake(value) {
+    const text = String(value ?? '');
+    // Repair common UTF-8 bytes decoded as Latin-1/Windows-1252.
+    if (!/[\u00C3\u00C2\u00E2\u00F0]/.test(text) || typeof TextDecoder === 'undefined') return text;
+    const cp1252 = { '€':0x80,'‚':0x82,'ƒ':0x83,'„':0x84,'…':0x85,'†':0x86,'‡':0x87,'ˆ':0x88,'‰':0x89,'Š':0x8A,'‹':0x8B,'Œ':0x8C,'Ž':0x8E,'‘':0x91,'’':0x92,'“':0x93,'”':0x94,'•':0x95,'–':0x96,'—':0x97,'˜':0x98,'™':0x99,'š':0x9A,'›':0x9B,'œ':0x9C,'ž':0x9E,'Ÿ':0x9F };
+    try {
+      const codes = [];
+      for (const ch of text) { const code = ch.charCodeAt(0); const b = code <= 0xFF ? code : cp1252[ch]; if (b === undefined) return text; codes.push(b); }
+      const repaired = new TextDecoder('utf-8', { fatal: true }).decode(new Uint8Array(codes));
+      return repaired.includes('�') ? text : repaired;
+    } catch { return text; }
+  }
+  function addMessage(role, text) { const div = document.createElement('div'); div.className = `nova-msg ${role}`; const safeText = repairMojibake(text); div.innerHTML = safeText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); msgs.appendChild(div); scrollToBottom(); return div; }
   function addTyping() { const div = document.createElement('div'); div.className = 'nova-typing'; div.innerHTML = '<div class="nova-dot"></div><div class="nova-dot"></div><div class="nova-dot"></div>'; msgs.appendChild(div); scrollToBottom(); return div; }
   function scrollToBottom() { msgs.scrollTop = msgs.scrollHeight; }
   function setLoading(s) { isLoading = s; input.disabled = s; sendBtn.disabled = s; }
@@ -979,7 +987,6 @@ window.NovaPerformance = {
     await fetch(VIEW_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ id: String(pack.id || ''), name: String(pack.name || ''), source: 'web' }) });
   };
 })();
-
 // ========== LIBRARY CODE ==========
 let PER_PAGE = 30;
 let allPacks = [], filtered = [], currentPage = 1, totalPages = 0;
@@ -1684,5 +1691,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<!-- Turnstile API: loaded after the NOVA callback is defined -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>
