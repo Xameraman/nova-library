@@ -920,29 +920,57 @@ window.NovaPerformance = {
   const SOURCE = 'INDEX.txt';
 
   let csrfToken = '';
-  let captchaRequired = false;
+  // Safe default: while the session is loading, require verification so the
+  // chat cannot be sent before the security state is known. The server remains authoritative.
+  let captchaRequired = true;
   let captchaVerified = false;
   let turnstileWidgetId = null;
   const TURNSTILE_SITE_KEY = '0x4AAAAAADQ644b2jjSd7BsB';
   let captchaToken = null;
   let sessionPromise = null;
+  let sessionReady = false;
+  let sessionExpiresAt = 0;
+  let sessionDataCache = null;
 
   async function ensureWebSession(force = false) {
+    const nowMs = Date.now();
+    if (!force && sessionReady && sessionDataCache && nowMs < sessionExpiresAt - 30000) {
+      return sessionDataCache;
+    }
     if (sessionPromise && !force) return sessionPromise;
+
     sessionPromise = (async () => {
-      const res = await fetch(SESSION_URL, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' } });
+      const res = await fetch(SESSION_URL, {
+        method: 'POST',
+        credentials: 'include',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' }
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.csrf_token) throw new Error(`Web session failed (${res.status})`);
+
       csrfToken = String(data.csrf_token);
       captchaRequired = Boolean(data.turnstile_required);
-      captchaVerified = !captchaRequired || Boolean(data.captcha_verified);
-      if (captchaVerified) captchaToken = null;
+      const serverVerified = Boolean(data.captcha_verified);
+      // If a fresh Turnstile token exists, keep the local verified state until
+      // that one-time token is submitted. Otherwise trust the server's state.
+      captchaVerified = !captchaRequired || serverVerified || Boolean(captchaToken);
+      if (serverVerified) captchaToken = null;
+
+      sessionDataCache = data;
+      sessionReady = true;
+      sessionExpiresAt = Date.now() + Math.max(60000, Number(data.expires_in || 3600) * 1000);
       updateCaptchaState();
       return data;
-    })().finally(() => { sessionPromise = null; });
+    })().catch(err => {
+      sessionReady = false;
+      sessionDataCache = null;
+      sessionExpiresAt = 0;
+      if (footer && isOpen) footer.textContent = '⚠️ NOVA connection unavailable. Verification can still load.';
+      throw err;
+    }).finally(() => { sessionPromise = null; });
     return sessionPromise;
   }
-
   function webHeaders() {
     const headers = { 'Content-Type': 'application/json' };
     if (csrfToken) headers['X-NOVA-CSRF'] = csrfToken;
@@ -959,9 +987,9 @@ window.NovaPerformance = {
         action: 'nova_chat',
         theme: 'dark',
         size: 'flexible',
-        callback: 'onCaptchaSuccess',
-        'expired-callback': 'onCaptchaExpired',
-        'error-callback': 'onCaptchaError'
+        callback: window.onCaptchaSuccess,
+        'expired-callback': window.onCaptchaExpired,
+        'error-callback': window.onCaptchaError
       });
     } catch (e) {
       console.error('[NOVA Turnstile]', e);
@@ -1026,12 +1054,33 @@ window.NovaPerformance = {
   function unlockChat() { clearInterval(countdownInt); chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; addMessage('bot', '✅ Lock lifted! You can send messages again. Please keep it respectful. 😊'); }
   function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); if (captchaToken) { captchaToken = null; captchaVerified = false; resetTurnstileWidget(); } else { updateCaptchaState(); } }
 
-  async function checkStatusOnLoad() { try { await ensureWebSession(false); const res = await fetch(STATUS_URL, { credentials: 'include' }); if (!res.ok) return; const data = await res.json();
-      if (typeof data.turnstile_required === 'boolean') { captchaRequired = data.turnstile_required; captchaVerified = captchaVerified || !captchaRequired; updateCaptchaState(); }
-      if (data.slow_mode && data.slow_until > 0) showSlowBanner(data.slow_until); else hideSlowBanner(); if (data.locked && data.unlock_in > 0) { chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; startCountdown(data.unlock_in); if (isOpen) addMessage('bot', `⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`); } else if (chatLocked && !data.locked) unlockChat(); } catch (e) { if (isOpen && footer) footer.textContent = '⚠️ Unable to connect to NOVA right now'; } }
-  updateCaptchaState(); checkStatusOnLoad();
+  async function checkStatusOnLoad(opened = false) {
+    try {
+      const session = await ensureWebSession(false);
+      if (typeof session.turnstile_required === 'boolean') captchaRequired = session.turnstile_required;
+      if (typeof session.captcha_verified === 'boolean') {
+        captchaVerified = !captchaRequired || session.captcha_verified || Boolean(captchaToken);
+        if (session.captcha_verified) captchaToken = null;
+      }
+      updateCaptchaState();
+      const res = await fetch(STATUS_URL, { credentials: 'include', cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.slow_mode && data.slow_until > 0) showSlowBanner(data.slow_until); else hideSlowBanner();
+      if (data.locked && data.unlock_in > 0) {
+        chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; startCountdown(data.unlock_in);
+        if (isOpen && opened) addMessage('bot', `⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`);
+      } else if (chatLocked && !data.locked) unlockChat();
+    } catch (e) {
+      if (isOpen && footer) footer.textContent = '⚠️ NOVA connection unavailable. Verification can still load.';
+      if (isOpen) { updateCaptchaState(); renderTurnstileIfNeeded(); }
+    }
+  }
 
-  btn.addEventListener('click', () => { isOpen = !isOpen; panel.classList.toggle('nova-open', isOpen); btn.textContent = isOpen ? '✕' : '🤖'; if (isOpen) { scrollToBottom(); checkStatusOnLoad(); updateCaptchaState(); } });
+  updateCaptchaState();
+  ensureWebSession(false).then(() => { updateCaptchaState(); renderTurnstileIfNeeded(); }).catch(() => { updateCaptchaState(); renderTurnstileIfNeeded(); });
+
+  btn.addEventListener('click', async () => { isOpen = !isOpen; panel.classList.toggle('nova-open', isOpen); btn.textContent = isOpen ? '✕' : '🤖'; if (isOpen) { scrollToBottom(); updateCaptchaState(); try { await ensureWebSession(false); } catch {} updateCaptchaState(); renderTurnstileIfNeeded(); checkStatusOnLoad(true); } });
   input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
   sendBtn.addEventListener('click', sendMessage);
@@ -1076,6 +1125,7 @@ window.NovaPerformance = {
       const reply = data.response || 'Sorry, no response. Please try again.';
       history.push({ role: 'assistant', content: reply }); typing.remove(); addMessage('bot', reply);
       captchaToken = null;
+      updateCaptchaState();
     } catch (err) { typing.remove(); addMessage('bot', err.message === 'Verification required' ? '🔒 Please complete the human verification to continue.' : '⚠️ Something went wrong. Please try again in a moment.'); console.error('[NOVA Widget]', err); }
     finally { setLoading(false); input.focus(); }
   }
