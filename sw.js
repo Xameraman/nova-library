@@ -1,5 +1,5 @@
 /* Nova Library service worker — conservative cache-first/static + stale-while-revalidate data. */
-const VERSION = 'v4.4';
+const VERSION = 'v4.5';
 const STATIC_CACHE = `nova-static-${VERSION}`;
 const DATA_CACHE = `nova-data-${VERSION}`;
 const IMAGE_CACHE = `nova-images-${VERSION}`;
@@ -54,6 +54,14 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
+
+  // NOVA's same-origin proxy must never be cached. In particular, /status
+  // contains the current Turnstile/session state; caching it can make the
+  // browser believe verification is still required (or already complete).
+  if (url.pathname === '/api/nova' || url.pathname.startsWith('/api/nova/')) {
+    event.respondWith(fetch(request, { cache: 'no-store' }).catch(() => new Response('', { status: 503 })));
+    return;
+  }
 
   // Keep third-party APIs/video embeds network-only. This avoids storing tokens,
   // AI responses, challenge responses, or large third-party content.
