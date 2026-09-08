@@ -932,13 +932,22 @@ window.NovaPerformance = {
   async function ensureWebSession(force = false) {
     if (sessionPromise && !force) return sessionPromise;
     sessionPromise = (async () => {
-      const res = await fetch(SESSION_URL, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' } });
+      const res = await fetch(SESSION_URL, {
+        method: 'POST',
+        credentials: 'include',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' }
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.csrf_token) throw new Error(`Web session failed (${res.status})`);
       csrfToken = String(data.csrf_token);
       captchaRequired = Boolean(data.turnstile_required);
-      captchaVerified = !captchaRequired || Boolean(data.captcha_verified);
-      if (captchaVerified) captchaToken = null;
+
+      // The server is authoritative, but never erase a freshly completed
+      // client challenge while its one-time token is still waiting to be sent.
+      const serverVerified = Boolean(data.captcha_verified);
+      captchaVerified = !captchaRequired || serverVerified || Boolean(captchaToken);
+      if (serverVerified) captchaToken = null;
       updateCaptchaState();
       return data;
     })().catch(err => {
@@ -990,12 +999,25 @@ window.NovaPerformance = {
     }
   }
 
+  function resetTurnstileWidget() {
+    captchaToken = null;
+    captchaVerified = false;
+    turnstileWaitStartedAt = 0;
+    if (window.turnstile && turnstileWidgetId !== null && typeof window.turnstile.reset === 'function') {
+      try { window.turnstile.reset(turnstileWidgetId); } catch {}
+    } else {
+      turnstileWidgetId = null;
+    }
+    updateCaptchaState();
+  }
+
   window.onCaptchaSuccess = function(cfToken) {
     captchaToken = cfToken;
     captchaVerified = true;
     turnstileWaitStartedAt = 0;
 
     updateCaptchaState();
+    if (footer) footer.textContent = '✅ Human verification complete. You can chat now.';
     if (input) input.focus();
   };
   window.onCaptchaExpired = function() {
@@ -1033,7 +1055,7 @@ window.NovaPerformance = {
     if (!captchaRequired || captchaVerified) {
       if (cw) cw.style.display = 'none';
       if (ir) ir.style.display = 'flex';
-      if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official';
+      if (footer && !/^✅ Human verification complete/.test(footer.textContent || '')) footer.textContent = 'NOVA AI • Powered by NOVA Official';
     } else {
       if (cw) cw.style.display = 'block';
       if (ir) ir.style.display = 'none';
@@ -1058,7 +1080,17 @@ window.NovaPerformance = {
       if (data.slow_mode && data.slow_until > 0) showSlowBanner(data.slow_until); else hideSlowBanner(); if (data.locked && data.unlock_in > 0) { chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; startCountdown(data.unlock_in); if (isOpen) addMessage('bot', `⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`); } else if (chatLocked && !data.locked) unlockChat(); } catch (e) { if (isOpen && footer) footer.textContent = '⚠️ Unable to connect to NOVA right now'; } }
   updateCaptchaState(); checkStatusOnLoad();
 
-  btn.addEventListener('click', () => { isOpen = !isOpen; panel.classList.toggle('nova-open', isOpen); btn.textContent = isOpen ? '✕' : '🤖'; if (isOpen) { scrollToBottom(); checkStatusOnLoad(); updateCaptchaState(); } });
+  btn.addEventListener('click', async () => {
+    isOpen = !isOpen;
+    panel.classList.toggle('nova-open', isOpen);
+    btn.textContent = isOpen ? '✕' : '🤖';
+    if (isOpen) {
+      scrollToBottom();
+      updateCaptchaState();
+      try { await checkStatusOnLoad(); } catch {}
+      requestAnimationFrame(() => { if (captchaRequired && !captchaVerified) renderTurnstileIfNeeded(); });
+    }
+  });
   input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
   sendBtn.addEventListener('click', sendMessage);
@@ -1091,8 +1123,8 @@ window.NovaPerformance = {
       }
       if (!res.ok) {
         const msg = String(data.detail || '');
-        if (res.status === 400 && /verification required/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; updateCaptchaState(); throw new Error('Verification required'); }
-        if (res.status === 403 && /verification failed|invalid verification/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; updateCaptchaState(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
+        if (res.status === 400 && /verification required/i.test(msg)) { captchaRequired = true; resetTurnstileWidget(); throw new Error('Verification required'); }
+        if (res.status === 403 && /verification failed|invalid verification/i.test(msg)) { captchaRequired = true; resetTurnstileWidget(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
         throw new Error(`HTTP ${res.status}`);
       }
       if (data.locked) { typing.remove(); lockChat(data.response || '⛔ You have been locked. Please wait.', data.unlock_in || 15); setLoading(false); return; }
@@ -1101,7 +1133,12 @@ window.NovaPerformance = {
       if (data.rate_limited) { typing.remove(); addMessage('bot', data.response || '⏳ Please wait a moment before sending another message.'); setLoading(false); return; }
       const reply = data.response || 'Sorry, no response. Please try again.';
       history.push({ role: 'assistant', content: reply }); typing.remove(); addMessage('bot', reply);
+      // The backend marks the current web session verified immediately after
+      // successful server-side Turnstile validation. Keep the UI unlocked for
+      // subsequent messages; only the one-time Turnstile token is discarded.
+      captchaVerified = true;
       captchaToken = null;
+      updateCaptchaState();
     } catch (err) { typing.remove(); addMessage('bot', err.message === 'Verification required' ? '🔒 Please complete the human verification to continue.' : '⚠️ Something went wrong. Please try again in a moment.'); console.error('[NOVA Widget]', err); }
     finally { setLoading(false); input.focus(); }
   }
