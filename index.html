@@ -912,8 +912,8 @@ window.NovaPerformance = {
 
 // ========== AI CHAT WIDGET ==========
 (function() {
-  // Same-origin Vercel proxy -> Hugging Face. This keeps the NOVA session cookie
-  // first-party to the Vercel site and avoids browser third-party-cookie blocking.
+  // Website API is same-origin. Vercel proxies /api/nova/* to the Hugging Face
+  // /web/* endpoints, so the nova_session cookie remains first-party to the site.
   const API_BASE = '/api/nova';
   const SESSION_URL = API_BASE + '/session';
   const API_URL = API_BASE + '/chat';
@@ -928,6 +928,7 @@ window.NovaPerformance = {
   const TURNSTILE_SITE_KEY = '0x4AAAAAADQ644b2jjSd7BsB';
   let captchaToken = null;
   let sessionPromise = null;
+  let sessionReady = false;
 
   async function ensureWebSession(force = false) {
     if (sessionPromise && !force) return sessionPromise;
@@ -940,17 +941,21 @@ window.NovaPerformance = {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.csrf_token) throw new Error(`Web session failed (${res.status})`);
+
       csrfToken = String(data.csrf_token);
       captchaRequired = Boolean(data.turnstile_required);
-
-      // The server is authoritative, but never erase a freshly completed
-      // client challenge while its one-time token is still waiting to be sent.
       const serverVerified = Boolean(data.captcha_verified);
+
+      // IMPORTANT: a locally completed Turnstile challenge must not be erased
+      // before its one-time token is delivered to /web/chat. After the server
+      // accepts it, future sessions report captcha_verified=true.
       captchaVerified = !captchaRequired || serverVerified || Boolean(captchaToken);
       if (serverVerified) captchaToken = null;
+      sessionReady = true;
       updateCaptchaState();
       return data;
     })().catch(err => {
+      sessionReady = false;
       if (footer) footer.textContent = '⚠️ Unable to connect to NOVA. Please try again.';
       throw err;
     }).finally(() => { sessionPromise = null; });
@@ -965,9 +970,20 @@ window.NovaPerformance = {
 
   let turnstileWaitTimer = null;
   let turnstileWaitStartedAt = 0;
+
+  function removeTurnstileWidget() {
+    const mount = document.getElementById('nova-turnstile');
+    if (window.turnstile && turnstileWidgetId !== null && typeof window.turnstile.remove === 'function') {
+      try { window.turnstile.remove(turnstileWidgetId); } catch {}
+    }
+    if (mount) mount.innerHTML = '';
+    turnstileWidgetId = null;
+  }
+
   function renderTurnstileIfNeeded() {
     const mount = document.getElementById('nova-turnstile');
-    if (!captchaRequired || captchaVerified || turnstileWidgetId !== null || !mount) return;
+    if (!isOpen || !captchaRequired || captchaVerified || turnstileWidgetId !== null || !mount) return;
+
     if (window.turnstile && typeof window.turnstile.render === 'function') {
       try {
         turnstileWidgetId = window.turnstile.render(mount, {
@@ -980,14 +996,14 @@ window.NovaPerformance = {
           'error-callback': window.onCaptchaError,
           'timeout-callback': window.onCaptchaExpired
         });
+        turnstileWaitStartedAt = 0;
         if (turnstileWaitTimer) { clearTimeout(turnstileWaitTimer); turnstileWaitTimer = null; }
         return;
       } catch (e) {
         console.error('[NOVA Turnstile]', e);
       }
     }
-    // The Cloudflare script is async. Retry until it is available instead of
-    // depending on a race-prone script onload callback.
+
     if (!turnstileWaitStartedAt) turnstileWaitStartedAt = Date.now();
     if (Date.now() - turnstileWaitStartedAt < 15000 && !turnstileWaitTimer) {
       turnstileWaitTimer = setTimeout(() => {
@@ -1003,37 +1019,35 @@ window.NovaPerformance = {
     captchaToken = null;
     captchaVerified = false;
     turnstileWaitStartedAt = 0;
-    if (window.turnstile && turnstileWidgetId !== null && typeof window.turnstile.reset === 'function') {
-      try { window.turnstile.reset(turnstileWidgetId); } catch {}
-    } else {
-      turnstileWidgetId = null;
-    }
+    removeTurnstileWidget();
     updateCaptchaState();
   }
 
   window.onCaptchaSuccess = function(cfToken) {
+    if (!cfToken) return;
     captchaToken = cfToken;
     captchaVerified = true;
     turnstileWaitStartedAt = 0;
-
     updateCaptchaState();
     if (footer) footer.textContent = '✅ Human verification complete. You can chat now.';
     if (input) input.focus();
   };
+
   window.onCaptchaExpired = function() {
     captchaToken = null;
-    turnstileWidgetId = null;
-    turnstileWaitStartedAt = 0;
     captchaVerified = false;
+    turnstileWaitStartedAt = 0;
+    removeTurnstileWidget();
     updateCaptchaState();
   };
-  window.onCaptchaError = function() {
+
+  window.onCaptchaError = function(code) {
     captchaToken = null;
-    turnstileWidgetId = null;
-    turnstileWaitStartedAt = 0;
     captchaVerified = false;
+    turnstileWaitStartedAt = 0;
+    removeTurnstileWidget();
     updateCaptchaState();
-    if (footer) footer.textContent = '⚠️ Human verification could not load. Please try again.';
+    if (footer) footer.textContent = `⚠️ Human verification could not load (${code || 'error'}). Please try again.`;
   };
 
   const BAD_WORDS = ["fuck","f*ck","fck","fuk","fuq","fvck","shit","sh1t","sh*t","sht","bitch","b*tch","btch","biatch","bastard","cunt","c*nt","dick","d*ck","cock","c*ck","pussy","p*ssy","piss","p*ss","whore","wh*re","slut","sl*t","retard","retarded","i will kill","i'll kill","gonna kill","i hate you","hate you","shut up","stfu","go die","kys","kill yourself","you suck","sucks ass","useless bot","stupid bot","dumb bot","garbage bot","trash bot","worst bot","useless ai","stupid ai","dumb ai","this is trash","this is garbage","you're trash","you're garbage","you're useless","you're stupid","you're dumb","you're an idiot","you are trash","you are garbage","you are useless","you are stupid","you are dumb","you are an idiot","nsfw","porn","pornography","xxx","nude","naked","hentai","lewd","explicit","erotic","onlyfans","fetish","gore","self harm","self-harm","suicide method","how to kill","how to make bomb"];
@@ -1051,34 +1065,61 @@ window.NovaPerformance = {
   const btn = document.getElementById('nova-widget-btn'), panel = document.getElementById('nova-widget-panel'), msgs = document.getElementById('nova-messages'), input = document.getElementById('nova-input'), sendBtn = document.getElementById('nova-send'), footer = document.getElementById('nova-footer-note');
 
   function updateCaptchaState() {
-    const cw = document.getElementById('nova-captcha-wrap'), ir = document.getElementById('nova-input-row');
-    if (!captchaRequired || captchaVerified) {
+    const cw = document.getElementById('nova-captcha-wrap');
+    const ir = document.getElementById('nova-input-row');
+    const needsVerification = captchaRequired && !captchaVerified;
+    if (!needsVerification) {
       if (cw) cw.style.display = 'none';
       if (ir) ir.style.display = 'flex';
-      if (footer && !/^✅ Human verification complete/.test(footer.textContent || '')) footer.textContent = 'NOVA AI • Powered by NOVA Official';
+      if (footer && !/^✅ Human verification complete/.test(footer.textContent || '')) {
+        footer.textContent = 'NOVA AI • Powered by NOVA Official';
+      }
     } else {
-      if (cw) cw.style.display = 'block';
+      if (cw) cw.style.display = isOpen ? 'block' : 'none';
       if (ir) ir.style.display = 'none';
-      if (footer) footer.textContent = '🔒 Verify to start chatting';
-      requestAnimationFrame(() => { turnstileWaitStartedAt = turnstileWaitStartedAt || Date.now(); renderTurnstileIfNeeded(); });
+      if (footer && isOpen) footer.textContent = '🔒 Verify to start chatting';
+      if (isOpen) requestAnimationFrame(renderTurnstileIfNeeded);
     }
   }
   let slowBanner = null;
   function showSlowBanner(s) { if (slowBanner) return; slowBanner = document.createElement('div'); slowBanner.style.cssText = 'background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);color:#fbbf24;font-size:11px;font-weight:700;text-align:center;padding:6px 10px;flex-shrink:0;'; slowBanner.textContent = `🛡️ High load detected — slow mode active (${s}s)`; panel.insertBefore(slowBanner, msgs); }
   function hideSlowBanner() { if (slowBanner) { slowBanner.remove(); slowBanner = null; } }
 
-  const header = document.getElementById('nova-panel-header');
-  if (header) { const nc = document.createElement('button'); nc.title = 'New conversation'; nc.textContent = '🔄'; nc.style.cssText = 'background:none;border:none;cursor:pointer;font-size:16px;opacity:0.45;transition:opacity .2s;padding:2px 4px;margin-left:auto;flex-shrink:0;'; nc.onmouseover = () => nc.style.opacity = '1'; nc.onmouseout = () => nc.style.opacity = '0.45'; nc.addEventListener('click', resetChat); const dot = document.getElementById('nova-online-dot'); if (dot) header.insertBefore(nc, dot); else header.appendChild(nc); }
-
   function startCountdown(s) { clearInterval(countdownInt); let r = s; function tick() { if (r <= 0) { clearInterval(countdownInt); checkStatusOnLoad(); return; } const m = Math.floor(r / 60), sec = r % 60; if (footer) footer.textContent = m > 0 ? `⏳ Locked ${m}m ${sec}s` : `⏳ Locked ${sec}s`; r--; } tick(); countdownInt = setInterval(tick, 1000); }
   function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock'; }
   function unlockChat() { clearInterval(countdownInt); chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; addMessage('bot', '✅ Lock lifted! You can send messages again. Please keep it respectful. 😊'); }
-  function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); captchaToken = null; updateCaptchaState(); }
+  function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); captchaToken = null; updateCaptchaState(); }
 
-  async function checkStatusOnLoad() { try { await ensureWebSession(false); const res = await fetch(STATUS_URL, { credentials: 'include' }); if (!res.ok) return; const data = await res.json();
-      if (typeof data.turnstile_required === 'boolean') { captchaRequired = data.turnstile_required; captchaVerified = captchaVerified || !captchaRequired; updateCaptchaState(); }
-      if (data.slow_mode && data.slow_until > 0) showSlowBanner(data.slow_until); else hideSlowBanner(); if (data.locked && data.unlock_in > 0) { chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; startCountdown(data.unlock_in); if (isOpen) addMessage('bot', `⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`); } else if (chatLocked && !data.locked) unlockChat(); } catch (e) { if (isOpen && footer) footer.textContent = '⚠️ Unable to connect to NOVA right now'; } }
-  updateCaptchaState(); checkStatusOnLoad();
+  async function checkStatusOnLoad(opened = false) {
+    try {
+      const session = await ensureWebSession(false);
+      if (typeof session.turnstile_required === 'boolean') captchaRequired = session.turnstile_required;
+      if (typeof session.captcha_verified === 'boolean') {
+        captchaVerified = !captchaRequired || session.captcha_verified || Boolean(captchaToken);
+        if (session.captcha_verified) captchaToken = null;
+      }
+
+      const res = await fetch(STATUS_URL, { credentials: 'include', cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (typeof data.turnstile_required === 'boolean') captchaRequired = data.turnstile_required;
+        if (data.slow_mode && data.slow_until > 0) showSlowBanner(data.slow_until); else hideSlowBanner();
+        if (data.locked && data.unlock_in > 0) {
+          chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; startCountdown(data.unlock_in);
+          if (isOpen) addMessage('bot', `⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`);
+        } else if (chatLocked && !data.locked) unlockChat();
+      }
+      updateCaptchaState();
+      if (opened && captchaRequired && !captchaVerified) requestAnimationFrame(renderTurnstileIfNeeded);
+    } catch (e) {
+      if (isOpen && footer) footer.textContent = '⚠️ Unable to connect to NOVA right now';
+      throw e;
+    }
+  }
+
+  // Do not create a web session while the widget is still closed. When NOVA
+  // opens, create/reuse the session and render verification while visible.
+  updateCaptchaState();
 
   btn.addEventListener('click', async () => {
     isOpen = !isOpen;
@@ -1086,9 +1127,11 @@ window.NovaPerformance = {
     btn.textContent = isOpen ? '✕' : '🤖';
     if (isOpen) {
       scrollToBottom();
+      try { await checkStatusOnLoad(true); } catch {}
       updateCaptchaState();
-      try { await checkStatusOnLoad(); } catch {}
-      requestAnimationFrame(() => { if (captchaRequired && !captchaVerified) renderTurnstileIfNeeded(); });
+    } else {
+      // Keep the verified server session alive; just hide the widget visually.
+      updateCaptchaState();
     }
   });
   input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
@@ -1097,6 +1140,7 @@ window.NovaPerformance = {
 
   async function sendMessage() {
     if (chatLocked) return;
+    if (!sessionReady) { try { await ensureWebSession(false); } catch { updateCaptchaState(); return; } }
     if (captchaRequired && !captchaVerified) { updateCaptchaState(); return; }
     const text = input.value.trim();
     if (!text || isLoading) return;
