@@ -1,5 +1,5 @@
 /* Nova Library service worker — conservative cache-first/static + stale-while-revalidate data. */
-const VERSION = 'v4.5';
+const VERSION = 'v5.0-verification';
 const STATIC_CACHE = `nova-static-${VERSION}`;
 const DATA_CACHE = `nova-data-${VERSION}`;
 const IMAGE_CACHE = `nova-images-${VERSION}`;
