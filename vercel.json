@@ -1,29 +1,16 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/nova/session",
-      "destination": "https://xameraman5022-nova-guides.hf.space/web/session"
-    },
-    {
-      "source": "/api/nova/chat",
-      "destination": "https://xameraman5022-nova-guides.hf.space/web/chat"
-    },
-    {
-      "source": "/api/nova/view",
-      "destination": "https://xameraman5022-nova-guides.hf.space/web/view"
-    },
-    {
-      "source": "/api/nova/status",
-      "destination": "https://xameraman5022-nova-guides.hf.space/status"
-    }
-  ],
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
       "source": "/api/nova/:path*",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-store, max-age=0"
+          "value": "no-store, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Vercel-CDN-Cache-Control",
+          "value": "no-store"
         }
       ]
     }
