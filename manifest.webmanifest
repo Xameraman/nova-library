@@ -1,0 +1,11 @@
+{
+  "name": "Nova Library",
+  "short_name": "Nova",
+  "description": "NOVA Library for Minecraft community packs and resources.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#09090B",
+  "theme_color": "#09090B",
+  "lang": "en"
+}
