@@ -1015,6 +1015,18 @@ window.NovaPerformance = {
     if (footer) footer.textContent = '⚠️ Human verification could not load. Please try again.';
   };
 
+  // Resets the rendered Cloudflare Turnstile widget so the user can verify
+  // again (after an expired token, a failed/rejected verification, or a
+  // manual chat reset). This was previously called but never defined,
+  // which threw a ReferenceError and left the chat stuck with no way to
+  // re-trigger verification without a full page reload.
+  function resetTurnstileWidget() {
+    if (turnstileWidgetId !== null && window.turnstile && typeof window.turnstile.reset === 'function') {
+      try { window.turnstile.reset(turnstileWidgetId); } catch (e) { console.error('[NOVA Turnstile] reset failed', e); }
+    }
+    updateCaptchaState();
+  }
+
   const BAD_WORDS = ["fuck","f*ck","fck","fuk","fuq","fvck","shit","sh1t","sh*t","sht","bitch","b*tch","btch","biatch","bastard","cunt","c*nt","dick","d*ck","cock","c*ck","pussy","p*ssy","piss","p*ss","whore","wh*re","slut","sl*t","retard","retarded","i will kill","i'll kill","gonna kill","i hate you","hate you","shut up","stfu","go die","kys","kill yourself","you suck","sucks ass","useless bot","stupid bot","dumb bot","garbage bot","trash bot","worst bot","useless ai","stupid ai","dumb ai","this is trash","this is garbage","you're trash","you're garbage","you're useless","you're stupid","you're dumb","you're an idiot","you are trash","you are garbage","you are useless","you are stupid","you are dumb","you are an idiot","nsfw","porn","pornography","xxx","nude","naked","hentai","lewd","explicit","erotic","onlyfans","fetish","gore","self harm","self-harm","suicide method","how to kill","how to make bomb"];
   const MULTI_WORD_BAD = BAD_WORDS.filter(w => w.includes(" "));
   const SINGLE_BAD = BAD_WORDS.filter(w => !w.includes(" "));
