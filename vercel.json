@@ -18,6 +18,14 @@
         { "key": "Vercel-CDN-Cache-Control", "value": "no-store" },
         { "key": "CDN-Cache-Control", "value": "no-store" }
       ]
+    },
+    {
+      "source": "/api/verify-turnstile",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" },
+        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" },
+        { "key": "CDN-Cache-Control", "value": "no-store" }
+      ]
     }
   ]
 }
