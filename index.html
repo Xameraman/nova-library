@@ -927,6 +927,7 @@ window.NovaPerformance = {
   let turnstileWidgetId = null;
   const TURNSTILE_SITE_KEY = '0x4AAAAAADQ644b2jjSd7BsB';
   let captchaToken = null;
+  let verificationProof = null;
   let sessionPromise = null;
   let sessionReady = false;
   let sessionExpiresAt = 0;
@@ -954,8 +955,8 @@ window.NovaPerformance = {
       const serverVerified = Boolean(data.captcha_verified);
       // If a fresh Turnstile token exists, keep the local verified state until
       // that one-time token is submitted. Otherwise trust the server's state.
-      captchaVerified = !captchaRequired || serverVerified || Boolean(captchaToken);
-      if (serverVerified) captchaToken = null;
+      captchaVerified = !captchaRequired || serverVerified || Boolean(verificationProof);
+      if (serverVerified) { captchaToken = null; verificationProof = null; }
 
       sessionDataCache = data;
       sessionReady = true;
@@ -997,19 +998,44 @@ window.NovaPerformance = {
   }
   window.onTurnstileLoaded = renderTurnstileIfNeeded;
 
-  window.onCaptchaSuccess = function(cfToken) {
+  window.onCaptchaSuccess = async function(cfToken) {
     captchaToken = cfToken;
-    captchaVerified = true;
-    updateCaptchaState();
-    if (input) input.focus();
+    // The raw Cloudflare token isn't sent to the backend directly anymore --
+    // it's exchanged here for a short-lived signed proof via the Vercel
+    // bridge function, which is the thing that actually talks to Cloudflare
+    // (this Space's own connection to Cloudflare was unreliable).
+    try {
+      const res = await fetch('/api/verify-turnstile', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: cfToken, csrf_token: csrfToken || '' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.proof) throw new Error('bridge_exchange_failed');
+      verificationProof = data.proof;
+      captchaVerified = true;
+      updateCaptchaState();
+      if (input) input.focus();
+    } catch (e) {
+      console.error('[NOVA Turnstile] proof exchange failed', e);
+      captchaToken = null;
+      verificationProof = null;
+      captchaVerified = false;
+      updateCaptchaState();
+      if (footer) footer.textContent = '⚠️ Verification could not be completed. Please try again.';
+      resetTurnstileWidget();
+    }
   };
   window.onCaptchaExpired = function() {
     captchaToken = null;
+    verificationProof = null;
     captchaVerified = false;
     updateCaptchaState();
   };
   window.onCaptchaError = function() {
     captchaToken = null;
+    verificationProof = null;
     captchaVerified = false;
     updateCaptchaState();
     if (footer) footer.textContent = '⚠️ Human verification could not load. Please try again.';
@@ -1064,15 +1090,15 @@ window.NovaPerformance = {
   function startCountdown(s) { clearInterval(countdownInt); let r = s; function tick() { if (r <= 0) { clearInterval(countdownInt); checkStatusOnLoad(); return; } const m = Math.floor(r / 60), sec = r % 60; if (footer) footer.textContent = m > 0 ? `⏳ Locked ${m}m ${sec}s` : `⏳ Locked ${sec}s`; r--; } tick(); countdownInt = setInterval(tick, 1000); }
   function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock'; }
   function unlockChat() { clearInterval(countdownInt); chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; addMessage('bot', '✅ Lock lifted! You can send messages again. Please keep it respectful. 😊'); }
-  function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); if (captchaToken) { captchaToken = null; captchaVerified = false; resetTurnstileWidget(); } else { updateCaptchaState(); } }
+  function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); if (captchaToken || verificationProof) { captchaToken = null; verificationProof = null; captchaVerified = false; resetTurnstileWidget(); } else { updateCaptchaState(); } }
 
   async function checkStatusOnLoad(opened = false) {
     try {
       const session = await ensureWebSession(false);
       if (typeof session.turnstile_required === 'boolean') captchaRequired = session.turnstile_required;
       if (typeof session.captcha_verified === 'boolean') {
-        captchaVerified = !captchaRequired || session.captcha_verified || Boolean(captchaToken);
-        if (session.captcha_verified) captchaToken = null;
+        captchaVerified = !captchaRequired || session.captcha_verified || Boolean(verificationProof);
+        if (session.captcha_verified) { captchaToken = null; verificationProof = null; }
       }
       updateCaptchaState();
       const res = await fetch(STATUS_URL, { credentials: 'include', cache: 'no-store' });
@@ -1114,20 +1140,20 @@ window.NovaPerformance = {
       await ensureWebSession(false);
       const idem = crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(36).slice(2);
       let headers = webHeaders(); headers['X-Idempotency-Key'] = idem;
-      let res = await fetch(API_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ message: text, history: history.slice(0, -1), source: SOURCE, captcha_token: captchaToken || '' }) });
+      let res = await fetch(API_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ message: text, history: history.slice(0, -1), source: SOURCE, verification_proof: verificationProof || '' }) });
       let data = await res.json().catch(() => ({}));
       const detail = String(data.detail || '');
       if (!res.ok && (res.status === 401 || (res.status === 403 && /csrf|session/i.test(detail)))) {
         await ensureWebSession(true);
         headers = webHeaders(); headers['X-Idempotency-Key'] = idem;
-        res = await fetch(API_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ message: text, history: history.slice(0, -1), source: SOURCE, captcha_token: captchaToken || '' }) });
+        res = await fetch(API_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ message: text, history: history.slice(0, -1), source: SOURCE, verification_proof: verificationProof || '' }) });
         data = await res.json().catch(() => ({}));
       }
       if (!res.ok) {
         const msg = String(data.detail || '');
-        if (res.status === 400 && /verification required/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; resetTurnstileWidget(); throw new Error('Verification required'); }
-        if (res.status === 403 && /verification failed|invalid verification/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; resetTurnstileWidget(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
-        if (res.status === 503 && /verification service|verification.*configured/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; resetTurnstileWidget(); addMessage('bot', '⚠️ The verification service is temporarily unavailable. Please try again in a moment.'); setLoading(false); return; }
+        if (res.status === 400 && /verification required|verification expired/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); throw new Error('Verification required'); }
+        if (res.status === 403 && /verification failed|invalid verification/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
+        if (res.status === 503 && /verification service|verification.*configured/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); addMessage('bot', '⚠️ The verification service is temporarily unavailable. Please try again in a moment.'); setLoading(false); return; }
         throw new Error(`HTTP ${res.status}`);
       }
       if (data.locked) { typing.remove(); lockChat(data.response || '⛔ You have been locked. Please wait.', data.unlock_in || 15); setLoading(false); return; }
@@ -1137,6 +1163,7 @@ window.NovaPerformance = {
       const reply = data.response || 'Sorry, no response. Please try again.';
       history.push({ role: 'assistant', content: reply }); typing.remove(); addMessage('bot', reply);
       captchaToken = null;
+      verificationProof = null;
       updateCaptchaState();
     } catch (err) { typing.remove(); addMessage('bot', err.message === 'Verification required' ? '🔒 Please complete the human verification to continue.' : '⚠️ Something went wrong. Please try again in a moment.'); console.error('[NOVA Widget]', err); }
     finally { setLoading(false); input.focus(); }
