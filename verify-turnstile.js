@@ -30,7 +30,7 @@ module.exports = async function handler(req, res) {
   }
 
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
-  const bridgeSecret = process.env.NOVA_VERIFY_BRIDGE_SECRET;
+  const bridgeSecret = (process.env.NOVA_VERIFY_BRIDGE_SECRET || '').trim();
   if (!secretKey || !bridgeSecret) {
     res.status(503).json({ error: 'not_configured', detail: 'TURNSTILE_SECRET_KEY and/or NOVA_VERIFY_BRIDGE_SECRET are not set on this Vercel project.' });
     return;
