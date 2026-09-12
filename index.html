@@ -1118,7 +1118,26 @@ window.NovaPerformance = {
   updateCaptchaState();
   ensureWebSession(false).then(() => { updateCaptchaState(); renderTurnstileIfNeeded(); }).catch(() => { updateCaptchaState(); renderTurnstileIfNeeded(); });
 
-  btn.addEventListener('click', async () => { isOpen = !isOpen; panel.classList.toggle('nova-open', isOpen); btn.textContent = isOpen ? '✕' : '🤖'; if (isOpen) { scrollToBottom(); updateCaptchaState(); try { await ensureWebSession(false); } catch {} updateCaptchaState(); renderTurnstileIfNeeded(); checkStatusOnLoad(true); } });
+  btn.addEventListener('click', async () => {
+    isOpen = !isOpen; panel.classList.toggle('nova-open', isOpen); btn.textContent = isOpen ? '✕' : '🤖';
+    if (isOpen) {
+      scrollToBottom();
+      updateCaptchaState();
+      const hadChattedBefore = history.length > 0;
+      try { await ensureWebSession(false); } catch {}
+      updateCaptchaState();
+      checkStatusOnLoad(true);
+      // If someone who already successfully sent a message this session is
+      // suddenly being asked to verify again, that's not the normal
+      // first-time flow -- it means something about the session desynced.
+      // A full page refresh reliably clears it (confirmed), so say so
+      // directly instead of leaving them stuck on a widget that shouldn't
+      // be there.
+      if (hadChattedBefore && captchaRequired && !captchaVerified) {
+        addMessage('bot', "👋 Looks like your verification needs a refresh. Please reload the page — you won't lose this conversation.");
+      }
+    }
+  });
   input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
   sendBtn.addEventListener('click', sendMessage);
