@@ -8,6 +8,10 @@
     {
       "source": "/api/nova/:path*",
       "destination": "https://xameraman5022-nova-guides.hf.space/web/:path*"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides.html"
     }
   ],
   "headers": [
