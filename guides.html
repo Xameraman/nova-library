@@ -1077,18 +1077,34 @@ window.NovaPerformance = {
       resetTurnstileWidget();
     }
   };
-  window.onCaptchaExpired = function() {
+  window.onCaptchaExpired = async function() {
+    // The rendered widget's own token expired (Cloudflare's short client-side
+    // clock, ~5 min) -- that does NOT mean the backend needs re-verification:
+    // the server trusts an already-verified session for a full hour
+    // (NOVA_WEB_TURNSTILE_TTL). Re-check with the server before yanking an
+    // already-verified visitor back into the challenge mid-conversation.
     captchaToken = null;
     verificationProof = null;
-    captchaVerified = false;
+    try {
+      const session = await ensureWebSession(true);
+      captchaVerified = !captchaRequired || Boolean(session && session.captcha_verified);
+    } catch (e) {
+      captchaVerified = false;
+    }
     updateCaptchaState();
+    if (!captchaVerified) resetTurnstileWidget();
   };
-  window.onCaptchaError = function() {
+  window.onCaptchaError = async function() {
     captchaToken = null;
     verificationProof = null;
-    captchaVerified = false;
+    try {
+      const session = await ensureWebSession(true);
+      captchaVerified = !captchaRequired || Boolean(session && session.captcha_verified);
+    } catch (e) {
+      captchaVerified = false;
+    }
     updateCaptchaState();
-    if (footer) footer.textContent = '⚠️ Human verification could not load. Please try again.';
+    if (!captchaVerified && footer) footer.textContent = '⚠️ Human verification could not load. Please try again.';
   };
 
   // Resets the rendered Cloudflare Turnstile widget so the user can verify
@@ -1184,7 +1200,17 @@ window.NovaPerformance = {
       // directly instead of leaving them stuck on a widget that shouldn't
       // be there.
       if (hadChattedBefore && captchaRequired && !captchaVerified) {
-        addMessage('bot', "👋 Looks like your verification needs a refresh. Please reload the page — you won't lose this conversation.");
+        // The widget's own token can desync from the server's longer verified
+        // window (NOVA_WEB_TURNSTILE_TTL). Force a fresh server check first --
+        // this is what was previously only happening on a full page reload.
+        try {
+          const session = await ensureWebSession(true);
+          captchaVerified = !captchaRequired || Boolean(session && session.captcha_verified);
+          updateCaptchaState();
+        } catch (e) { /* fall through to the message below */ }
+        if (captchaRequired && !captchaVerified) {
+          addMessage('bot', "👋 Looks like your verification needs a refresh. Please reload the page — you won't lose this conversation.");
+        }
       }
     }
   });
