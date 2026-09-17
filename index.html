@@ -891,11 +891,34 @@ function packDateMs(value) {
   const t = Date.parse(s);
   return Number.isFinite(t) ? t : NaN;
 }
-function comparePackDates(a, b) {
+function comparePackDatesAddedOnly(a, b) {
   const ad = packDateMs(a?.date_added), bd = packDateMs(b?.date_added);
   const av = Number.isFinite(ad) ? ad : -Infinity;
   const bv = Number.isFinite(bd) ? bd : -Infinity;
   return (bv - av) || ((Number(b?.id) || 0) - (Number(a?.id) || 0));
+}
+function comparePackDates(a, b) {
+  // "Newest" ranks by whichever happened more recently -- being added, or
+  // being edited via /nova-update -- same rule the backend already applies
+  // to getLatest()/getAllPacks(): a fresh add wins a same-day tie against an
+  // edit to something older, so new content never gets buried behind an
+  // update to an older pack. This used to only look at date_added, which
+  // silently threw away the backend's activity-based ordering.
+  const aAddedV = Number.isFinite(packDateMs(a?.date_added)) ? packDateMs(a?.date_added) : -Infinity;
+  const bAddedV = Number.isFinite(packDateMs(b?.date_added)) ? packDateMs(b?.date_added) : -Infinity;
+  const aUpdatedRaw = packDateMs(a?.last_updated);
+  const bUpdatedRaw = packDateMs(b?.last_updated);
+  const aUpdated = (Number.isFinite(aUpdatedRaw) && aUpdatedRaw > aAddedV) ? aUpdatedRaw : -Infinity;
+  const bUpdated = (Number.isFinite(bUpdatedRaw) && bUpdatedRaw > bAddedV) ? bUpdatedRaw : -Infinity;
+
+  const av = Math.max(aAddedV, aUpdated);
+  const bv = Math.max(bAddedV, bUpdated);
+  if (bv !== av) return bv - av;
+
+  const aIsAdd = av === aAddedV;
+  const bIsAdd = bv === bAddedV;
+  if (aIsAdd !== bIsAdd) return aIsAdd ? -1 : 1;
+  return (Number(b?.id) || 0) - (Number(a?.id) || 0);
 }
 function packSearchText(p) { return normalizeSearchText([p.name,p.credits,p.category,p.secondary_tag,p.description].join(' ')); }
 function announce(text) {
@@ -1564,7 +1587,7 @@ function applyFilters(resetPage = true) {
   } else if (srt === 'newest') {
     filtered.sort(comparePackDates);
   } else if (srt === 'oldest') {
-    filtered.sort((a,b) => { const d = comparePackDates(b, a); return d || ((Number(a.id)||0)-(Number(b.id)||0)); });
+    filtered.sort((a,b) => { const d = comparePackDatesAddedOnly(b, a); return d || ((Number(a.id)||0)-(Number(b.id)||0)); });
   } else if (srt === 'az') {
     filtered.sort((a,b) => String(a.name||'').localeCompare(String(b.name||'')));
   } else if (srt === 'mostviewed') {
