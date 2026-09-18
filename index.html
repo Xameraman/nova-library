@@ -672,7 +672,8 @@
   <div id="nova-messages">
     <div class="nova-msg bot">
       Hey! 👋 I'm <strong>NOVA Assistant</strong>. Ask me anything about packs, the library, or Minecraft Bedrock!<br>
-      <em>No real people can see your chats. For concerns that need a human, join our Discord.</em>
+      <em>No real people can see your chats. For concerns that need a human, join our Discord.</em><br>
+      <em>Feel free to write as much detail as you want (up to 600 characters) — and if I show you a numbered list, just reply with the number.</em>
     </div>
   </div>
   <div id="nova-captcha-wrap" style="display:none;">
@@ -1098,6 +1099,11 @@ window.NovaPerformance = {
   function isBadMessage(text) { const l = text.toLowerCase(); for (const p of MULTI_WORD_BAD) if (l.includes(p)) return true; const t = new Set(l.match(/[a-z0-9*]+/g) || []); const c = new Set(l.replace(/\s+/g, '').match(/[a-z0-9*]+/g) || []); for (const w of SINGLE_BAD) if (t.has(w) || c.has(w)) return true; return false; }
 
   const REPEAT_WINDOW = 5, REPEAT_LOCK_AT = 3, SHORT_LOCK_AT = 2, REPEAT_TIME_WIN = 60000;
+  // Picking an item from a numbered list ("1", "#2", "give me number 3") is a
+  // legitimate short, often-repeated message -- searching a few times in a
+  // row and picking "1" each time looks identical to spam otherwise, and was
+  // locking people out of the chat just for using the number-pick feature.
+  const PICK_LIKE = /^\s*(?:(?:give|send|get)\s+me\s+|i(?:'ll|\s+will)?\s+(?:take|want|pick|choose)\s+|i\s+want\s+|pick\s+|choose\s+)?(?:number|num|no\.?|option|item|choice)?\s*#?\s*\d{1,2}\s*$/i;
   let msgHistory = [], shortWarnShown = false;
   function normMsg(t) { return t.toLowerCase().trim().replace(/\s+/g, ' '); }
   function simil(a, b) { if (!a || !b) return 0; const L = Math.max(a.length, b.length), S = Math.min(a.length, b.length); if (!L) return 1; let m = 0; for (let i = 0; i < S; i++) if (a[i] === b[i]) m++; return m / L; }
@@ -1198,7 +1204,7 @@ window.NovaPerformance = {
     if (!text || isLoading) return;
     if (text.length > 600) { lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 chars. 🔄', 15); return; }
     if (isBadMessage(text)) { lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW, and rude behavior are not allowed. 🔄', 15); return; }
-    const rep = checkRepetitive(text);
+    const rep = PICK_LIKE.test(text) ? { lock: false } : checkRepetitive(text);
     if (rep.warn) { addMessage('bot', '💡 Please ask a proper question! Very short messages may be limited. 😊'); input.value = ''; input.style.height = 'auto'; return; }
     if (rep.lock) { lockChat(rep.reason === 'short' ? '⛔ <strong>Chat locked</strong> — please type real questions. 🔄' : '⛔ <strong>Chat locked</strong> — stop repeating the same message. 🔄', 15); return; }
 
