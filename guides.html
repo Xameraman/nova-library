@@ -723,7 +723,7 @@
     <div class="nova-msg bot">
       Hey! 👋 I'm <strong>NOVA Assistant</strong>. Ask me anything about packs, the library, or Minecraft Bedrock!<br>
       <em>No real people can see your chats. For concerns that need a human, join our Discord.</em><br>
-      <em>Feel free to write as much detail as you want (up to 600 characters) — and if I show you a numbered list, just reply with the number.</em>
+      <em>Ask me about Minecraft Bedrock, addons, packs, shaders, maps, skins, or how to use Nova’s Library. I’ll help with what I can.</em>
     </div>
   </div>
   <div id="nova-captcha-wrap" style="display:none;">
@@ -1149,11 +1149,8 @@ window.NovaPerformance = {
   function isBadMessage(text) { const l = text.toLowerCase(); for (const p of MULTI_WORD_BAD) if (l.includes(p)) return true; const t = new Set(l.match(/[a-z0-9*]+/g) || []); const c = new Set(l.replace(/\s+/g, '').match(/[a-z0-9*]+/g) || []); for (const w of SINGLE_BAD) if (t.has(w) || c.has(w)) return true; return false; }
 
   const REPEAT_WINDOW = 5, REPEAT_LOCK_AT = 3, SHORT_LOCK_AT = 2, REPEAT_TIME_WIN = 60000;
-  // Picking an item from a numbered list ("1", "#2", "give me number 3") is a
-  // legitimate short, often-repeated message -- searching a few times in a
-  // row and picking "1" each time looks identical to spam otherwise, and was
-  // locking people out of the chat just for using the number-pick feature.
-  const PICK_LIKE = /^\s*(?:(?:give|send|get)\s+me\s+|i(?:'ll|\s+will)?\s+(?:take|want|pick|choose)\s+|i\s+want\s+|pick\s+|choose\s+)?(?:number|num|no\.?|option|item|choice)?\s*#?\s*\d{1,2}\s*$/i;
+  // Short/repeated-message protection. Search results are no longer selected
+  // through a numbered AI-chat picker, so every message follows normal spam checks.
   let msgHistory = [], shortWarnShown = false;
   function normMsg(t) { return t.toLowerCase().trim().replace(/\s+/g, ' '); }
   function simil(a, b) { if (!a || !b) return 0; const L = Math.max(a.length, b.length), S = Math.min(a.length, b.length); if (!L) return 1; let m = 0; for (let i = 0; i < S; i++) if (a[i] === b[i]) m++; return m / L; }
@@ -1179,22 +1176,10 @@ window.NovaPerformance = {
   function showSlowBanner(s) { if (slowBanner) return; slowBanner = document.createElement('div'); slowBanner.style.cssText = 'background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);color:#fbbf24;font-size:11px;font-weight:700;text-align:center;padding:6px 10px;flex-shrink:0;'; slowBanner.textContent = `🛡️ High load detected — slow mode active (${s}s)`; panel.insertBefore(slowBanner, msgs); }
   function hideSlowBanner() { if (slowBanner) { slowBanner.remove(); slowBanner = null; } }
 
-  const header = document.getElementById('nova-panel-header');
-  if (header) { const nc = document.createElement('button'); nc.title = 'New conversation'; nc.textContent = '🔄'; nc.style.cssText = 'background:none;border:none;cursor:pointer;font-size:16px;opacity:0.45;transition:opacity .2s;padding:2px 4px;margin-left:auto;flex-shrink:0;'; nc.onmouseover = () => nc.style.opacity = '1'; nc.onmouseout = () => nc.style.opacity = '0.45'; nc.addEventListener('click', resetChat); const dot = document.getElementById('nova-online-dot'); if (dot) header.insertBefore(nc, dot); else header.appendChild(nc); }
 
   function startCountdown(s) { clearInterval(countdownInt); let r = s; function tick() { if (r <= 0) { clearInterval(countdownInt); checkStatusOnLoad(); return; } const m = Math.floor(r / 60), sec = r % 60; if (footer) footer.textContent = m > 0 ? `⏳ Locked ${m}m ${sec}s` : `⏳ Locked ${sec}s`; r--; } tick(); countdownInt = setInterval(tick, 1000); }
-  function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock'; }
+  function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Wait for the timer to expire'; }
   function unlockChat() { clearInterval(countdownInt); chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; addMessage('bot', '✅ Lock lifted! You can send messages again. Please keep it respectful. 😊'); }
-  function resetChat() { if (isLoading) return; clearInterval(countdownInt); history = []; msgHistory = []; shortWarnShown = false; chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; msgs.innerHTML = ''; addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>NOVA Assistant</strong>. Ask me anything — I\'m here to help!'); if (captchaToken || verificationProof) { captchaToken = null; verificationProof = null; captchaVerified = false; resetTurnstileWidget(); } else { updateCaptchaState(); } }
-
-  async function checkStatusOnLoad(opened = false) {
-    try {
-      const session = await ensureWebSession(false);
-      if (typeof session.turnstile_required === 'boolean') captchaRequired = session.turnstile_required;
-      if (typeof session.captcha_verified === 'boolean') {
-        captchaVerified = !captchaRequired || session.captcha_verified || Boolean(verificationProof);
-        if (session.captcha_verified) { captchaToken = null; verificationProof = null; }
-      }
       updateCaptchaState();
       const res = await fetch(STATUS_URL, { credentials: 'include', cache: 'no-store' });
       if (!res.ok) return;
@@ -1219,15 +1204,11 @@ window.NovaPerformance = {
       scrollToBottom();
       updateCaptchaState();
       const hadChattedBefore = history.length > 0;
-      try { await ensureWebSession(false); } catch {}
+      try { await ensureWebSession(true); } catch {}
       updateCaptchaState();
       checkStatusOnLoad(true);
-      // If someone who already successfully sent a message this session is
-      // suddenly being asked to verify again, that's not the normal
-      // first-time flow -- it means something about the session desynced.
-      // A full page refresh reliably clears it (confirmed), so say so
-      // directly instead of leaving them stuck on a widget that shouldn't
-      // be there.
+      // Re-read verification state whenever the chat opens so a stale local
+      // cache cannot resurrect the verification embed after a successful check.
       if (hadChattedBefore && captchaRequired && !captchaVerified) {
         // The widget's own token can desync from the server's longer verified
         // window (NOVA_WEB_TURNSTILE_TTL). Force a fresh server check first --
@@ -1238,7 +1219,7 @@ window.NovaPerformance = {
           updateCaptchaState();
         } catch (e) { /* fall through to the message below */ }
         if (captchaRequired && !captchaVerified) {
-          addMessage('bot', "👋 Looks like your verification needs a refresh. Please reload the page — you won't lose this conversation.");
+          addMessage('bot', "👋 Your verification state could not be restored. Please complete the verification shown above.");
         }
       }
     }
@@ -1252,9 +1233,9 @@ window.NovaPerformance = {
     if (captchaRequired && !captchaVerified) { updateCaptchaState(); return; }
     const text = input.value.trim();
     if (!text || isLoading) return;
-    if (text.length > 600) { lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 chars. 🔄', 15); return; }
+    if (text.length > 600) { lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 characters.', 15); return; }
     if (isBadMessage(text)) { lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW, and rude behavior are not allowed. 🔄', 15); return; }
-    const rep = PICK_LIKE.test(text) ? { lock: false } : checkRepetitive(text);
+    const rep = checkRepetitive(text);
     if (rep.warn) { addMessage('bot', '💡 Please ask a proper question! Very short messages may be limited. 😊'); input.value = ''; input.style.height = 'auto'; return; }
     if (rep.lock) { lockChat(rep.reason === 'short' ? '⛔ <strong>Chat locked</strong> — please type real questions. 🔄' : '⛔ <strong>Chat locked</strong> — stop repeating the same message. 🔄', 15); return; }
 
@@ -1282,7 +1263,7 @@ window.NovaPerformance = {
       }
       if (data.locked) { typing.remove(); lockChat(data.response || '⛔ You have been locked. Please wait.', data.unlock_in || 15); setLoading(false); return; }
       if (data.slow_mode) { typing.remove(); showSlowBanner(data.unlock_in || 60); addMessage('bot', data.response || '🛡️ NOVA is under high load. Please wait.'); setLoading(false); return; }
-      if (data.spam) { typing.remove(); lockChat(data.response || '⛔ Chat locked. Refresh to unlock.', 0); setLoading(false); return; }
+      if (data.spam) { typing.remove(); lockChat(data.response || '⛔ Chat locked. Wait for the lock to expire.', 0); setLoading(false); return; }
       if (data.rate_limited) { typing.remove(); addMessage('bot', data.response || '⏳ Please wait a moment before sending another message.'); setLoading(false); return; }
       const reply = data.response || 'Sorry, no response. Please try again.';
       history.push({ role: 'assistant', content: reply }); typing.remove(); addMessage('bot', reply);
