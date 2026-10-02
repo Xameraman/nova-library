@@ -514,7 +514,7 @@
 
 <div class="stats-bar">
   <div class="stat"><i class="fa-solid fa-box"></i> <b id="sTot">—</b> Packs</div>
-  <div class="stat"><i class="fa-solid fa-folder-open"></i> <b>23</b> Categories</div>
+  <div class="stat"><i class="fa-solid fa-folder-open"></i> <b id="statCats">25</b> Categories</div>
   <div class="stat"><i class="fa-solid fa-clock-rotate-left"></i> <b id="sLast">—</b></div>
   <div class="stat"><i class="fa-solid fa-file-lines"></i> <b id="sPages">—</b> Pages</div>
   <div class="stat"><i class="fa-solid fa-rotate"></i> <b id="sSynced">—</b></div>
@@ -671,9 +671,8 @@
   </div>
   <div id="nova-messages">
     <div class="nova-msg bot">
-      Hey! 👋 I'm <strong>NOVA Assistant</strong>. Ask me anything about packs, the library, or Minecraft Bedrock!<br>
-      <em>No real people can see your chats. For concerns that need a human, join our Discord.</em><br>
-      <em>Ask me about Minecraft Bedrock, addons, packs, shaders, maps, skins, or how to use Nova’s Library. I’ll help with what I can.</em>
+      Hi there! 👋 I'm <strong>NOVA Assistant</strong>, your helper for everything Minecraft Pocket Edition (MCPE) — add-ons, texture packs, skins, worlds, setup help, and troubleshooting.<br>
+      <em>To find packs, use the search on this website or our Discord search channels. Chats are private; for anything that needs a human, join our Discord.</em>
     </div>
   </div>
   <div id="nova-captcha-wrap" style="display:none;">
@@ -841,7 +840,7 @@ function normalizePack(p) {
     link: String(p.link || '').trim(),
     support_link: String(p.support_link || p.support || '').trim(),
     archive_link: String(p.archive_link || p.archive || '').trim(),
-    category: String(p.category || '').trim(),
+    category: String(p.category || '').trim() || 'Others',
     secondary_tag: String(p.secondary_tag || '').trim(),
     credits: String(p.credits || '').trim(),
     description: String(p.description || '').trim(),
@@ -996,6 +995,10 @@ window.NovaPerformance = {
     }).finally(() => { sessionPromise = null; });
     return sessionPromise;
   }
+  function markSessionVerified() {
+    captchaVerified = true;
+    if (sessionDataCache) sessionDataCache.captcha_verified = true;
+  }
   function webHeaders() {
     const headers = { 'Content-Type': 'application/json' };
     if (csrfToken) headers['X-NOVA-CSRF'] = csrfToken;
@@ -1082,8 +1085,7 @@ window.NovaPerformance = {
   };
 
   // Resets the rendered Cloudflare Turnstile widget so the user can verify
-  // again (after an expired token, a failed/rejected verification, or a
-  // manual chat reset). This was previously called but never defined,
+  // again (after an expired token or a failed/rejected verification). This was previously called but never defined,
   // which threw a ReferenceError and left the chat stuck with no way to
   // re-trigger verification without a full page reload.
   function resetTurnstileWidget() {
@@ -1099,8 +1101,6 @@ window.NovaPerformance = {
   function isBadMessage(text) { const l = text.toLowerCase(); for (const p of MULTI_WORD_BAD) if (l.includes(p)) return true; const t = new Set(l.match(/[a-z0-9*]+/g) || []); const c = new Set(l.replace(/\s+/g, '').match(/[a-z0-9*]+/g) || []); for (const w of SINGLE_BAD) if (t.has(w) || c.has(w)) return true; return false; }
 
   const REPEAT_WINDOW = 5, REPEAT_LOCK_AT = 3, SHORT_LOCK_AT = 2, REPEAT_TIME_WIN = 60000;
-  // Short/repeated-message protection. Search results are no longer selected
-  // through a numbered AI-chat picker, so every message follows normal spam checks.
   let msgHistory = [], shortWarnShown = false;
   function normMsg(t) { return t.toLowerCase().trim().replace(/\s+/g, ' '); }
   function simil(a, b) { if (!a || !b) return 0; const L = Math.max(a.length, b.length), S = Math.min(a.length, b.length); if (!L) return 1; let m = 0; for (let i = 0; i < S; i++) if (a[i] === b[i]) m++; return m / L; }
@@ -1126,10 +1126,18 @@ window.NovaPerformance = {
   function showSlowBanner(s) { if (slowBanner) return; slowBanner = document.createElement('div'); slowBanner.style.cssText = 'background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);color:#fbbf24;font-size:11px;font-weight:700;text-align:center;padding:6px 10px;flex-shrink:0;'; slowBanner.textContent = `🛡️ High load detected — slow mode active (${s}s)`; panel.insertBefore(slowBanner, msgs); }
   function hideSlowBanner() { if (slowBanner) { slowBanner.remove(); slowBanner = null; } }
 
-
   function startCountdown(s) { clearInterval(countdownInt); let r = s; function tick() { if (r <= 0) { clearInterval(countdownInt); checkStatusOnLoad(); return; } const m = Math.floor(r / 60), sec = r % 60; if (footer) footer.textContent = m > 0 ? `⏳ Locked ${m}m ${sec}s` : `⏳ Locked ${sec}s`; r--; } tick(); countdownInt = setInterval(tick, 1000); }
-  function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Wait for the timer to expire'; }
+  function lockChat(msg, unlockIn) { clearInterval(countdownInt); chatLocked = true; input.disabled = true; sendBtn.disabled = true; input.placeholder = '⛔ Locked. Wait for timer.'; addMessage('bot', msg); if (unlockIn > 0) startCountdown(unlockIn); else if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock'; }
   function unlockChat() { clearInterval(countdownInt); chatLocked = false; input.disabled = false; sendBtn.disabled = false; input.placeholder = 'Ask me anything...'; hideSlowBanner(); if (footer) footer.textContent = 'NOVA AI • Powered by NOVA Official'; addMessage('bot', '✅ Lock lifted! You can send messages again. Please keep it respectful. 😊'); }
+
+  async function checkStatusOnLoad(opened = false) {
+    try {
+      const session = await ensureWebSession(false);
+      if (typeof session.turnstile_required === 'boolean') captchaRequired = session.turnstile_required;
+      if (typeof session.captcha_verified === 'boolean') {
+        captchaVerified = !captchaRequired || session.captcha_verified || Boolean(verificationProof);
+        if (session.captcha_verified) { captchaToken = null; verificationProof = null; }
+      }
       updateCaptchaState();
       const res = await fetch(STATUS_URL, { credentials: 'include', cache: 'no-store' });
       if (!res.ok) return;
@@ -1154,11 +1162,15 @@ window.NovaPerformance = {
       scrollToBottom();
       updateCaptchaState();
       const hadChattedBefore = history.length > 0;
-      try { await ensureWebSession(true); } catch {}
+      try { await ensureWebSession(false); } catch {}
       updateCaptchaState();
       checkStatusOnLoad(true);
-      // Re-read verification state whenever the chat opens so a stale local
-      // cache cannot resurrect the verification embed after a successful check.
+      // If someone who already successfully sent a message this session is
+      // suddenly being asked to verify again, that's not the normal
+      // first-time flow -- it means something about the session desynced.
+      // A full page refresh reliably clears it (confirmed), so say so
+      // directly instead of leaving them stuck on a widget that shouldn't
+      // be there.
       if (hadChattedBefore && captchaRequired && !captchaVerified) {
         // The widget's own token can desync from the server's longer verified
         // window (NOVA_WEB_TURNSTILE_TTL). Force a fresh server check first --
@@ -1169,7 +1181,7 @@ window.NovaPerformance = {
           updateCaptchaState();
         } catch (e) { /* fall through to the message below */ }
         if (captchaRequired && !captchaVerified) {
-          addMessage('bot', "👋 Your verification state could not be restored. Please complete the verification shown above.");
+          addMessage('bot', "👋 Looks like your verification needs a refresh. Please reload the page — you won't lose this conversation.");
         }
       }
     }
@@ -1183,11 +1195,11 @@ window.NovaPerformance = {
     if (captchaRequired && !captchaVerified) { updateCaptchaState(); return; }
     const text = input.value.trim();
     if (!text || isLoading) return;
-    if (text.length > 600) { lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 characters.', 15); return; }
-    if (isBadMessage(text)) { lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW, and rude behavior are not allowed. 🔄', 15); return; }
+    if (text.length > 600) { lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 chars.', 15); return; }
+    if (isBadMessage(text)) { lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW, and rude behavior are not allowed.', 15); return; }
     const rep = checkRepetitive(text);
     if (rep.warn) { addMessage('bot', '💡 Please ask a proper question! Very short messages may be limited. 😊'); input.value = ''; input.style.height = 'auto'; return; }
-    if (rep.lock) { lockChat(rep.reason === 'short' ? '⛔ <strong>Chat locked</strong> — please type real questions. 🔄' : '⛔ <strong>Chat locked</strong> — stop repeating the same message. 🔄', 15); return; }
+    if (rep.lock) { lockChat(rep.reason === 'short' ? '⛔ <strong>Chat locked</strong> — please type real questions.' : '⛔ <strong>Chat locked</strong> — stop repeating the same message.', 15); return; }
 
     addMessage('user', text); history.push({ role: 'user', content: text }); input.value = ''; input.style.height = 'auto';
     const typing = addTyping(); setLoading(true);
@@ -1206,17 +1218,21 @@ window.NovaPerformance = {
       }
       if (!res.ok) {
         const msg = String(data.detail || '');
-        if (res.status === 400 && /verification required|verification expired/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); throw new Error('Verification required'); }
-        if (res.status === 403 && /verification failed|invalid verification/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
-        if (res.status === 503 && /verification service|verification.*configured/i.test(msg)) { captchaRequired = true; captchaVerified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); addMessage('bot', '⚠️ The verification service is temporarily unavailable. Please try again in a moment.'); setLoading(false); return; }
+        if (res.status === 400 && /verification required|verification expired/i.test(msg)) { captchaRequired = true; captchaVerified = false; if (sessionDataCache) sessionDataCache.captcha_verified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); throw new Error('Verification required'); }
+        if (res.status === 403 && /verification failed|invalid verification/i.test(msg)) { captchaRequired = true; captchaVerified = false; if (sessionDataCache) sessionDataCache.captcha_verified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); addMessage('bot', '⛔ Human verification failed. Please verify again.'); setLoading(false); return; }
+        if (res.status === 503 && /verification service|verification.*configured/i.test(msg)) { captchaRequired = true; captchaVerified = false; if (sessionDataCache) sessionDataCache.captcha_verified = false; captchaToken = null; verificationProof = null; resetTurnstileWidget(); addMessage('bot', '⚠️ The verification service is temporarily unavailable. Please try again in a moment.'); setLoading(false); return; }
         throw new Error(`HTTP ${res.status}`);
       }
       if (data.locked) { typing.remove(); lockChat(data.response || '⛔ You have been locked. Please wait.', data.unlock_in || 15); setLoading(false); return; }
       if (data.slow_mode) { typing.remove(); showSlowBanner(data.unlock_in || 60); addMessage('bot', data.response || '🛡️ NOVA is under high load. Please wait.'); setLoading(false); return; }
-      if (data.spam) { typing.remove(); lockChat(data.response || '⛔ Chat locked. Wait for the lock to expire.', 0); setLoading(false); return; }
+      if (data.spam) { typing.remove(); lockChat(data.response || '⛔ Chat locked. Refresh to unlock.', 0); setLoading(false); return; }
       if (data.rate_limited) { typing.remove(); addMessage('bot', data.response || '⏳ Please wait a moment before sending another message.'); setLoading(false); return; }
       const reply = data.response || 'Sorry, no response. Please try again.';
       history.push({ role: 'assistant', content: reply }); typing.remove(); addMessage('bot', reply);
+      // The server accepted the proof and now holds this session as verified. The cached
+      // session snapshot predates that (captcha_verified:false); left as-is it made the next
+      // close/reopen re-show the verification embed. Sync it before dropping the proof.
+      markSessionVerified();
       captchaToken = null;
       verificationProof = null;
       updateCaptchaState();
@@ -1304,9 +1320,14 @@ const CATEGORIES = [
   { val: 'Food', label: 'Food' },
   { val: 'Environment', label: 'Environment' },
   { val: 'Animation', label: 'Animation' },
-  { val: 'Skins', label: 'Skins' },
-  { val: 'Fps Booster', label: 'Fps Booster' }
+  { val: 'Skins', label: 'Skins' },          // content type (Secondary Tag) -- filter matches tags too
+  { val: 'Scripts', label: 'Scripts' },      // content type (Secondary Tag)
+  { val: 'Fps Booster', label: 'Fps Booster' },
+  { val: 'Others', label: 'Others' }          // no-fit fallback category
 ];
+
+// Secondary Tag is a comma-separated list (REQUIRED); Category is optional ('Others' when nothing fits).
+function packTags(p) { return String(p.secondary_tag || '').split(',').map(t => t.trim()).filter(Boolean); }
 
 const PLACEHOLDER_PHRASES = [
   "Search Nova Library", "100% Creator Trusted!", "Looking For Something?", 
@@ -1359,6 +1380,7 @@ window.handleImgErr = function(img) {
 };
 
 function renderCategories() {
+  const sc = document.getElementById('statCats'); if (sc) sc.textContent = CATEGORIES.length;
   document.getElementById('categoryBar').innerHTML = CATEGORIES.map((c, i) =>
     `<button type="button" class="cat-pill ${currentCat === c.val ? 'active' : ''}" data-category-index="${i}">${esc(c.label)}</button>`
   ).join('');
@@ -1506,7 +1528,7 @@ function openStatsModal() {
     if (!allPacks.length) return;
     const total = allPacks.length;
     const catCount = {};
-    allPacks.forEach(p => { const cat = p.category || 'Unknown'; catCount[cat] = (catCount[cat] || 0) + 1; });
+    allPacks.forEach(p => { const cat = p.category || 'Others'; catCount[cat] = (catCount[cat] || 0) + 1; });
     const formatEntries = (obj) => Object.entries(obj).sort((a,b) => b[1]-a[1]).map(([k,v]) => `<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>${k}</span><b>${v}</b></div>`).join('');
     document.getElementById('statsContent').innerHTML = `<div style="margin-bottom:24px; font-size:1.1rem;"><b>Total Packs Installed:</b> ${total}</div><div style="font-weight:800;margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:8px;">Distribution By Category</div>${formatEntries(catCount)}`;
     document.getElementById('statsOverlay').classList.add('open');
@@ -1544,7 +1566,7 @@ function applyFilters(resetPage = true) {
 
   filtered = allPacks.map(p => ({ p, search: packSearchText(p) })).filter(({p,search}) => {
     const mq = !tokens.length || tokens.every(t => search.includes(t));
-    const mc = !cat || normalizeSearchText(p.category) === cat;
+    const mc = !cat || normalizeSearchText(p.category) === cat || packTags(p).some(t => normalizeSearchText(t) === cat);
     const sup = String(p.support_link || p.support || '').trim();
     const mf = !featuredOnly || (sup !== '' && sup.toLowerCase() !== 'none');
     return mq && mc && mf;
@@ -1611,7 +1633,7 @@ function appendCards(slice) {
       const pack = p;
       const supportLink = String(p.support_link || p.support || '').trim();
       const hasSupport = supportLink && supportLink.toLowerCase() !== 'none';
-      const secondaryTag = (p.secondary_tag && p.secondary_tag !== p.category) ? `<span class="card-tag"><i class="fa-solid fa-tag"></i> ${esc(p.secondary_tag)}</span>` : '';
+      const secondaryTag = packTags(p).map(t => `<span class="card-tag"><i class="fa-solid fa-tag"></i> ${esc(t)}</span>`).join('');
       const addedMs = packDateMs(p.date_added);
       const ageMs = Number.isFinite(addedMs) ? Date.now() - addedMs : Infinity;
       const isNew = Number.isFinite(addedMs) && ageMs >= 0 && ageMs <= 7*24*60*60*1000;
@@ -1645,8 +1667,8 @@ function appendCards(slice) {
         <div class="card-body">
           <div class="card-title">${esc(p.name)}</div>
           <div class="card-tags">
-            <span class="card-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>
             ${secondaryTag}
+            <span class="card-tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Others')}</span>
             ${hasSupport ? `<span class="featured-badge" data-action="open">Featured</span>` : ''}
             ${hasVideo ? `<span class="video-badge" data-action="open">🎬 Video</span>` : ''}
             ${isNew ? '<span class="new-badge">New</span>' : ''}
@@ -1772,10 +1794,8 @@ function openModalDirect(p) {
   document.getElementById('mName').textContent = p.name || 'Unknown';
   document.getElementById('mDesc').textContent = p.description || 'No description available.';
   document.getElementById('mLink').href = p.link || '#';
-  let tagsHTML = `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Unknown')}</span>`;
-  if (p.secondary_tag && p.secondary_tag !== p.category) {
-    tagsHTML += `<span class="tag"><i class="fa-solid fa-tag"></i> ${esc(p.secondary_tag)}</span>`;
-  }
+  let tagsHTML = packTags(p).map(t => `<span class="tag"><i class="fa-solid fa-tag"></i> ${esc(t)}</span>`).join('');
+  tagsHTML += `<span class="tag"><i class="fa-solid fa-folder"></i> ${esc(p.category || 'Others')}</span>`;
   tagsHTML += `<span class="tag"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>`;
 
   const videoLink = String(p.video_link || '').trim();
