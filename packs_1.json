@@ -19,6 +19,25 @@
     "last_updated": ""
   },
   {
+    "id": 260,
+    "name": "PandaMine's Entity ESP",
+    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/pandamines-entity-esp",
+    "support_link": "https://youtube.com/@pandamine5?si=MNAJAWGK2HrJEIRW",
+    "archive_link": "",
+    "category": "Utility",
+    "secondary_tag": "Texture Pack",
+    "credits": "PandaMine5",
+    "description": "Adds ESP that reveals entities behind walls and objects. Supports Actions & Stuff",
+    "image": "https://i.ibb.co/3yYx7wR9/329ae52c0de7.jpg",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-09-21",
+    "last_viewed": "2026-09-27",
+    "view_count": 5,
+    "video_link": "https://youtu.be/stdl3gDLzF8?si=a3TQxr2d1xkKoEaM",
+    "last_updated": "2026-10-03"
+  },
+  {
     "id": 69,
     "name": "Craftopia Furniture | +2000 BLOCKS",
     "link": "https://mcpedl.com/craftopia-furniture/",
@@ -36,25 +55,6 @@
     "view_count": 4,
     "video_link": "",
     "last_updated": "2026-10-03"
-  },
-  {
-    "id": 260,
-    "name": "PandaMine's Entity ESP",
-    "link": "https://www.curseforge.com/minecraft-bedrock/texture-packs/pandamines-entity-esp",
-    "support_link": "https://youtube.com/@pandamine5?si=MNAJAWGK2HrJEIRW",
-    "archive_link": "",
-    "category": "Others",
-    "secondary_tag": "Utility",
-    "credits": "PandaMine5",
-    "description": "Adds ESP that reveals entities behind walls and objects. Supports Actions & Stuff",
-    "image": "https://i.ibb.co/3yYx7wR9/329ae52c0de7.jpg",
-    "image_credit": "",
-    "added_by": "xameraman5022",
-    "date_added": "2026-09-21",
-    "last_viewed": "2026-09-27",
-    "view_count": 5,
-    "video_link": "https://youtu.be/stdl3gDLzF8?si=a3TQxr2d1xkKoEaM",
-    "last_updated": ""
   },
   {
     "id": 259,
