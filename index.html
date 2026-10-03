@@ -187,6 +187,43 @@
     }
     .cat-pill:hover { border-color: var(--cyan); color: var(--text-main); background: var(--bg-surface-hover); }
     .cat-pill.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); box-shadow: 0 4px 12px var(--cyan-glow); }
+    /* ── Two independent filter rows ── */
+    .filter-row-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; margin: 0 0 8px; display: block; text-align: left; }
+    #categoryBar { margin-bottom: 10px; padding-bottom: 6px; }
+    #tagBar { margin-bottom: 18px; padding-bottom: 6px; }
+    #tagBar .cat-pill { padding: 9px 18px; font-size: 0.85rem; }
+    #tagBar .cat-pill i { font-size: 0.85rem; }
+    .no-results { grid-column: 1 / -1; text-align: center; padding: 40px 16px; color: var(--text-muted); }
+    .no-results button { margin-top: 12px; }
+
+    /* ── Featured videos ── */
+    .fv { max-width: 900px; margin: 0 auto 24px; text-align: left; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px; }
+    .fv[hidden] { display: none !important; }
+    .fv-hero { display: flex; gap: 14px; width: 100%; text-align: left; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; font: inherit; align-items: stretch; }
+    .fv-thumb { position: relative; flex: 0 0 46%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; background: #000; }
+    .fv-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+    .fv-hero:hover .fv-thumb img, .fv-card:hover .fv-thumb img { transform: scale(1.04); }
+    .fv-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 44px; height: 30px; background: #FF0000; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: .85rem; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
+    .fv-info { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+    .fv-kicker { font-size: .7rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .fv-kicker i { color: #FF0000; font-size: .95rem; }
+    .fv-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+    .fv-meta { font-size: .8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fv-meta b { color: var(--text-main); font-weight: 600; }
+    .fv-desc { font-size: .82rem; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .fv-strip-wrap { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+    .fv-strip { display: flex; gap: 10px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; scroll-snap-type: x proximity; }
+    .fv-strip::-webkit-scrollbar { display: none; }
+    .fv-card { flex: 0 0 150px; scroll-snap-align: start; background: none; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0; color: inherit; cursor: pointer; text-align: left; overflow: hidden; font: inherit; }
+    .fv-card:hover { border-color: var(--cyan); }
+    .fv-card .fv-thumb { flex: none; border-radius: 0; }
+    .fv-card .fv-play { width: 30px; height: 21px; font-size: .62rem; border-radius: 6px; }
+    .fv-card .fv-ctitle { padding: 6px 8px 2px; font-size: .75rem; font-weight: 600; color: var(--text-main); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+    .fv-card .fv-cmeta { padding: 0 8px 7px; font-size: .68rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fv-arrow { flex: 0 0 32px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-light); background: var(--bg); color: var(--text-main); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .fv-arrow:hover { border-color: var(--cyan); color: var(--cyan); }
+    @media (max-width: 560px) { .fv { padding: 10px; } .fv-hero { gap: 10px; } .fv-desc { display: none; } .fv-arrow { display: none; } .fv-card { flex-basis: 132px; } .fv-title { font-size: .95rem; } .fv-strip-wrap { margin-top: 10px; } }
+    @media (max-width: 340px) { .fv-hero { flex-direction: column; } .fv-thumb { flex: none; width: 100%; } }
 
     .section-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; display: block; text-align: left; }
 
@@ -522,6 +559,16 @@
 
 <div class="hero">
   <p>Browse verified Minecraft Bedrock packs, addons, worlds, skins, and more with direct downloads and proper credits.</p>
+  <!-- Featured videos: built from the packs' own video_link data (see renderFeaturedVideos) -->
+  <section class="fv" id="featuredVideos" aria-label="Featured videos" hidden>
+    <div id="fvHero"></div>
+    <div class="fv-strip-wrap" id="fvStripWrap" style="display:none;">
+      <button type="button" class="fv-arrow" data-fv-dir="-1" aria-label="Previous videos"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="fv-strip" id="fvStrip"></div>
+      <button type="button" class="fv-arrow" data-fv-dir="1" aria-label="Next videos"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </section>
+
   <div class="search-container">
     <div class="search-input-wrapper">
       <i class="fa-solid fa-magnifying-glass"></i>
@@ -557,8 +604,11 @@
 
   <span class="section-label" id="recentLabel" style="display:none;">Recently Viewed</span>
   <div class="scroll-bar" id="recentChips" style="margin-bottom: 24px;"></div>
-  <span class="section-label">Browse by Category</span>
-  <div class="scroll-bar" id="categoryBar"></div>
+  <span class="section-label">Browse</span>
+  <span class="filter-row-label">Category</span>
+  <div class="scroll-bar" id="categoryBar" role="group" aria-label="Filter by category"></div>
+  <span class="filter-row-label">Secondary Tag</span>
+  <div class="scroll-bar" id="tagBar" role="group" aria-label="Filter by secondary tag"></div>
 </div>
 
 <main>
@@ -834,14 +884,15 @@ function boundedList(key, max) {
 }
 function normalizePack(p) {
   if (!p || typeof p !== 'object') return null;
+  const cls = normalizeClassification(p.category, p.secondary_tag);
   return {
     id: p.id == null ? '' : String(p.id),
     name: String(p.name || '').trim(),
     link: String(p.link || '').trim(),
     support_link: String(p.support_link || p.support || '').trim(),
     archive_link: String(p.archive_link || p.archive || '').trim(),
-    category: String(p.category || '').trim() || 'Others',
-    secondary_tag: String(p.secondary_tag || '').trim(),
+    category: cls.category,
+    secondary_tag: cls.secondary_tag,
     credits: String(p.credits || '').trim(),
     description: String(p.description || '').trim(),
     image: String(p.image || '').trim(),
@@ -1278,7 +1329,7 @@ window.NovaPerformance = {
 // ========== LIBRARY CODE ==========
 let PER_PAGE = 30;
 let allPacks = [], filtered = [], currentPage = 1, totalPages = 0;
-let currentView = 'grid', currentCat = '';
+let currentView = 'grid', currentCat = '', currentTag = '';
 let currentModalPack = null;
 let infiniteMode = false;
 let scrollThrottle = null;
@@ -1320,14 +1371,45 @@ const CATEGORIES = [
   { val: 'Food', label: 'Food' },
   { val: 'Environment', label: 'Environment' },
   { val: 'Animation', label: 'Animation' },
-  { val: 'Skins', label: 'Skins' },          // content type (Secondary Tag) -- filter matches tags too
-  { val: 'Scripts', label: 'Scripts' },      // content type (Secondary Tag)
   { val: 'Fps Booster', label: 'Fps Booster' },
   { val: 'Others', label: 'Others' }          // no-fit fallback category
-];
+];  // content types (Texture Pack, Addon, World, Skins, Scripts) are Secondary Tags, not categories
 
 // Secondary Tag is a comma-separated list (REQUIRED); Category is optional ('Others' when nothing fits).
 function packTags(p) { return String(p.secondary_tag || '').split(',').map(t => t.trim()).filter(Boolean); }
+
+// ── Classification model ───────────────────────
+// Mirror of classification.js (bot) / CLASSIFICATION (Apps Script) -- keep the three in sync.
+// The data itself is cleaned at the source (Apps Script migrate_classification + normalization on
+// every add/update); this only keeps the page correct while GitHub still holds older records.
+//   Secondary Tag = what it is (REQUIRED, comma-separated). Category = optional ('Others' if nothing fits).
+//   One classification, one representation: a type never also appears as the Category.
+const TYPE_TAGS = ['Texture Pack', 'Addon', 'World', 'Skins', 'Scripts'];
+const TYPE_TAG_LABELS = { 'Texture Pack': 'Texture Packs', 'Addon': 'Add-ons', 'World': 'Worlds', 'Skins': 'Skins', 'Scripts': 'Scripts' };
+const TYPE_TAG_ICONS = { 'Texture Pack': 'fa-image', 'Addon': 'fa-puzzle-piece', 'World': 'fa-earth-americas', 'Skins': 'fa-user', 'Scripts': 'fa-code' };
+const TAG_ALIASES = {
+  'texturepack': 'Texture Pack', 'texture packs': 'Texture Pack', 'resource pack': 'Texture Pack', 'resource packs': 'Texture Pack',
+  'add-on': 'Addon', 'add on': 'Addon', 'addons': 'Addon', 'add-ons': 'Addon', 'worlds': 'World', 'skin': 'Skins', 'script': 'Scripts'
+};
+const OTHER_KEYS = ['others', 'other', 'uncategorized', 'uncategorised', 'general', 'unknown', 'none', 'n/a', 'na'];
+function canonTag(t) {
+  const key = String(t).trim().toLowerCase().replace(/\s+/g, ' ');
+  return TYPE_TAGS.find(x => x.toLowerCase() === key) || TAG_ALIASES[key] || String(t).trim();
+}
+function normalizeClassification(category, secondaryTag) {
+  const tags = [], seen = new Set();
+  const add = t => { const k = t.toLowerCase(); if (!seen.has(k)) { seen.add(k); tags.push(t); } };
+  String(secondaryTag || '').split(/[,;|/]+/).map(s => s.trim()).filter(Boolean).forEach(t => add(canonTag(t)));
+  let cat = String(category || '').trim();
+  if (!cat || OTHER_KEYS.includes(cat.toLowerCase())) cat = '';
+  else {
+    const asTag = canonTag(cat);
+    if (TYPE_TAGS.includes(asTag)) { add(asTag); cat = ''; }          // legacy type-as-category
+    else cat = (CATEGORIES.find(c => c.val && c.val.toLowerCase() === cat.toLowerCase()) || { val: cat }).val;
+  }
+  if (cat && seen.has(cat.toLowerCase())) cat = '';                   // same value as a tag -> keep the tag only
+  return { category: cat || 'Others', secondary_tag: tags.join(', ') };
+}
 
 const PLACEHOLDER_PHRASES = [
   "Search Nova Library", "100% Creator Trusted!", "Looking For Something?", 
@@ -1379,15 +1461,199 @@ window.handleImgErr = function(img) {
   img.outerHTML = `<div class="fallback-img"><i class="fa-solid fa-image-slash"></i><span>Unavailable</span></div>`;
 };
 
+// ── Category row + Secondary Tag row (independent, each with its own "All") ──
+// Chips are built once and only their `active` class is toggled, so a click never resets the row's
+// horizontal scroll position (the old code rebuilt the row's innerHTML on every click).
 function renderCategories() {
-  const sc = document.getElementById('statCats'); if (sc) sc.textContent = CATEGORIES.length;
-  document.getElementById('categoryBar').innerHTML = CATEGORIES.map((c, i) =>
-    `<button type="button" class="cat-pill ${currentCat === c.val ? 'active' : ''}" data-category-index="${i}">${esc(c.label)}</button>`
-  ).join('');
-  document.getElementById('categoryBar').querySelectorAll('[data-category-index]').forEach(btn => btn.addEventListener('click', () => selectCat(CATEGORIES[Number(btn.dataset.categoryIndex)]?.val || '')));
+  const sc = document.getElementById('statCats');
+  if (sc) sc.textContent = CATEGORIES.filter(c => c.val && c.val !== '__featured__').length;
+  const bar = document.getElementById('categoryBar');
+  if (!bar) return;
+  if (!bar.dataset.built) {
+    bar.innerHTML = CATEGORIES.map((c, i) =>
+      `<button type="button" class="cat-pill" data-category-index="${i}">${esc(c.label)}</button>`
+    ).join('');
+    bar.addEventListener('click', e => {
+      const b = e.target.closest('[data-category-index]');
+      if (b) selectCat(CATEGORIES[Number(b.dataset.categoryIndex)]?.val || '');
+    });
+    bar.dataset.built = '1';
+  }
+  bar.querySelectorAll('[data-category-index]').forEach(b => {
+    const on = (CATEGORIES[Number(b.dataset.categoryIndex)]?.val || '') === currentCat;
+    b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+function selectCat(val) { currentCat = val; renderCategories(); applyFilters(); }
+
+let tagBarItems = [], tagBarSig = '';
+function tagRowItems() {
+  // Canonical types always (Scripts included), then any other tag actually present in the data.
+  const known = new Set(TYPE_TAGS.map(t => t.toLowerCase())), extra = new Map();
+  allPacks.forEach(p => packTags(p).forEach(t => { const k = t.toLowerCase(); if (!known.has(k) && !extra.has(k)) extra.set(k, t); }));
+  return [{ val: '', label: 'All', icon: 'fa-border-all' },
+    ...TYPE_TAGS.map(t => ({ val: t, label: TYPE_TAG_LABELS[t] || t, icon: TYPE_TAG_ICONS[t] || 'fa-tag' })),
+    ...[...extra.values()].sort((a, b) => a.localeCompare(b)).map(t => ({ val: t, label: t, icon: 'fa-tag' }))];
+}
+function renderTagBar() {
+  const bar = document.getElementById('tagBar');
+  if (!bar) return;
+  const items = tagRowItems(), sig = items.map(i => i.val).join('|');
+  if (sig !== tagBarSig) {
+    tagBarItems = items; tagBarSig = sig;
+    bar.innerHTML = items.map((c, i) =>
+      `<button type="button" class="cat-pill" data-tag-index="${i}"><i class="fa-solid ${c.icon}"></i> ${esc(c.label)}</button>`
+    ).join('');
+    if (!bar.dataset.bound) {
+      bar.addEventListener('click', e => {
+        const b = e.target.closest('[data-tag-index]');
+        if (b) selectTag(tagBarItems[Number(b.dataset.tagIndex)]?.val || '');
+      });
+      bar.dataset.bound = '1';
+    }
+    if (currentTag && !items.some(i => i.val === currentTag)) currentTag = '';
+  }
+  bar.querySelectorAll('[data-tag-index]').forEach(b => {
+    const on = (tagBarItems[Number(b.dataset.tagIndex)]?.val || '') === currentTag;
+    b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+function selectTag(val) { currentTag = val; renderTagBar(); applyFilters(); }
+
+function clearBrowseFilters() { currentCat = ''; currentTag = ''; renderCategories(); renderTagBar(); applyFilters(); }
+function showEmptyResults() {
+  const host = document.getElementById(currentView === 'grid' ? 'grid' : 'imageGrid');
+  if (!host) return;
+  const narrowed = currentCat || currentTag || document.getElementById('q').value.trim();
+  host.innerHTML = `<div class="no-results"><i class="fa-regular fa-face-frown" style="font-size:1.6rem;"></i><p>No packs match this combination.</p>${narrowed ? '<button type="button" class="cat-pill" onclick="clearBrowseFilters()">Clear category &amp; tag filters</button>' : ''}</div>`;
 }
 
-function selectCat(val) { currentCat = val; renderCategories(); applyFilters(); }
+// ── Featured videos ────────────────────────────
+// Built ONLY from the packs' own video_link data -- nothing is hard-coded. A card exists only for a
+// link that resolves to a valid 11-character YouTube id whose thumbnail actually loads (and, when
+// YouTube's oEmbed answers, that the video still exists). The section stays hidden when none qualify.
+// Not in the data and not available without a YouTube API key: duration -> deliberately not shown.
+// Title/channel come from YouTube's public oEmbed (best effort, cached 7 days); if it can't be reached
+// the pack name is used and no channel is claimed. The channel is the VIDEO's channel -- it is shown
+// separately from the pack's credits and never presented as the pack's creator.
+const YT_ID_RE = /^[A-Za-z0-9_-]{11}$/;
+const FV_MAX = 12, FV_META_KEY = 'nova_fv_meta_v1', FV_META_TTL = 7 * 864e5, FV_FAIL_TTL = 864e5;
+let fvMeta = {};
+try { fvMeta = JSON.parse(localStorage.getItem(FV_META_KEY) || '{}') || {}; } catch { fvMeta = {}; }
+const fvInvalid = new Set();
+let fvItems = [], fvSig = '', fvEnriching = false;
+
+function fvSaveMeta() { try { localStorage.setItem(FV_META_KEY, JSON.stringify(fvMeta)); } catch {} }
+function videoIdOf(p) {
+  const link = String(p.video_link || '').trim();
+  if (!link || !isValidLink(link)) return null;
+  const id = extractYouTubeVideoId(link);
+  return id && YT_ID_RE.test(id) ? id : null;
+}
+function fvList() {
+  const seen = new Set();
+  return allPacks.map(p => ({ p, id: videoIdOf(p) }))
+    .filter(x => x.id && !fvInvalid.has(x.id) && !(fvMeta[x.id] && fvMeta[x.id].gone && Date.now() - fvMeta[x.id].ts < FV_META_TTL) && !seen.has(x.id) && seen.add(x.id))
+    .sort((a, b) => comparePackDates(a.p, b.p))
+    .slice(0, FV_MAX);
+}
+const fvThumb = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+function fvTexts(it) {
+  const m = fvMeta[it.id] || {};
+  return { title: m.t || it.p.name || 'Video', channel: m.a || '' };
+}
+function fvThumbHTML(it, eager) {
+  return `<div class="fv-thumb"><img src="${fvThumb(it.id)}" alt="" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" onload="fvThumbOk(this)" onerror="fvDrop(this)"><span class="fv-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></div>`;
+}
+function fvHeroHTML(it) {
+  const t = fvTexts(it), p = it.p;
+  return `<button type="button" class="fv-hero" data-fv="0" data-fv-id="${it.id}" aria-label="Open ${esc(p.name)} and its video">
+    ${fvThumbHTML(it, true)}
+    <div class="fv-info">
+      <span class="fv-kicker"><i class="fa-brands fa-youtube"></i> Featured Video</span>
+      <span class="fv-title">${esc(t.title)}</span>
+      <span class="fv-meta">Pack: <b>${esc(p.name)}</b>${p.credits ? ` · by ${esc(p.credits)}` : ''}</span>
+      <span class="fv-meta fv-channel" ${t.channel ? '' : 'hidden'}>Channel: <b>${esc(t.channel)}</b></span>
+      <span class="fv-desc">${esc(p.description)}</span>
+    </div></button>`;
+}
+function fvCardHTML(it, idx) {
+  const t = fvTexts(it);
+  return `<button type="button" class="fv-card" data-fv="${idx}" data-fv-id="${it.id}" aria-label="Open ${esc(it.p.name)} and its video">
+    ${fvThumbHTML(it, false)}<div class="fv-ctitle">${esc(t.title)}</div><div class="fv-cmeta">${esc(it.p.name)}</div></button>`;
+}
+function fvThumbOk(img) { if (img.naturalWidth && img.naturalWidth <= 120) fvDrop(img); } // YouTube's 120px grey placeholder = no such video
+function fvDrop(img) {
+  const id = img.closest('[data-fv-id]')?.dataset.fvId;
+  if (id && !fvInvalid.has(id)) { fvInvalid.add(id); renderFeaturedVideos(); }
+}
+async function fvFetchMeta(id) {
+  const m = fvMeta[id], now = Date.now();
+  if (m && (((m.t || m.gone) && now - m.ts < FV_META_TTL) || (m.fail && now - m.ts < FV_FAIL_TTL))) return m;
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 6000);
+  try {
+    const r = await fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id), { signal: ctl.signal });
+    if (r.status === 404) fvMeta[id] = { gone: true, ts: now };            // removed / never existed
+    else if (r.ok) { const j = await r.json(); fvMeta[id] = { t: String(j.title || '').slice(0, 140), a: String(j.author_name || '').slice(0, 80), ts: now }; }
+    else fvMeta[id] = { fail: true, ts: now };                              // private / embedding off: unknown, keep the card
+  } catch { fvMeta[id] = { fail: true, ts: now }; }                         // offline / CORS: unknown, keep the card
+  finally { clearTimeout(to); }
+  fvSaveMeta();
+  return fvMeta[id];
+}
+async function fvEnrich(list) {
+  if (fvEnriching) return;
+  fvEnriching = true;
+  let rerender = false;
+  try {
+    for (const it of list) {
+      const m = await fvFetchMeta(it.id);
+      if (m.gone) { fvInvalid.add(it.id); rerender = true; continue; }
+      if (!m.t) continue;
+      document.querySelectorAll(`#featuredVideos [data-fv-id="${it.id}"]`).forEach(el => {
+        const ti = el.querySelector('.fv-title, .fv-ctitle'); if (ti) ti.textContent = m.t;
+        const ch = el.querySelector('.fv-channel'); if (ch && m.a) { ch.innerHTML = 'Channel: <b></b>'; ch.querySelector('b').textContent = m.a; ch.hidden = false; }
+      });
+    }
+  } finally { fvEnriching = false; }
+  if (rerender) renderFeaturedVideos();
+}
+function renderFeaturedVideos() {
+  const sec = document.getElementById('featuredVideos');
+  if (!sec) return;
+  const list = fvList(), sig = list.map(x => x.id).join(',');
+  if (sig === fvSig) return;
+  fvSig = sig; fvItems = list;
+  if (!list.length) { sec.hidden = true; return; }
+  const [first, ...rest] = list;
+  document.getElementById('fvHero').innerHTML = fvHeroHTML(first);
+  document.getElementById('fvStrip').innerHTML = rest.map((it, i) => fvCardHTML(it, i + 1)).join('');
+  document.getElementById('fvStripWrap').style.display = rest.length ? 'flex' : 'none';
+  sec.hidden = false;
+  fvEnrich(list);
+}
+function setupFeaturedVideos() {
+  const sec = document.getElementById('featuredVideos');
+  if (!sec) return;
+  sec.addEventListener('click', e => {
+    const card = e.target.closest('[data-fv]');
+    if (card) { const it = fvItems[Number(card.dataset.fv)]; if (it) openModalDirect(it.p, { focusVideo: true }); return; }
+    const arrow = e.target.closest('[data-fv-dir]');
+    if (arrow) { const s = document.getElementById('fvStrip'); s.scrollBy({ left: Number(arrow.dataset.fvDir) * s.clientWidth * 0.8, behavior: 'smooth' }); }
+  });
+}
+// Channel line inside the item card's own video section (cache only; fetched in the background if missing).
+function fvModalChannel(container, p) {
+  const id = videoIdOf(p);
+  if (!container || !id) return;
+  const put = m => {
+    if (!m || !m.a || !container.isConnected || container.querySelector('.fv-modal-channel')) return;
+    const h = container.querySelector('h3'); if (!h) return;
+    const d = document.createElement('div'); d.className = 'fv-meta fv-modal-channel'; d.style.marginBottom = '8px';
+    d.textContent = 'Video channel: ' + m.a; h.insertAdjacentElement('afterend', d);
+  };
+  if (fvMeta[id] && fvMeta[id].a) put(fvMeta[id]); else fvFetchMeta(id).then(put);
+}
 
 async function pingPackView(pack) {
   try {
@@ -1557,19 +1823,23 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 function applyFilters(resetPage = true) {
+  renderTagBar(); renderFeaturedVideos();
   const rawQ = document.getElementById('q').value.trim();
   const q = normalizeSearchText(rawQ);
   const tokens = q.split(/\s+/).filter(Boolean);
   const srt = document.getElementById('sortFilter').value;
   const featuredOnly = currentCat === '__featured__';
   const cat = featuredOnly ? '' : normalizeSearchText(currentCat);
+  const tag = normalizeSearchText(currentTag);
 
   filtered = allPacks.map(p => ({ p, search: packSearchText(p) })).filter(({p,search}) => {
     const mq = !tokens.length || tokens.every(t => search.includes(t));
-    const mc = !cat || normalizeSearchText(p.category) === cat || packTags(p).some(t => normalizeSearchText(t) === cat);
+    // Two independent filters, combined with AND. '' (All) on a row = no restriction from that row.
+    const mc = !cat || normalizeSearchText(p.category) === cat;
+    const mt = !tag || packTags(p).some(t => normalizeSearchText(t) === tag);
     const sup = String(p.support_link || p.support || '').trim();
     const mf = !featuredOnly || (sup !== '' && sup.toLowerCase() !== 'none');
-    return mq && mc && mf;
+    return mq && mc && mt && mf;
   }).map(x => x.p);
 
   if (tokens.length) {
@@ -1610,6 +1880,7 @@ function applyFilters(resetPage = true) {
   document.getElementById('rCount').textContent = filtered.length;
   document.getElementById('pag').style.display = (infiniteMode || totalPages <= 1) ? 'none' : 'flex';
   renderCurrentPage();
+  if (!filtered.length && allPacks.length) showEmptyResults();
 }
 function renderCurrentPage() {
   if (infiniteMode) {
@@ -1770,10 +2041,10 @@ function extractYouTubeVideoId(url) {
     if (u.hostname === 'www.youtube.com' || u.hostname === 'youtube.com' || u.hostname === 'm.youtube.com') {
       const v = u.searchParams.get('v');
       if (v) return v;
-      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/embed/')[1];
-      if (u.pathname.startsWith('/shorts/')) return u.pathname.split('/shorts/')[1];
+      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/embed/')[1].split(/[/?#&]/)[0];
+      if (u.pathname.startsWith('/shorts/')) return u.pathname.split('/shorts/')[1].split(/[/?#&]/)[0];
     }
-    if (u.pathname.startsWith('/v/')) return u.pathname.split('/v/')[1];
+    if (u.pathname.startsWith('/v/')) return u.pathname.split('/v/')[1].split(/[/?#&]/)[0];
   } catch {}
   return null;
 }
@@ -1784,7 +2055,7 @@ function getYouTubeEmbedUrl(url) {
   return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
 }
 
-function openModalDirect(p) {
+function openModalDirect(p, opts = {}) {
   if (!p) return;
   // Clear previous video and stop it
   const videoContainer = document.getElementById('mVideoContainer');
@@ -1820,6 +2091,7 @@ function openModalDirect(p) {
               <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:2.4rem;">▶</span>
             </button>
           </div>`;
+        fvModalChannel(videoContainer, p);
         const play = videoContainer.querySelector('.nova-video-lazy');
         if (play) play.addEventListener('click', () => {
           videoContainer.innerHTML = `<div style="margin-bottom:16px;"><h3 style="font-size:1rem;font-weight:800;margin-bottom:10px;color:var(--text-main);"><span aria-hidden="true">▶️</span> Video Showcase/Testing</h3><div style="border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#000;"><iframe width="100%" height="100%" style="display:block;width:100%;height:100%;" src="${embedUrl}?rel=0" title="YouTube video player" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>`;
@@ -1872,6 +2144,8 @@ function openModalDirect(p) {
   
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // Opened from a Featured Video: bring that item's own video into view (it is playable right there).
+  if (opts.focusVideo) requestAnimationFrame(() => { const v = document.getElementById('mVideoContainer'); if (v && v.firstElementChild) v.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
 }
 
 function closeModal(e) {
@@ -1962,7 +2236,9 @@ function setupDesktopShortcuts() {
 async function init() {
   setupNetworkUX();
   setupDesktopShortcuts();
+  setupFeaturedVideos();
   renderCategories();
+  renderTagBar();
   document.getElementById('infiniteToggle').checked = infiniteMode;
   renderRecent();
   
