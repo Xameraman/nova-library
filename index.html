@@ -1732,7 +1732,9 @@ async function loadAllPacks() {
   const first = await loadJsonWithCache(BASE_URL + 'packs_1.json', 'packs_1');
   allPacks = Array.isArray(first) ? first.map(normalizePack).filter(Boolean) : [];
 
-  if (!allPacks.length) {
+  // Chunks never shift when records expire, so packs_1.json can legitimately be empty while later chunks
+  // still hold packs; only show the empty state when there is nothing further to load.
+  if (!allPacks.length && pages <= 1) {
     const offline = !navigator.onLine;
     document.getElementById('grid').innerHTML = `<div class="empty" style="text-align:center; padding:60px 20px; grid-column:1 / -1;"><div style="font-size:3rem;margin-bottom:16px;">${offline ? '📡' : '⚠️'}</div><h3 style="font-size:1.2rem;margin-bottom:8px;">${offline ? 'You are offline' : 'Library unavailable'}</h3><p style="color:var(--text-muted);">${offline ? 'No cached library is available yet. Reconnect once to save the library for offline browsing.' : 'Nova could not reach the library. Please try again.'}</p></div>`;
     setBar(100); setTimeout(() => setBar(0), 600);
