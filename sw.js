@@ -1,10 +1,11 @@
-/* Nova Library service worker — conservative cache-first/static + stale-while-revalidate data. */
-const VERSION = 'v4.4';
+/* Nova Library service worker — cache-first static assets, NETWORK-FIRST library data (the cache is only an offline/slow-network fallback). */
+const VERSION = 'v4.5';
 const STATIC_CACHE = `nova-static-${VERSION}`;
 const DATA_CACHE = `nova-data-${VERSION}`;
 const IMAGE_CACHE = `nova-images-${VERSION}`;
 const MAX_IMAGE_ENTRIES = 40;
 const MAX_DATA_ENTRIES = 55;
+const DATA_NETWORK_TIMEOUT_MS = 6000;   // slower than this -> answer from the cached copy (the fetch keeps updating the cache)
 const PRECACHE = ['/', '/index.html', '/nova-themes.js', '/sw.js', '/manifest.webmanifest'];
 
 function isCacheableResponse(response) {
@@ -67,23 +68,31 @@ self.addEventListener('fetch', event => {
   const isImage = /\.(?:png|jpe?g|webp|gif|avif|svg)$/i.test(url.pathname);
 
   if (isData) {
-    // Stale-while-revalidate: instant cached data, quiet background update.
+    // Network-first. After /commit the index and chunks must show the NEW library at once, so a stale-first answer
+    // is wrong here. The request always revalidates with the server (conditional request: a cheap 304 when nothing
+    // changed). The cached copy is only a fallback: offline, a failing/non-OK reply (e.g. mid-deploy), or a reply
+    // slower than DATA_NETWORK_TIMEOUT_MS.
     event.respondWith((async () => {
       const cache = await caches.open(DATA_CACHE);
-      const cached = await cache.match(request);
-      const refresh = fetch(request).then(async response => {
+      const refresh = fetch(request, { cache: 'no-cache' }).then(async response => {
+        if (!response || !response.ok) return null;          // a 404/5xx must never replace good data
         if (isCacheableResponse(response)) {
           await cache.put(request, response.clone());
           await trimCache(DATA_CACHE, MAX_DATA_ENTRIES).catch(() => {});
         }
         return response;
       }).catch(() => null);
-      if (cached) {
-        event.waitUntil(refresh.then(() => undefined));
-        return cached;
+      const cached = await cache.match(request);
+      if (!cached) {
+        const fresh = await refresh;
+        return fresh || new Response('[]', { status: 503, headers: { 'Content-Type': 'application/json' } });
       }
-      const fresh = await refresh;
-      return fresh || new Response('[]', { status: 503, headers: { 'Content-Type': 'application/json' } });
+      event.waitUntil(refresh.then(() => undefined));        // keep updating the cache even if we answer from it
+      let timer;
+      const tooSlow = new Promise(resolve => { timer = setTimeout(() => resolve(null), DATA_NETWORK_TIMEOUT_MS); });
+      const fresh = await Promise.race([refresh, tooSlow]);
+      clearTimeout(timer);
+      return fresh || cached;
     })());
     return;
   }
