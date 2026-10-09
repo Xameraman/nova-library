@@ -1475,15 +1475,12 @@ async function safeFetch(url, options = {}) {
   }
 }
 
-async function loadJsonWithCache(url, cacheKey, { ttl = NOVA_CACHE.ttlMs, background = false } = {}) {
+// A cached chunk is served as-is: loadAllPacks() drops every cached chunk as soon as the (always fresh) index says
+// the library changed, so a cache hit is never stale. (The old "background refresh" returned the cached copy again
+// without fetching anything, so it never refreshed anything; it was removed.)
+async function loadJsonWithCache(url, cacheKey) {
   const cached = NOVA_CACHE.get(cacheKey);
-  if (cached) {
-    if (!background && !NOVA_NETWORK.slow) {
-      // Refresh in the background; don't block the UI.
-      setTimeout(() => loadJsonWithCache(url, cacheKey, { ttl, background: true }), 0);
-    }
-    return cached;
-  }
+  if (cached) return cached;
   if (!navigator.onLine) return null;
   const data = await safeFetch(url);
   if (data != null) NOVA_CACHE.set(cacheKey, data);
@@ -1499,14 +1496,17 @@ async function loadAllPacks() {
   if (navigator.onLine) {
     const freshIndex = await safeFetch(BASE_URL + 'packs_index.json');
     if (freshIndex && typeof freshIndex === 'object') {
-      const oldVersion = index.version || index.updated || '';
+      const oldVersion = cachedIndex ? (cachedIndex.version || cachedIndex.updated || '') : '';
       const newVersion = freshIndex.version || freshIndex.updated || '';
       index = freshIndex;
+      // Drop the cached chunks BEFORE storing the new index: if the tab closed in between, the next load would see
+      // the new version, skip the drop and keep serving old chunks. An unknown old version (index entry expired or
+      // evicted) also drops them: that costs one refetch and can never serve a stale chunk.
+      if (newVersion && oldVersion !== newVersion) {
+        for (let i = 1; i <= 50; i++) NOVA_CACHE.remove(`packs_${i}`);
+      }
       NOVA_CACHE.set('index', index);
       fetchStatsUI(index);
-      if (oldVersion && newVersion && oldVersion !== newVersion) {
-        for (let i = 1; i <= Math.min(Number(index.pages) || 1, 50); i++) NOVA_CACHE.remove(`packs_${i}`);
-      }
     }
   }
 
