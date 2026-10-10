@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>NOVA Guides — Nexus of Verified Assets</title>
-  <meta name="description" content="Every NOVA download and install guide in one place — MCPEDL, CurseForge, MediaFire, MEGA, and more." />
+  <meta name="description" content="Step-by-step NOVA guides: join, find, download, install, share and troubleshoot Minecraft content — MCPEDL, CurseForge, MediaFire, MEGA and more." />
   <meta name="theme-color" content="#09090B" />
   <meta name="color-scheme" content="dark light" />
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -512,6 +512,65 @@
   .guide-acc .g-body li { margin-bottom: 4px; }
   .guide-acc .g-body .g-note { margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-sm); background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); font-size: .84rem; color: var(--text-main); }
   .guides-footer { text-align: center; color: var(--text-muted); font-size: .82rem; line-height: 1.7; margin-top: 30px; }
+
+  /* ---- guides: structure, navigation, tables (uses the site's existing variables) ---- */
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .guides-wrap { max-width: 900px; }
+  .guides-hero h2 { font-size: 1.6rem; margin-bottom: 8px; color: var(--text-main); }
+  .g-toc { display:flex; gap:8px; overflow-x:auto; padding:8px 2px 12px; margin:6px 0 0; -webkit-overflow-scrolling:touch; scrollbar-width:thin; }
+  .g-toc a { flex:0 0 auto; padding:9px 14px; border:1px solid var(--border); border-radius:999px; background:var(--bg-surface); color:var(--text-muted); font-size:.82rem; font-weight:700; text-decoration:none; white-space:nowrap; }
+  .g-toc a:hover, .g-toc a:focus-visible { border-color:var(--cyan); color:var(--text-main); outline:none; }
+  .g-section { margin-top:36px; scroll-margin-top:96px; }
+  .g-section > h2 { font-size:1.3rem; font-weight:800; color:var(--text-main); padding-bottom:8px; margin-bottom:12px; border-bottom:1px solid var(--border); }
+  .g-section h3 { font-size:1rem; font-weight:800; color:var(--cyan); margin:20px 0 8px; }
+  .g-section p, .g-section li { line-height:1.7; font-size:.92rem; }
+  .g-section p { margin:8px 0; }
+  .g-lead { color:var(--text-main); font-size:.98rem !important; }
+  .g-small { color:var(--text-muted); font-size:.82rem !important; }
+  .g-section ul, .g-section ol { padding-left:22px; margin:6px 0; }
+  .g-section li { margin-bottom:5px; }
+  .g-section a { color:var(--cyan); }
+  .g-section a:hover { text-decoration:underline; }
+  .g-section code, .g-body code { background:var(--bg-surface-hover); border:1px solid var(--border); border-radius:6px; padding:1px 6px; font-size:.84em; word-break:break-word; }
+  kbd { background:var(--bg-surface-hover); border:1px solid var(--border-light); border-bottom-width:2px; border-radius:6px; padding:1px 6px; font-size:.8em; font-family:inherit; }
+  .g-steps { list-style:none; padding-left:0 !important; counter-reset:gs; }
+  .g-steps > li { counter-increment:gs; position:relative; padding:12px 14px 12px 52px; margin-bottom:8px; border:1px solid var(--border); background:var(--bg-surface); border-radius:var(--radius-md); }
+  .g-steps > li::before { content:counter(gs); position:absolute; left:14px; top:12px; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; color:#06202a; background:var(--cyan); }
+  .g-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+  .g-card { border:1px solid var(--border); background:var(--bg-surface); border-radius:var(--radius-lg); padding:6px 18px 16px; min-width:0; }
+  .g-card h3 { margin-top:14px; }
+  .g-find { margin-top:12px; padding-top:4px; border-top:1px dashed var(--border); }
+  .g-find h4 { color:var(--gold); font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; margin:10px 0 4px; }
+  .g-chips { list-style:none; display:flex; flex-wrap:wrap; gap:8px; padding-left:0 !important; }
+  .g-chips li { margin:0; padding:6px 12px; border:1px solid var(--border); border-radius:999px; background:var(--bg-surface); font-size:.82rem; font-weight:600; color:var(--text-main); }
+  .g-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-md); margin:10px 0; background:var(--bg-surface); }
+  .g-table { width:100%; border-collapse:collapse; min-width:520px; font-size:.86rem; }
+  .g-table th, .g-table td { padding:10px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--border); line-height:1.6; }
+  .g-table thead th { color:var(--text-muted); font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; }
+  .g-table tbody th { color:var(--text-main); font-weight:700; width:34%; }
+  .g-table tbody tr:last-child th, .g-table tbody tr:last-child td { border-bottom:0; }
+  .guide-acc .g-note, .g-section > .g-note { margin:12px 0; }
+  .g-note.warn { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); }
+  .g-note.ok, .guide-acc .g-body .g-note.ok { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); }
+  .g-section > .g-note { padding:12px 14px; border-radius:var(--radius-sm); font-size:.88rem; line-height:1.65; background:rgba(6,182,212,0.07); border:1px solid rgba(6,182,212,0.28); }
+  .g-section > .g-note.warn { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.3); }
+  .g-tools { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; }
+  .g-search { flex:1 1 220px; min-width:0; padding:11px 14px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-main); font:inherit; font-size:.9rem; }
+  .g-search:focus-visible, .g-btn:focus-visible, .guide-acc summary:focus-visible, .g-top a:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+  .g-btn { padding:11px 14px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-muted); font:inherit; font-size:.85rem; font-weight:700; cursor:pointer; }
+  .g-btn:hover { border-color:var(--cyan); color:var(--text-main); }
+  .guide-acc { scroll-margin-top:96px; }
+  .guide-acc[hidden] { display:none; }
+  .guide-acc .g-body p { margin:8px 0; }
+  .g-top { text-align:right; margin-top:14px !important; font-size:.8rem !important; }
+  @media (max-width: 720px) {
+    .g-grid2 { grid-template-columns:1fr; }
+    .g-section > h2 { font-size:1.15rem; }
+    .g-table { min-width:480px; }
+    .g-table tbody th { width:auto; }
+  }
 </style>
 
 <header>
@@ -523,190 +582,217 @@
     </div>
   </div>
   <div class="header-right">
-    <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" class="icon-btn"><i class="fa-brands fa-discord"></i></a>
+    <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" rel="noopener noreferrer" class="icon-btn" aria-label="NOVA Discord"><i class="fa-brands fa-discord"></i></a>
     <a href="/" class="icon-btn" title="Back to Library"><i class="fa-solid fa-house"></i></a>
   </div>
 </header>
 
-<div class="guides-wrap">
+<div class="guides-wrap" id="top">
   <div class="guides-hero">
-    <h1>Download &amp; Install Guides</h1>
-    <p>Every guide, in one place — no more jumping between separate pages. Tap any topic to expand it.</p>
+    <h2>How to use NOVA</h2>
+    <p>Find, download, install and share Minecraft content &mdash; step by step. New here? Start at the top. Looking for something specific? Jump to a topic.</p>
   </div>
 
   <a class="guides-back" href="/">← Back to NOVA Library</a>
+  <nav class="g-toc" aria-label="On this page">
+    <a href="#start">Start here</a><a href="#find">Find content</a><a href="#install">Download &amp; install</a><a href="#hosts">Host guides</a><a href="#share">Share</a><a href="#troubleshooting">Troubleshooting</a><a href="#safety">Safety</a><a href="#faq">FAQ</a>
+  </nav>
 
-  <details class="guide-acc" open>
-    <summary><span class="g-icon">🛠️</span><div><div class="g-name">Java &amp; Bedrock Install Guide</div><div class="g-desc">The full install guide for every file type</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <h4>Quick Start</h4>
-      <p><strong>Bedrock:</strong> Download .mcpack / .mcaddon / .mcworld / .mcskin → tap the file → open with Minecraft → activate packs in world settings.<br><strong>Java:</strong> Install Forge or Fabric → place .jar mods in your .minecraft/mods folder → select the mod loader profile in the launcher.</p>
-      <h4>Bedrock Installation</h4>
-      <ol>
-        <li>Check the file extension: .mcpack, .mcaddon, .mcworld, .mcskin. Never open .exe, .apk, or .msi.</li>
-        <li>Download only from trusted sources: MCPEDL, CurseForge, or the NOVA Discord.</li>
-        <li>Open your file manager (ZArchiver on Android) → Downloads folder → tap the file.</li>
-        <li>If it's a .zip, rename it to .mcpack or .mcaddon first.</li>
-        <li>Open with Minecraft — you'll see "Import Started" then "Successfully Imported."</li>
-        <li>Create/edit a world → Resource Packs / Behaviour Packs → move the pack to the Active column. For .mcaddon files, activate <em>both</em> the behaviour and resource pack.</li>
-        <li>Enable Experimental Gameplay if the pack needs it (World Settings → Experiments).</li>
-      </ol>
-      <div class="g-note">Never open .exe, .apk, or .msi files from a Minecraft content download — that's not a real pack format and is a common malware trick.</div>
-    </div>
-  </details>
+<section class="g-section" id="start" aria-labelledby="h-start">
+  <h2 id="h-start">Start here</h2>
+  <p class="g-lead"><strong>NOVA</strong> is a community Discord and guide network for verified Minecraft Bedrock content: direct downloads, proper credit to creators, 22 clean categories and zero ad links. Content comes mainly from CurseForge and MCPEDL and is re-hosted or linked through trusted mirrors. NOVA is completely free &mdash; no paywalls and no ad gates.</p>
+  <h3>Quick start in six steps</h3>
+  <ol class="g-steps">
+    <li><strong>Join the Discord.</strong> <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" rel="noopener noreferrer">discord.gg/Zc5pPEZYpe</a></li>
+    <li><strong>Read the rules.</strong> English only, moderated by the Wick bot.</li>
+    <li><strong>Get the Key Access role</strong> to unlock the main channels.</li>
+    <li><strong>Browse a category</strong> in Discord, or use the search and filters on this website.</li>
+    <li><strong>Click a direct download link.</strong> Links come from CurseForge, MCPEDL, MediaFire, MEGA, Google Drive or Proton Drive &mdash; no ad pages.</li>
+    <li><strong>Install it.</strong> Follow <a href="#install">Download &amp; install</a>, and the matching <a href="#hosts">host guide</a> if the link goes through a file host.</li>
+  </ol>
+  <div class="g-note warn"><strong>Bedrock and Java are different games files.</strong> Bedrock content (.mcpack, .mcaddon, .mcworld, .mcskin) will not work on Java Edition, and Java files (.jar mods) will not work on Bedrock. Check which edition you play before you download.</div>
+  <h3>The 22 categories</h3>
+  <ul class="g-chips" aria-label="NOVA categories">
+    <li>PvP</li><li>Utility</li><li>Furniture</li><li>Horror</li><li>Anime</li><li>Shader</li><li>Structure</li><li>Weapon</li><li>Bosses</li><li>Vehicle</li><li>Visual</li><li>Survival</li><li>Client</li><li>GUI &amp; UI</li><li>Adventure</li><li>Minigame</li><li>Food</li><li>Environment</li><li>Addon</li><li>World</li><li>Animation</li><li>Skins</li>
+  </ul>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">🔥</span><div><div class="g-name">CurseForge Guide</div><div class="g-desc">Java &amp; Bedrock — pick your edition</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>CurseForge is the largest modding platform for Minecraft, hosting mods, modpacks, resource packs, shaders, data packs, and worlds for both Java and Bedrock.</p>
-      <h4>Java Download</h4>
-      <ol>
-        <li>Go to curseforge.com/minecraft and search for the mod — look for the Verified badge.</li>
-        <li>Check compatibility: Minecraft version, mod loader (Forge/Fabric), and dependencies (Relations tab).</li>
-        <li>Open the Files tab, find the right version, click ⋯ → Download File, and wait out the short countdown.</li>
-        <li>Place the .jar in your .minecraft/mods folder (create it if missing), then launch with your mod loader profile.</li>
-      </ol>
-      <h4>Bedrock Download</h4>
-      <p>Browse the Bedrock section → download the .mcpack/.mcaddon → tap the file → open with Minecraft → activate it in world settings, same as any other Bedrock pack.</p>
+<section class="g-section" id="find" aria-labelledby="h-find">
+  <h2 id="h-find">Find something to download</h2>
+  <div class="g-grid2">
+    <div class="g-card">
+      <h3>On this website</h3>
+      <ol><li>Type a name in <em>Search Nova Library</em>. On a computer, <kbd>Ctrl</kbd>/<kbd>&#8984;</kbd> + <kbd>K</kbd> jumps to the search box.</li><li>Narrow the list with a <em>Category</em> and, if you like, a <em>Secondary Tag</em>.</li><li>Change the order with the sort menu: Newest, Oldest, A&ndash;Z, Recently Viewed, Most Viewed or Favorites.</li><li>Not sure what you want? Press <em>Surprise Me</em> for a random pick.</li><li>Switch between the grid and the image layout with the two layout buttons (on a computer: <kbd>G</kbd> and <kbd>I</kbd>; <kbd>R</kbd> is Surprise Me).</li><li>Open an item to see its details and download link.</li></ol>
+      <p class="g-small">The <em>Preferences</em> menu also has an Infinite Scroll switch and shortcuts to these guides, Partnerships and Statistics.</p>
     </div>
-  </details>
+    <div class="g-card">
+      <h3>On Discord</h3>
+      <ol><li>Pick a category channel. If you cannot see all 22, open the top of the channel list &rarr; <em>Channels &amp; Roles</em> &rarr; <em>Roles</em> tab and choose individual category roles, or take <em>Access all Without Pings</em>. Channels appear instantly.</li><li>Click the direct download link in the post.</li><li>Missing something? Use <em>Request it on Discord</em> at the top of the Library.</li></ol>
+      <p class="g-small"><strong>NOVA Assistant</strong> can help with Minecraft add-ons, texture packs, skins, worlds, setup and troubleshooting. To find packs, use the search on this website or the Discord search channels; you can ask naturally (for example &ldquo;find me the furniture pack&rdquo;), and <code>Find:</code>, <code>Search:</code> and <code>Look up:</code> also work. If it does not answer, wait a few seconds and retry, or ask in a support channel.</p>
+    </div>
+  </div>
+  <div class="g-note "><strong>About view counts.</strong> The number on each item counts <em>unique browser views</em>: each browser profile counts once per item. Clearing site data, using a private window, or using another browser or device looks like a new viewer. It is a count of browsers, not of people, and it is tracked within NOVA only &mdash; not linked to MCPEDL, CurseForge or other platforms.</div>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">📱</span><div><div class="g-name">MCPEDL Guide</div><div class="g-desc">Download Bedrock add-ons, maps &amp; textures</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>MCPEDL (mcpedl.com) is the largest free site for Bedrock content — add-ons, maps, texture packs, skins, and more. No account needed.</p>
-      <ol>
-        <li>Go to mcpedl.com and find the content via search or categories.</li>
-        <li>On the content page, click <em>Skip to Download</em> or scroll all the way to the bottom.</li>
-        <li>Pick the link matching your Minecraft version (check yours in Settings → About).</li>
-        <li>Click the real download link — small green text inside the content area, not a large flashy banner.</li>
-        <li>You'll either land on a direct file or an external host (MediaFire, Google Drive, Dropbox). If Linkvertise shows up, see NOVA's Linkvertise guide.</li>
-        <li>If the file is a .zip, rename it to .mcpack or .mcaddon, then tap it to import into Minecraft.</li>
-      </ol>
-      <div class="g-note">The real download link is small, plain text — big colorful "Download Now" banners on these pages are almost always ads.</div>
+<section class="g-section" id="install" aria-labelledby="h-install">
+  <h2 id="h-install">Download &amp; install</h2>
+  <p class="g-lead">First work out <strong>what kind of file you have</strong>, then follow the steps for your edition.</p>
+  <h3>What is this file?</h3>
+  <div class="g-table-wrap"><table class="g-table"><caption class="sr-only">File types and what to do with them</caption>
+<thead><tr><th scope="col">File</th><th scope="col">Edition</th><th scope="col">What to do</th></tr></thead><tbody>
+<tr><th scope="row"><code>.mcpack</code></th><td>Bedrock</td><td>Tap it, open with Minecraft, then activate the pack in your world settings.</td></tr>
+<tr><th scope="row"><code>.mcaddon</code></th><td>Bedrock</td><td>Tap it, open with Minecraft, then activate <strong>both</strong> the behaviour and the resource pack.</td></tr>
+<tr><th scope="row"><code>.mcworld</code>, <code>.mcskin</code></th><td>Bedrock</td><td>Tap the file and open it with Minecraft to import it.</td></tr>
+<tr><th scope="row"><code>.zip</code> (Bedrock content)</th><td>Bedrock</td><td>Rename it to <code>.mcpack</code> or <code>.mcaddon</code>, then import as above.</td></tr>
+<tr><th scope="row"><code>.jar</code></th><td>Java</td><td>A mod. Put it in <code>.minecraft/mods</code> and launch with the matching Forge or Fabric profile.</td></tr>
+<tr><th scope="row"><code>.zip</code> (Java content)</th><td>Java</td><td>Resource pack &rarr; <code>resourcepacks</code> folder (do not extract). Data pack &rarr; <code>saves/&lt;world&gt;/datapacks</code>. World &rarr; extract into <code>saves</code>.</td></tr>
+<tr><th scope="row"><code>.exe</code>, <code>.apk</code>, <code>.msi</code></th><td>Neither</td><td><strong>Never open these.</strong> They are not Minecraft content formats. Delete the file and report it in the NOVA Discord.</td></tr>
+</tbody></table></div>
+  <div class="g-grid2">
+    <div class="g-card"><h3>Bedrock Edition</h3><ol><li>Check the extension: <code>.mcpack</code>, <code>.mcaddon</code>, <code>.mcworld</code> or <code>.mcskin</code>. Never open <code>.exe</code>, <code>.apk</code> or <code>.msi</code>.</li><li>Download from a trusted source: MCPEDL, CurseForge or the NOVA Discord.</li><li>Open a file manager (ZArchiver on Android) &rarr; Downloads &rarr; tap the file.</li><li>If it is a <code>.zip</code>, rename it to <code>.mcpack</code> or <code>.mcaddon</code>.</li><li>Choose <em>Open with Minecraft</em> and wait for &ldquo;Successfully Imported&rdquo;.</li><li>In your world: <em>Resource Packs</em> / <em>Behaviour Packs</em> &rarr; move the pack to <em>Active</em>. For a <code>.mcaddon</code>, activate <strong>both</strong> the resource and the behaviour pack.</li><li>Turn on <em>Experimental Gameplay</em> if the pack needs it (World Settings &rarr; Experiments).</li></ol></div>
+    <div class="g-card"><h3>Java Edition</h3><ol><li>Install a mod loader that matches your Minecraft version: Forge (<a href="https://files.minecraftforge.net" target="_blank" rel="noopener noreferrer">files.minecraftforge.net</a>) or Fabric (<a href="https://fabricmc.net" target="_blank" rel="noopener noreferrer">fabricmc.net</a>). Download the installer, run it and pick your Minecraft version.</li><li>Open your <code>.minecraft</code> folder (see the box below).</li><li>Create a lowercase <code>mods</code> folder if it is missing, then put the <code>.jar</code> inside. Do not double-click it.</li><li>Launch with the matching loader profile; the mod appears in the Mods menu.</li><li>Resource packs: <em>Options</em> &rarr; <em>Resource Packs</em> &rarr; <em>Open Pack Folder</em> and drop the <code>.zip</code> in (do not extract it).</li><li>Data packs: put the <code>.zip</code> in <code>saves/&lt;world&gt;/datapacks</code>, then run <code>/reload</code>.</li><li>Worlds: extract the <code>.zip</code> and move the folder into <code>.minecraft/saves</code>.</li></ol>
+      <div class="g-find"><h4>Where is <code>.minecraft</code>?</h4><ul><li>Windows: press <kbd>Win</kbd> + <kbd>R</kbd>, type <code>%appdata%\.minecraft</code></li><li>macOS: <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd>, then <code>~/Library/Application Support/minecraft</code></li><li>Linux: <code>~/.minecraft</code></li></ul></div>
     </div>
-  </details>
+  </div>
+  <p class="g-small">*Console players cannot import files directly: download on a phone or PC first, then sync through your Microsoft account.</p>
+  <h3>Example: installing a Bedrock add-on</h3>
+  <ol class="g-steps">
+    <li>You download a file called <code>example.mcaddon</code> from a NOVA link.</li>
+    <li>Tap it in your file manager and choose <em>Open with Minecraft</em>. You see &ldquo;Import Started&rdquo; and then &ldquo;Successfully Imported&rdquo;.</li>
+    <li>Create or edit a world. Under <em>Resource Packs</em> and again under <em>Behaviour Packs</em>, move the add-on to <em>Active</em>.</li>
+    <li>If the add-on page says it needs it, switch on <em>Experimental Gameplay</em> in World Settings &rarr; Experiments, then play.</li>
+  </ol>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">📁</span><div><div class="g-name">MediaFire Guide</div><div class="g-desc">Spot the real button, avoid fake ads</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>MediaFire is a cloud storage service with 10 GB free, commonly used by Minecraft creators. The real download button is always directly below the file name.</p>
-      <ol>
-        <li>Open the MediaFire link (URL starts with mediafire.com).</li>
-        <li>Confirm the file name and size shown at the top of the page.</li>
-        <li>Find the large blue <em>Download</em> button placed directly under the file details — ignore every other button, banner, or sidebar ad.</li>
-        <li>Complete the captcha if one appears.</li>
-        <li>If the download doesn't start, allow pop-ups for mediafire.com in your browser.</li>
-        <li>Import as usual: .mcpack/.mcaddon/.mcworld → tap to import; .jar → place in .minecraft/mods.</li>
-      </ol>
-    </div>
-  </details>
+<section class="g-section" id="hosts" aria-labelledby="h-hosts">
+  <h2 id="h-hosts">Host guides</h2>
+  <p class="g-lead">A NOVA post links straight to a file or to one of these sites. Find the one you are looking at, then open its guide. Everything stays collapsed until you need it.</p>
+  <div class="g-table-wrap"><table class="g-table"><caption class="sr-only">Which guide matches the link you have</caption>
+  <thead><tr><th scope="col">If the link goes to&hellip;</th><th scope="col">Open</th></tr></thead><tbody>
+  <tr><th scope="row">curseforge.com/minecraft or /minecraft-bedrock</th><td><a href="#curseforge">CurseForge</a></td></tr>
+  <tr><th scope="row">mcpedl.com</th><td><a href="#mcpedl">MCPEDL</a></td></tr>
+  <tr><th scope="row">modrinth.com (Java only)</th><td><a href="#modrinth">Modrinth</a></td></tr>
+  <tr><th scope="row">mediafire.com</th><td><a href="#mediafire">MediaFire</a></td></tr>
+  <tr><th scope="row">mega.nz/file or mega.nz/folder</th><td><a href="#mega">MEGA</a></td></tr>
+  <tr><th scope="row">drive.proton.me</th><td><a href="#proton">Proton Drive</a></td></tr>
+  <tr><th scope="row">A page listing many hosts</th><td><a href="#mirrored">Mirrored.to</a></td></tr>
+  <tr><th scope="row">A page asking you to finish tasks first</th><td><a href="#linkvertise">Linkvertise</a>, <a href="#sub2unlock">Sub2Unlock</a> or <a href="#urlspay">Urlspay</a></td></tr>
+  </tbody></table></div>
+  <div class="g-tools" role="search">
+    <label class="sr-only" for="g-filter">Filter the guides</label>
+    <input id="g-filter" class="g-search" type="search" placeholder="Filter guides (e.g. MEGA, captcha, .apk)" autocomplete="off" />
+    <button type="button" class="g-btn" id="g-expand">Expand all</button>
+    <button type="button" class="g-btn" id="g-collapse">Collapse all</button>
+  </div>
+  <p id="g-empty" class="g-small" hidden>No guide matches that search. Try a host name or a file extension.</p>
+  <h3>Where content is published</h3><p class="g-small">Marketplaces that host mods, add-ons and packs.</p><details class="guide-acc" id="curseforge"><summary><span class="g-icon" aria-hidden="true">🔥</span><div><div class="g-name">CurseForge</div><div class="g-desc">Java &amp; Bedrock — pick your edition</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>CurseForge is the largest Minecraft modding platform. It hosts mods, modpacks, resource packs, shaders, data packs and worlds for both Java and Bedrock.</p><h4>Quick start</h4><p><strong>Java:</strong> search the mod &rarr; check version and loader &rarr; download the <code>.jar</code> &rarr; put it in <code>.minecraft/mods</code>. <strong>Bedrock:</strong> browse the Bedrock section &rarr; download <code>.mcpack</code>/<code>.mcaddon</code> &rarr; tap the file &rarr; activate it in world settings.</p><h4>Step by step</h4><ol><li><strong>Java:</strong> go to curseforge.com/minecraft, search, and look for the Verified badge.</li><li>Check compatibility: Minecraft version, mod loader (Forge or Fabric) and dependencies (Relations tab).</li><li>Files tab &rarr; find the right version &rarr; &#8943; &rarr; Download File &rarr; wait out the short countdown.</li><li>Put the <code>.jar</code> in <code>.minecraft/mods</code> (create the folder if missing) and launch with your loader profile.</li><li><strong>Bedrock:</strong> go to curseforge.com/minecraft-bedrock and search or browse.</li><li>Confirm the file is <code>.mcpack</code>, <code>.mcaddon</code>, <code>.mcworld</code> or <code>.mcskin</code> &mdash; a <code>.jar</code> is Java only.</li><li>Files tab &rarr; Download &rarr; wait out the countdown, then tap the file and open it with Minecraft.</li><li>Activate the pack(s) in world settings (both for a <code>.mcaddon</code>) and enable Experimental Gameplay if needed.</li></ol><h4>If something goes wrong</h4><ul><li>Mod not appearing (Java): check the mods folder, the loader version and missing dependencies.</li><li>Game crash: remove mods one by one, check dependencies and update Java.</li><li>Import failed (Bedrock): rename the <code>.zip</code> to <code>.mcpack</code> and use &ldquo;Open with&rdquo; Minecraft.</li><li>Pack not working: activate both packs and enable Experimental Gameplay.</li><li>Countdown will not start: refresh the page and avoid clicking ads.</li></ul><h4>Stay safe</h4><ul><li>Only download from curseforge.com.</li><li>Never click banner ads &mdash; the real button is inside the Files tab.</li><li>Java <code>.jar</code> and Bedrock <code>.mcpack</code> files are not interchangeable.</li><li>Check dependencies before downloading and never double-click a <code>.jar</code>.</li></ul></div></details><details class="guide-acc" id="mcpedl"><summary><span class="g-icon" aria-hidden="true">📱</span><div><div class="g-name">MCPEDL</div><div class="g-desc">Bedrock add-ons, maps &amp; textures</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>MCPEDL (mcpedl.com) is the largest free site for Bedrock content &mdash; add-ons, maps, texture packs and skins. No account needed.</p><h4>Quick start</h4><p>Open MCPEDL &rarr; <em>Skip to Download</em> (or scroll to the bottom) &rarr; pick the version link (small green text, not the big banner) &rarr; download the file &rarr; tap to import &rarr; activate in world settings.</p><h4>Step by step</h4><ol><li>Find your content with the search or categories on mcpedl.com.</li><li>Click <em>Skip to Download</em>, or scroll to the bottom of the page.</li><li>Pick the link that matches your Minecraft version (Settings &rarr; About).</li><li>Click the real link: small green text inside the content area, never a large flashy banner.</li><li>It leads to a direct file or an external host (MediaFire, Google Drive, Dropbox). If Linkvertise appears, see the Linkvertise guide below.</li><li>If the file is a <code>.zip</code>, rename it to <code>.mcpack</code> or <code>.mcaddon</code>.</li><li>Tap the file, open with Minecraft and wait for &ldquo;Successfully Imported&rdquo;.</li><li>Activate: resource packs via Settings &rarr; Global Resources; behaviour packs via edit world &rarr; Behaviour Packs (both for a <code>.mcaddon</code>). Enable Experimental Gameplay if the page says so.</li></ol><h4>If something goes wrong</h4><ul><li>Clicked the big DOWNLOAD button and nothing happened: that was an ad. Use the small green link.</li><li>File downloaded as <code>.zip</code>: rename it to <code>.mcpack</code>/<code>.mcaddon</code>, then import.</li><li>Import failed: use &ldquo;Open with&rdquo; Minecraft and check the extension and storage permissions.</li><li>Add-on not appearing: activate both packs and enable the required Experimental Gameplay toggles.</li><li>Broken or expired link: check the MCPEDL comments or ask in the NOVA Discord.</li></ul><h4>Stay safe</h4><ul><li>The real link is small green text; large banners are ads.</li><li><code>.jar</code> files on MCPEDL are Java-only and will not work on Bedrock.</li><li>MCPEDL often redirects to an external host &mdash; follow that host&rsquo;s guide.</li><li>Console players: download on a phone or PC first, then sync through your Microsoft account.</li></ul></div></details><details class="guide-acc" id="modrinth"><summary><span class="g-icon" aria-hidden="true">🟢</span><div><div class="g-name">Modrinth</div><div class="g-desc">Java mods, packs &amp; shaders</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>Modrinth is an open-source modding platform for <strong>Java Edition only</strong>. It supports Forge, Fabric, Quilt and NeoForge, has no fake buttons and shares ad revenue with creators.</p><h4>Quick start</h4><p>Search the mod &rarr; check Minecraft version and loader &rarr; Versions tab &rarr; Download &rarr; put the <code>.jar</code> in <code>.minecraft/mods</code> &rarr; launch with the matching loader profile. Or use the free Modrinth App to install automatically.</p><h4>Step by step</h4><ol><li>Find the mod on modrinth.com.</li><li>Confirm the Minecraft version, the loader (Forge, Fabric, Quilt or NeoForge) and the environment (Client or Both).</li><li>Versions tab &rarr; find the matching file &rarr; Download. Mods save as <code>.jar</code>, packs as <code>.zip</code>.</li><li>Open <code>.minecraft</code>, create a lowercase <code>mods</code> folder if needed and drop the <code>.jar</code> in. Packs go in <code>resourcepacks</code> or <code>saves/&lt;world&gt;/datapacks</code>.</li><li>Launch with the matching loader profile; the mod shows in the Mods menu.</li><li>Easiest route: install the free Modrinth App (modrinth.com/app), which manages versions and dependencies for you.</li></ol><h4>If something goes wrong</h4><ul><li>Mod does not work: check the loader (Fabric is not Forge), the Minecraft version and the Relations tab for dependencies.</li><li>Crash on launch: remove mods one at a time and make sure they all match one Minecraft version.</li><li>Downloaded a <code>.zip</code> instead of a <code>.jar</code>: that is correct for resource and data packs &mdash; place it accordingly.</li><li>Not sure which loader you have: check your launcher profile name.</li></ul><h4>Stay safe</h4><ul><li>Java Edition only &mdash; no Bedrock support.</li><li>Never double-click a <code>.jar</code>; place it in the mods folder.</li><li>Always check Relations for required dependency mods.</li><li>Only download from modrinth.com and avoid repacks. The Modrinth App is free &mdash; never pay an imposter.</li></ul></div></details>
+  <h3>File hosts</h3><p class="g-small">Cloud storage a NOVA link may point to.</p><details class="guide-acc" id="mediafire"><summary><span class="g-icon" aria-hidden="true">📁</span><div><div class="g-name">MediaFire</div><div class="g-desc">Spot the real button, avoid fake ads</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>MediaFire is a free cloud host (10 GB free) commonly used by Minecraft creators. The real download button always sits directly below the file name.</p><h4>Quick start</h4><p>Open the link &rarr; confirm the file name &rarr; click the large blue <em>Download</em> button below it &rarr; complete any captcha &rarr; save &rarr; import into Minecraft.</p><h4>Step by step</h4><ol><li>Open the mediafire.com link and confirm the file name and size at the top.</li><li>Find the real button: a large blue Download (with the size) directly under the file name. Ignore every other button, banner or sidebar.</li><li>Click it and complete a captcha if one appears.</li><li>If the download does not start, allow pop-ups for mediafire.com.</li><li>Import: <code>.mcpack</code>/<code>.mcaddon</code>/<code>.mcworld</code> &rarr; tap to import; <code>.jar</code> &rarr; <code>.minecraft/mods</code>. If it came as <code>.zip</code>, rename it to <code>.mcpack</code>/<code>.mcaddon</code> (not <code>.jar</code>).</li></ol><h4>If something goes wrong</h4><ul><li>Clicked an ad and a new tab opened: close it; the real button is below the file name.</li><li>Captcha loops: complete it carefully, clear cookies, try another browser or turn off a VPN.</li><li>File Not Found: the creator removed it. Ask for a new link or check the NOVA Discord.</li><li>Button does nothing: refresh, allow pop-ups, or try Chrome, Firefox or Brave.</li></ul><h4>Stay safe</h4><ul><li>The real button never opens a new tab &mdash; if it does, it was an ad.</li><li>MediaFire never requires installing software.</li><li>Brave browser helps block fake buttons automatically.</li><li>Always check the file extension after downloading.</li></ul></div></details><details class="guide-acc" id="mega"><summary><span class="g-icon" aria-hidden="true">☁️</span><div><div class="g-name">MEGA</div><div class="g-desc">Large files, transfer quotas explained</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>MEGA is an ad-free, end-to-end encrypted cloud host. Free accounts get 20 GB of storage with a transfer quota of about 5 GB per 6 hours.</p><h4>Quick start</h4><p>Open the link &rarr; confirm the file name &rarr; click the red <em>Download</em> &rarr; wait for your browser to decrypt it &rarr; save. For folders use <em>Download as ZIP</em>. To skip the quota, import to your own free MEGA drive first.</p><h4>Step by step</h4><ol><li>Open a <code>mega.nz/file/</code> or <code>/folder/</code> link and confirm the file name and size.</li><li>Click the red Download button. Your browser downloads encrypted data with a progress bar.</li><li>It then decrypts locally (&ldquo;decrypting&hellip;&rdquo;); large files take longer.</li><li>Save the decrypted file, then import: <code>.mcpack</code>/<code>.mcaddon</code>/<code>.mcworld</code> &rarr; tap; <code>.jar</code> &rarr; <code>.minecraft/mods</code>.</li><li>Folders: download files one by one, or use <em>Download as ZIP</em>.</li><li>To get around the quota: <em>Import to Cloud Drive</em> (needs a free MEGA account), then download from your own storage any time.</li></ol><h4>If something goes wrong</h4><ul><li>Transfer quota exceeded: wait, switch networks, or import to your own MEGA drive first.</li><li>Stuck on &ldquo;Decrypting&rdquo;: large files need time; after 15 minutes retry with the MEGA app.</li><li>Download never starts: use Chrome, Edge or Brave with pop-ups enabled for mega.nz.</li><li>iPhone or iPad cannot download: use the free MEGA iOS app (Safari struggles with files over about 1 MB).</li><li>Link not found: the sharer deleted it. Ask for a new one or check the NOVA Discord.</li></ul><h4>Stay safe</h4><ul><li>Never use third-party &ldquo;MEGA downloader&rdquo; tools &mdash; they are usually malware.</li><li>MEGA has no ads, so any pop-up asking for something is fake.</li><li>For files over 500 MB use the official desktop or mobile app.</li><li>Always check the file extension after downloading.</li></ul></div></details><details class="guide-acc" id="proton"><summary><span class="g-icon" aria-hidden="true">🔐</span><div><div class="g-name">Proton Drive</div><div class="g-desc">Encrypted, ad-free downloads explained</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>Proton Drive is an encrypted, ad-free cloud host with no fake buttons or transfer quotas. A free account has 5 GB.</p><h4>Quick start</h4><p>Open the link &rarr; enter a password if asked &rarr; click <em>Download</em> &rarr; wait for browser decryption &rarr; save &rarr; import into Minecraft as usual.</p><h4>Step by step</h4><ol><li>Open the drive.proton.me link.</li><li>If a password prompt appears, enter the password the creator gave you.</li><li>A clean page shows the file name, size and a Download button &mdash; no ads.</li><li>Click Download. Your browser decrypts the file locally (seconds to a few minutes for large files).</li><li>Save the file, then import: <code>.mcpack</code>/<code>.mcaddon</code>/<code>.mcworld</code> &rarr; tap; <code>.jar</code> &rarr; mods folder.</li><li>If it looks stuck, wait: decryption is a privacy feature, not a bug.</li></ol><h4>If something goes wrong</h4><ul><li>Download does not start: wait for decryption; if it takes over 5 minutes, refresh once.</li><li>Slow speed: Proton does not throttle, so check your own connection.</li><li>&ldquo;Access Denied&rdquo; or &ldquo;Link Invalid&rdquo;: the link may have expired. Ask the creator for a new one.</li><li>Password prompt but no password: contact the sharer, who set it.</li><li>Fails on iPhone or iPad: use Chrome for iOS or the free Proton Drive app.</li></ul><h4>Stay safe</h4><ul><li>There are no ads on Proton Drive &mdash; any pop-up asking for money is a scam.</li><li>Never install third-party &ldquo;speed up&rdquo; tools.</li><li>The decryption delay is normal; do not close the page.</li><li>On iOS use the Proton Drive app for files over 100 MB.</li></ul></div></details><details class="guide-acc" id="mirrored"><summary><span class="g-icon" aria-hidden="true">🪞</span><div><div class="g-name">Mirrored.to</div><div class="g-desc">Multiple hosts — pick the safest one</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>Mirrored.to mirrors one file across many hosts. <strong>You pick the host</strong>, so your safety depends on that choice. NOVA rarely uses it and prefers direct links.</p><h4>Quick start</h4><p>Open the link &rarr; pick an <strong>Easy (green)</strong> host &rarr; follow that host&rsquo;s steps &rarr; confirm the file extension. Avoid the red hosts.</p><h4>Choosing a host</h4><div class="g-table-wrap"><table class="g-table"><caption class="sr-only">Mirrored.to hosts by difficulty</caption><thead><tr><th scope="col">Level</th><th scope="col">Hosts</th><th scope="col">What to do</th></tr></thead><tbody><tr><th scope="row">🟢 Easy</th><td>Gofile.io, MediaFire, Send.now, Google Drive, Dropbox</td><td>Gofile: click the download icon on the file row (1&ndash;3 s). MediaFire: the big blue Download (captcha if shown). Send.now: the big blue Download. Google Drive: the download arrow, top right (for large files choose <em>Download anyway</em>). Dropbox: Download, top right &mdash; no login needed.</td></tr><tr><th scope="row">🟡 Medium</th><td>Krakenfiles, Userdrive, Devuploads, 1fichier, Rapidgator</td><td>Only if no easy host is available. Krakenfiles: scroll past ads, click the green Download. Userdrive: captcha &rarr; Create download link &rarr; back &rarr; Click to download. Devuploads: Generate Download Link &rarr; wait 13 s &rarr; open the link &rarr; the larger Download Now. 1fichier: wait a 60 s countdown, then the green arrow. Rapidgator: Free Download &rarr; wait 45 s &rarr; captcha &rarr; Click here to download.</td></tr><tr><th scope="row">🔴 Hard</th><td>Katfile, 4shared, Upfiles, Megaup, Upload.ee, FilesDL</td><td>Skip unless it is the only option. Katfile, Upfiles and Megaup: adult pop-ups or malware risk. 4shared needs an account. Upload.ee may rename files to <code>.apk</code>. FilesDL is broken and dead-ends in ads.</td></tr></tbody></table></div><h4>If something goes wrong</h4><ul><li>Too many hosts: pick Gofile, MediaFire or Send.now first.</li><li>Adult pop-ups: close the tab and choose an Easy host.</li><li>Ad page instead of a download: you clicked a fake button; retry with the Brave browser.</li><li>Host asks for an account: likely fake (4shared is the exception) &mdash; try another host.</li><li>Downloaded file is an <code>.apk</code>: delete it immediately and download from a different host.</li></ul><h4>Stay safe</h4><ul><li>Always try an Easy host first, and use Brave for automatic ad blocking.</li><li>Never install anything from a host page and never allow notifications.</li><li>Check the file extension after every download.</li><li>Upfiles.com and Upload.ee carry the highest malware risk.</li></ul></div></details>
+  <h3>Link gates (ad walls)</h3><p class="g-small">NOVA does not use these. You may meet them on other sites.</p><details class="guide-acc" id="linkvertise"><summary><span class="g-icon" aria-hidden="true">🔗</span><div><div class="g-name">Linkvertise</div><div class="g-desc">Ad wall — free tasks before the download</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>Linkvertise is a link-monetisation gateway that asks for free tasks before it unlocks a download.</p><div class="g-note ok"><strong>NOVA does not use this link gate.</strong> It is explained only for links you meet elsewhere. If you find one inside NOVA, report it with <code>/nova-report</code>.</div><h4>Quick start</h4><p>Open in Chrome or Firefox &rarr; main button &rarr; <em>Free Access with Ads</em> &rarr; finish the tasks (keep tabs open, wait, captcha) &rarr; Continue &rarr; download from the final host.</p><h4>Step by step</h4><ol><li>Open the link in Chrome, Firefox or Edge &mdash; avoid in-app browsers (Discord, YouTube).</li><li>Wait for the gateway page; a countdown may run before the main button works.</li><li>Click the main button and choose <em>Free Access with Ads</em>. Never pay.</li><li>Complete any captcha (turn a VPN off if it fails).</li><li>Complete the 1&ndash;4 tasks: wait on a sponsored page (10&ndash;15 s, no clicking), watch or skip a video ad, keep an article tab open until its timer ends, a search-and-click task, follow or subscribe (look for Skip first), or open an app-store page (close it at once &mdash; no install needed).</li><li>When every task shows complete, click Continue / Get Access.</li><li>You land on the real file host (MediaFire, Google Drive, MEGA, &hellip;) &mdash; download there.</li></ol><h4>If something goes wrong</h4><ul><li>&ldquo;Invalid Visit Detected&rdquo;: turn off the VPN, switch network or try another browser.</li><li>Page loads forever: turn off ad blockers and extensions, clear the cache.</li><li>Continue stays grey: scroll for unfinished tasks and do not refresh (progress resets).</li><li>Tasks will not register: wait longer on each page and make sure you clicked the required button.</li><li>An install prompt appears: never install; close it and look for Skip.</li></ul><h4>Stay safe</h4><ul><li>Never install apps, extensions or software from task pages.</li><li>Only use the main button and the task elements &mdash; never banner ads.</li><li>Never enter payment or personal information; it is always free.</li><li>Do not use in-app browsers and do not refresh mid-process.</li></ul></div></details><details class="guide-acc" id="sub2unlock"><summary><span class="g-icon" aria-hidden="true">🔓</span><div><div class="g-name">Sub2Unlock</div><div class="g-desc">Social tasks before the download</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>Sub2Unlock asks for social tasks (subscribe, follow, join a Discord) before it reveals a download link.</p><div class="g-note ok"><strong>NOVA does not use this link gate.</strong> It is explained only for links you meet elsewhere. If you find one inside NOVA, report it with <code>/nova-report</code>.</div><h4>Quick start</h4><p>Open in Chrome, Brave or Firefox (not an in-app browser) &rarr; try each task&rsquo;s <em>smart skip</em> (open it, then go back) &rarr; do the real task if that fails &rarr; wait for green checkmarks &rarr; Unlock &rarr; download from the file host.</p><h4>Step by step</h4><ol><li>Open the link in Chrome, Brave or Firefox &mdash; avoid the Discord, YouTube and TikTok in-app browsers.</li><li>You will see 2&ndash;4 tasks. Never click banner ads, only the tasks.</li><li>Smart skip first: open the task, then go straight back &mdash; it often registers as done.</li><li>If that fails, do the actual task (subscribe, follow or join), then return.</li><li>When every task has a green check, Unlock / Continue becomes clickable (scroll down if it is hidden).</li><li>Click Unlock to reach the real file host (MediaFire, Google Drive, &hellip;).</li></ol><h4>If something goes wrong</h4><ul><li>Progress resets: use Chrome, Brave or Firefox; in-app browsers break sessions.</li><li>Tasks do not register: open the task, wait about 10 s, go back; do the real action if it still fails.</li><li>Unlock stays grey: scroll for hidden tasks or re-open each task to refresh it.</li><li>Pop-ups or new tabs: close them at once; they are ads.</li><li>Asked to install software or allow notifications: never do it; close the tab.</li></ul><h4>Stay safe</h4><ul><li>Never install apps or extensions and never allow notifications.</li><li>Never enter payment or personal information &mdash; it is free.</li><li>The FastForward browser extension can bypass these tasks automatically, or ask the sharer for a direct link.</li></ul></div></details><details class="guide-acc" id="urlspay"><summary><span class="g-icon" aria-hidden="true">⛓️</span><div><div class="g-name">Urlspay</div><div class="g-desc">Several unlock rounds before the link</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body"><p>Urlspay is a URL shortener that forces several unlock rounds before it shows the final link.</p><div class="g-note ok"><strong>NOVA does not use this link gate.</strong> It is explained only for links you meet elsewhere. If you find one inside NOVA, report it with <code>/nova-report</code>.</div><h4>Quick start</h4><p>Open in Chrome (not in-app) &rarr; <em>Continue to Content</em> &rarr; wait about 20 s &rarr; <em>Unlock Link</em> &rarr; scroll down &rarr; <em>Verify</em> &rarr; Continue. Repeat 3&ndash;5 rounds until you are sent to the file host.</p><h4>Step by step</h4><ol><li>Open the link in Chrome or Safari &mdash; avoid in-app browsers (Discord, YouTube, TikTok).</li><li>Click <em>Continue to Content</em>.</li><li>Wait about 20 seconds on the page without switching tabs or letting the screen sleep.</li><li>Tap <em>Unlock Link</em> once it is active, then scroll to the very bottom.</li><li>Tap <em>Verify</em>, then <em>Continue</em> when it appears.</li><li>Repeat steps 3&ndash;5 for 3&ndash;5 rounds (occasionally up to 7).</li><li>After the final round tap Unlock Link &rarr; scroll down &rarr; Continue / Get Link.</li><li>You land on the real file host (MediaFire, Google Drive, MEGA, &hellip;).</li></ol><h4>If something goes wrong</h4><ul><li>Page reloads or progress resets: use Chrome or an external browser.</li><li>Countdown restarts: stay on the page and do not switch tabs.</li><li>Cannot find Verify: scroll to the very bottom, or rotate to landscape.</li><li>All rounds done but no link: it may need up to 7 rounds; if it still fails, ask for a direct link.</li><li>&ldquo;Virus detected&rdquo; pop-up or install prompt: it is a fake ad &mdash; close the tab.</li></ul><h4>Stay safe</h4><ul><li>Never pay, enter personal information or install anything.</li><li>Never click banner ads or pop-ups.</li><li>Ad blockers can break the unlock &mdash; turn one off temporarily if needed, then turn it back on.</li></ul></div></details>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">☁️</span><div><div class="g-name">MEGA Guide</div><div class="g-desc">Large files, transfer quotas explained</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>MEGA is a secure, ad-free, end-to-end encrypted cloud host. Free accounts get 20 GB storage, with a transfer quota that resets roughly every 6 hours.</p>
-      <ol>
-        <li>Open the MEGA link (mega.nz/file/ or mega.nz/folder/) and confirm the file name/size.</li>
-        <li>Click the red <em>Download</em> button — your browser downloads and then decrypts it locally, which can take a moment for large files.</li>
-        <li>Save the decrypted file, then import into Minecraft as usual.</li>
-        <li>For folders, download individual files or use <em>Download as ZIP</em>.</li>
-      </ol>
-      <div class="g-note">Hit the transfer quota? Click <em>Import to Cloud Drive</em> (free MEGA account) to copy it into your own storage, then download anytime without waiting.</div>
+<section class="g-section" id="share" aria-labelledby="h-share">
+  <h2 id="h-share">Share content on NOVA</h2>
+  <p class="g-lead">First decide <strong>whose work it is</strong>. A <em>packmaker</em> shares their own creation; a <em>sharer</em> passes on someone else&rsquo;s, with credit.</p>
+  <div class="g-grid2">
+    <div class="g-card"><h3>I made it (Packmaker)</h3>
+      <p><strong>Quick way:</strong> post your MCPEDL, CurseForge or MediaFire link in the <strong>&#128228; | Uploads here</strong> channel together with a preview picture.</p>
+      <p><strong>Formal way:</strong> run <code>/share-with-nova</code>. It asks for:</p>
+      <ul><li><code>name</code></li><li><code>file_link</code></li><li><code>category</code></li><li><code>credits</code></li><li><code>support_link</code></li><li><code>archive</code></li><li><code>photo</code></li></ul>
+      <p class="g-small">Either way a preview picture (thumbnail or screenshot) is required &mdash; submissions without one are ignored. Approved creators receive the <strong>Verified Packmaker</strong> role.</p>
     </div>
-  </details>
+    <div class="g-card"><h3>Someone else made it (Sharer)</h3>
+      <p>Run <code>/nova-share</code>. It asks for:</p>
+      <ul><li><code>name</code></li><li><code>link</code></li><li><code>credits</code></li><li><code>description</code></li><li><code>image</code></li><li><code>category</code></li><li>an optional support link</li></ul>
+      <p class="g-small">The bot posts an embed with a <strong>&#128640; Download Now</strong> button. Never present someone else&rsquo;s creation as your own.</p>
+    </div>
+  </div>
+  <h3>Announcing approved submissions</h3>
+  <p><code>/nova-feature</code> adds a permanent archive link plus up to three buttons: <strong>&#128640; Download Now</strong>, <strong>&#127756; Temp Mirror</strong> and <strong>&#128157; Support the Creator</strong>. <code>/nova-share</code> and <code>/nova-feature</code> announce automatically &mdash; no extra steps.</p>
+  <h3>Rules for everything you share</h3>
+  <ul><li>Only direct download links are accepted.</li><li>Always credit the original creator.</li><li>No NSFW, spam or paid content.</li><li>A preview image is mandatory; submissions without one are ignored.</li><li>Only submit work you made yourself, or clearly credit what it is based on, and keep descriptions accurate &mdash; do not overstate compatibility or features.</li><li>filego.io is never used for packmaker archives.</li></ul>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">🟢</span><div><div class="g-name">Modrinth Guide</div><div class="g-desc">Download Java mods, packs &amp; shaders</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>Modrinth is an open-source modding platform for Java Edition, supporting Forge, Fabric, Quilt, and NeoForge. No fake download buttons, and it shares ad revenue with creators.</p>
-      <ol>
-        <li>Go to modrinth.com and find the project.</li>
-        <li>Check the Minecraft version, mod loader, and environment (Client/Both) on the project page.</li>
-        <li>Open the Versions tab and find the file matching your setup.</li>
-        <li>Click Download — mods save as .jar, resource/data packs as .zip.</li>
-        <li>Place .jar files in your .minecraft/mods folder and launch with the matching loader profile.</li>
-      </ol>
-    </div>
-  </details>
+<section class="g-section" id="troubleshooting" aria-labelledby="h-trouble">
+  <h2 id="h-trouble">Troubleshooting</h2>
+  <p class="g-lead">Find your symptom, try the fix, and if it still fails ask in the NOVA Discord.</p>
+  <div class="g-table-wrap"><table class="g-table"><caption class="sr-only">Common problems and fixes</caption>
+  <thead><tr><th scope="col">Problem</th><th scope="col">Try this</th></tr></thead><tbody>
+  <tr><th scope="row">Bedrock: import failed</th><td>Use <em>Open with</em> Minecraft; rename a <code>.zip</code> to <code>.mcpack</code>/<code>.mcaddon</code>; check the extension and storage permissions.</td></tr>
+  <tr><th scope="row">Bedrock: pack not showing or not working</th><td>Activate <strong>both</strong> packs (resource and behaviour) and enable Experimental Gameplay if the pack requires it.</td></tr>
+  <tr><th scope="row">Java: game crashes or the mod is missing</th><td>Match the mod version to your Minecraft version exactly, check dependencies (for example Fabric API) and the loader (Fabric is not Forge); remove mods one by one to find the culprit.</td></tr>
+  <tr><th scope="row">Java: there is no <code>mods</code> folder</th><td>Create a lowercase <code>mods</code> folder inside <code>.minecraft</code>.</td></tr>
+  <tr><th scope="row">The download is an <code>.exe</code>, <code>.apk</code> or <code>.msi</code></th><td>Delete it immediately and report it in the NOVA Discord. It is not Minecraft content.</td></tr>
+  <tr><th scope="row">I clicked a big Download button and got an ad</th><td>That was an ad. On MCPEDL use the small green link; on MediaFire the blue button under the file name; on CurseForge the Files tab.</td></tr>
+  <tr><th scope="row">The file downloaded as <code>.zip</code></th><td>Bedrock content: rename to <code>.mcpack</code>/<code>.mcaddon</code>/<code>.mcworld</code>. Java resource or data packs are meant to stay <code>.zip</code>.</td></tr>
+  <tr><th scope="row">Broken, expired or removed link</th><td>Report it with <code>/nova-report</code>; staff handles it. The creator may also have removed the file.</td></tr>
+  <tr><th scope="row">MEGA: transfer quota exceeded</th><td>Wait, switch networks, or use <em>Import to Cloud Drive</em> to copy the file into your own MEGA storage.</td></tr>
+  <tr><th scope="row">MEGA or Proton Drive seems stuck</th><td>It is probably decrypting in your browser, so give it time. MEGA: if it is still stuck after 15 minutes, retry with the MEGA app. Proton Drive: if it takes over 5 minutes, refresh once. On iPhone and iPad use each host&rsquo;s app (Chrome for iOS or the Proton Drive app; the MEGA iOS app).</td></tr>
+  <tr><th scope="row">A page wants tasks, subscriptions or installs</th><td>That is a link gate. See the Link gates guides, never install anything, and report it with <code>/nova-report</code> if it came from NOVA.</td></tr>
+  <tr><th scope="row">I cannot see all 22 categories in Discord</th><td>Top of the channel list &rarr; <em>Channels &amp; Roles</em> &rarr; <em>Roles</em> tab &rarr; pick individual category roles, or take <em>Access all Without Pings</em>.</td></tr>
+  <tr><th scope="row">NOVA Assistant is not responding</th><td>Wait a few seconds and retry, or ask in a support channel.</td></tr>
+  </tbody></table></div>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">🔐</span><div><div class="g-name">Proton Drive Guide</div><div class="g-desc">Encrypted, ad-free downloads explained</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>Proton Drive is encrypted, ad-free cloud storage with no fake buttons and no transfer quotas.</p>
-      <ol>
-        <li>Open the link (URL contains drive.proton.me).</li>
-        <li>Enter the password if one was provided by the creator.</li>
-        <li>Click Download — your browser decrypts the file locally, which can take seconds to a few minutes for large files.</li>
-        <li>Import into Minecraft as usual once saved.</li>
-      </ol>
-      <div class="g-note">If the download looks "stuck," give it a moment — that's local decryption happening, not a broken link.</div>
-    </div>
-  </details>
+<section class="g-section" id="safety" aria-labelledby="h-safety">
+  <h2 id="h-safety">Stay safe</h2>
+  <ul><li>Never open <code>.exe</code>, <code>.apk</code> or <code>.msi</code> files that claim to be Minecraft content.</li><li>Check the file extension after every download and delete anything unexpected.</li><li>Prefer official creator pages and direct file links. A well-known host does not make a third-party file guaranteed safe.</li><li>Never install software, extensions or apps from a download page, and never allow notifications.</li><li>Never enter payment or personal information to unlock a file.</li><li>Brave browser blocks many ads and fake buttons automatically.</li><li>Bedrock files and Java files are not interchangeable.</li></ul>
+  <h3>Report a problem</h3>
+  <p>Use <code>/nova-report</code> in the NOVA Discord for a broken link, an ad link or a link gate (such as Linkvertise) inside NOVA, or an inappropriate submission. For anything else, ask staff in the <a href="https://discord.gg/Zc5pPEZYpe" target="_blank" rel="noopener noreferrer">NOVA Discord</a>.</p>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
-  <details class="guide-acc">
-    <summary><span class="g-icon">🪞</span><div><div class="g-name">Mirrored.to Guide</div><div class="g-desc">Multiple hosts — pick the safest one</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>Mirrored.to mirrors one file across several hosting platforms. You pick which host to use, so your safety depends on that choice.</p>
-      <ol>
-        <li>Open the link to see the list of host buttons.</li>
-        <li>Prefer an easy, well-known host first: Gofile.io, MediaFire, Send.now, Google Drive, or Dropbox.</li>
-        <li>If none of those are available, lesser-known hosts (Krakenfiles, 1fichier, etc.) are a second option — proceed a bit more carefully.</li>
-        <li>Avoid the riskiest, least-known hosts unless it's genuinely the only option.</li>
-        <li>After downloading, double check the file extension — delete anything unexpected, like a stray .apk.</li>
-      </ol>
-    </div>
-  </details>
-
-  <details class="guide-acc">
-    <summary><span class="g-icon">🔓</span><div><div class="g-name">Sub2Unlock Guide</div><div class="g-desc">Complete social tasks, then unlock</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>Sub2Unlock requires small social tasks (subscribe, follow, join a Discord) before revealing the download link. NOVA prefers direct links — this guide is for when you run into one elsewhere.</p>
-      <ol>
-        <li>Open the link in Chrome, Brave, or Firefox — avoid in-app browsers (Discord, YouTube, TikTok), they often break these pages.</li>
-        <li>You'll see 2–4 tasks. Only interact with the actual tasks, never banner ads.</li>
-        <li>Complete each task and wait for its checkmark to turn green.</li>
-        <li>Once all tasks show complete, click Unlock and download from the file host it leads to.</li>
-      </ol>
-      <div class="g-note">Never install anything or allow notifications as part of "completing a task" — a real task never requires that.</div>
-    </div>
-  </details>
-
-  <details class="guide-acc">
-    <summary><span class="g-icon">🔗</span><div><div class="g-name">Urlspay Guide</div><div class="g-desc">Unlock links, skip timers &amp; ads</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>Urlspay is a link shortener that forces multiple unlock rounds before showing the final download link. NOVA never uses Urlspay ourselves — this guide is only for links you find elsewhere.</p>
-      <ol>
-        <li>Open the link in Chrome or Safari — not an in-app browser.</li>
-        <li>Tap Continue to Content, then wait about 20 seconds without switching tabs.</li>
-        <li>Tap Unlock Link once active, scroll down, tap Verify, then Continue.</li>
-        <li>Repeat that a few rounds (usually 3–5, sometimes up to 7).</li>
-        <li>You'll land on the real file host (MediaFire, MEGA, Google Drive, etc.) — download from there.</li>
-      </ol>
-      <div class="g-note">Never click ads or install anything along the way — the only real actions are Continue / Unlock / Verify.</div>
-    </div>
-  </details>
-
-  <details class="guide-acc">
-    <summary><span class="g-icon">🔗</span><div><div class="g-name">Linkvertise Guide</div><div class="g-desc">Navigate ad walls &amp; unlock safely</div></div><span class="g-chev">›</span></summary>
-    <div class="g-body">
-      <p>Linkvertise requires completing free tasks before unlocking the final download. NOVA never uses Linkvertise ourselves — this guide is for links found elsewhere.</p>
-      <ol>
-        <li>Open the link in Chrome, Firefox, or Edge — avoid Discord/YouTube's in-app browser.</li>
-        <li>Wait for the gateway page, then click the main button and choose <em>Free Access with Ads</em> — never pay.</li>
-        <li>Complete any captcha (temporarily disable a VPN if it won't load).</li>
-        <li>Complete the 1–4 assigned tasks — usually just waiting on a page or watching a short ad, no installs required.</li>
-        <li>Click Continue once done, and download from the final host.</li>
-      </ol>
-    </div>
-  </details>
+<section class="g-section" id="faq" aria-labelledby="h-faq">
+  <h2 id="h-faq">Frequently asked questions</h2><details class="guide-acc" id="faq-free"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">Is NOVA free?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">Yes. There are no paywalls and no ad gates.</div></details><details class="guide-acc" id="faq-files"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">Which file types do I need?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">Bedrock uses <code>.mcpack</code>, <code>.mcaddon</code>, <code>.mcworld</code> and <code>.mcskin</code>. Java uses <code>.jar</code> (mods) and <code>.zip</code> (resource packs, data packs, worlds).</div></details><details class="guide-acc" id="faq-bedrock-java"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">Can I use Bedrock add-ons on Java?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">No. Bedrock and Java files are not interchangeable.</div></details><details class="guide-acc" id="faq-loader"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">How do I install Forge or Fabric?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">Download the installer, run it and pick your Minecraft version. Then launch with that loader profile.</div></details><details class="guide-acc" id="faq-broken"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">How are broken links fixed?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">Report them with <code>/nova-report</code> and staff handles it.</div></details><details class="guide-acc" id="faq-share"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">Can I share someone else&rsquo;s creation?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">Yes, with <code>/nova-share</code> and proper credit &mdash; never claim it as your own.</div></details><details class="guide-acc" id="faq-safest"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">Which host is the safest?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">On Mirrored.to: Gofile, MediaFire, Send.now, Google Drive and Dropbox. Whatever the host, still check the file extension.</div></details><details class="guide-acc" id="faq-direct"><summary><span class="g-icon" aria-hidden="true">❓</span><div><div class="g-name">Does NOVA use link gates?</div></div><span class="g-chev" aria-hidden="true">›</span></summary><div class="g-body">No. NOVA shares direct links. MCPEDL links are verified first and point straight to the content page. Report any ad or link gate you find.</div></details>
+  <p class="g-top"><a href="#top">↑ Back to top</a></p>
+</section>
 
   <div class="guides-footer">
     <strong>NOVA — Nexus of Verified Assets</strong><br />
-    Verified. Organized. Creator Respecting.
+    Verified. Organized. Creator Respecting.<br />
+    <span class="g-small">These guides follow the NOVA knowledge base (index v2026-09-07). Websites change their layout from time to time &mdash; if a button is not where a guide says, look for the same action and ask in the Discord.</span>
   </div>
 </div>
 
+
+<script>
+/* Guides page: filter, expand/collapse and deep links. Plain DOM, no dependencies. */
+(function () {
+  var acc = Array.prototype.slice.call(document.querySelectorAll('details.guide-acc'));
+  var box = document.getElementById('g-filter'), empty = document.getElementById('g-empty');
+  var snapshot = null;
+  function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+  function applyFilter() {
+    var q = norm(box && box.value), shown = 0;
+    if (q && !snapshot) snapshot = acc.map(function (d) { return d.open; });
+    acc.forEach(function (d) {
+      var hit = !q || norm(d.textContent).indexOf(q) !== -1;
+      d.hidden = !hit; if (hit) shown++;
+      if (q) d.open = hit;
+    });
+    if (!q && snapshot) { acc.forEach(function (d, i) { d.open = snapshot[i]; }); snapshot = null; }
+    if (empty) empty.hidden = !q || shown > 0;
+  }
+  function setAll(open) { acc.forEach(function (d) { if (!d.hidden) d.open = open; }); }
+  function openFromHash() {
+    var id = decodeURIComponent((location.hash || '').slice(1)); if (!id) return;
+    var el = document.getElementById(id); if (!el) return;
+    if (el.tagName === 'DETAILS') { if (el.hidden && box) { box.value = ''; applyFilter(); } el.open = true; }
+    el.scrollIntoView();
+  }
+  if (box) box.addEventListener('input', applyFilter);
+  var ex = document.getElementById('g-expand'), co = document.getElementById('g-collapse');
+  if (ex) ex.addEventListener('click', function () { setAll(true); });
+  if (co) co.addEventListener('click', function () { setAll(false); });
+  window.addEventListener('hashchange', openFromHash);
+  if (location.hash) setTimeout(openFromHash, 0);
+})();
+</script>
 
 <button id="nova-widget-btn" title="Chat with NOVA Assistant">🤖</button>
 <div id="nova-widget-panel">
