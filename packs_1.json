@@ -4843,5 +4843,43 @@
     "view_count": 0,
     "video_link": "",
     "last_updated": ""
+  },
+  {
+    "id": 272,
+    "name": "Eterna Curse",
+    "link": "https://mcpedl.com/eterna-curse/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Others",
+    "secondary_tag": "Skins",
+    "credits": "LunaticOwner",
+    "description": "A timeless shadow in tailored threads.",
+    "image": "https://i.ibb.co/vCPy5SRv/58db24f76211.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-10-10",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": "",
+    "last_updated": ""
+  },
+  {
+    "id": 271,
+    "name": "Random Loot - Blocks",
+    "link": "https://mcpedl.com/random-loot-breaking-any-block/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Survival",
+    "secondary_tag": "Scripts",
+    "credits": "Effect99",
+    "description": "A modScript/Add-On that will drop items, place blocks or spawn random mobs by breaking any block, dropping items like enchanted apples, nether stars and many more. Compatible with any Add-On/Mod in any world.",
+    "image": "https://i.ibb.co/Kpt71bcP/0798e3112f1f.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-10-10",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": "",
+    "last_updated": ""
   }
 ]
