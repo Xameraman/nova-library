@@ -627,7 +627,7 @@
   </div>
   <div class="image-grid" id="imageGrid" style="display:none"></div>
   <div class="pagination" id="pag"></div>
-  <div class="view-disclaimer">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms.</div>
+  <div class="view-disclaimer">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms. Each browser counts once per item; clearing site data, private mode or another device counts as a new viewer.</div>
 </main>
 
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
@@ -647,7 +647,7 @@
         </label>
       </div>
       <div style="margin-top:40px;display:flex;flex-direction:column;gap:16px;">
-        <a href="https://xameraman.github.io/all-nova-guides/" target="_blank" class="btn-full btn-archive"><i class="fa-solid fa-book"></i> Read Guides</a>
+        <a href="https://nova-library-mu.vercel.app/guides.html" class="btn-full btn-archive"><i class="fa-solid fa-book"></i> Read Guides</a>
         <a href="https://xameraman.github.io/Nova-Partherships/" target="_blank" class="btn-full btn-archive"><i class="fa-solid fa-handshake"></i> Partnerships</a>
         <button class="btn-full btn-archive" onclick="openStatsModal()"><i class="fa-solid fa-chart-pie"></i> Statistics</button>
       </div>
@@ -700,7 +700,7 @@
         <div style="font-size:0.8rem;color:var(--text-muted);margin-top:10px;">
           <i class="fa-solid fa-eye"></i> <span id="mViews">0</span> views
         </div>
-        <div class="view-disclaimer" style="margin-top:8px;">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms.</div>
+        <div class="view-disclaimer" style="margin-top:8px;">View count is tracked within Nova only — not linked to MCPEDL, Curseforge, or other platforms. Each browser counts once per item; clearing site data, private mode or another device counts as a new viewer.</div>
       </div>
     </div>
   </div>
@@ -1318,12 +1318,18 @@ window.NovaPerformance = {
   document.querySelectorAll('.overlay').forEach(el => novaOverlayObserver.observe(el, { attributes: true, attributeFilter: ['class'] }));
   novaUpdateOverlayState();
 
+  // Resolves the server's verdict {ok, recorded, deduped, view_count}, or null when the request did not succeed
+  // (network error, HTTP error, unreadable reply). Callers must treat null as "NOT counted".
   window.novaRecordView = async function(pack) {
-    if (!pack || (!pack.id && !pack.name)) return;
+    if (!pack || (!pack.id && !pack.name)) return null;
     await ensureWebSession(false);
     const headers = webHeaders();
     headers['X-Idempotency-Key'] = `view:${String(pack.id || pack.name).slice(0, 180)}:${Math.floor(Date.now() / 60000)}`;
-    await fetch(VIEW_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ id: String(pack.id || ''), name: String(pack.name || ''), source: 'web' }) });
+    const res = await fetch(VIEW_URL, { method: 'POST', credentials: 'include', headers, body: JSON.stringify({ id: String(pack.id || ''), name: String(pack.name || ''), source: 'web' }) });
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    if (!data || typeof data !== 'object') return null;
+    return { ok: data.ok === true, recorded: data.recorded === true, deduped: data.deduped === true, view_count: data.view_count };
   };
 })();
 // ========== LIBRARY CODE ==========
@@ -1655,24 +1661,167 @@ function fvModalChannel(container, p) {
   if (fvMeta[id] && fvMeta[id].a) put(fvMeta[id]); else fvFetchMeta(id).then(put);
 }
 
+// ===== NOVA UNIQUE VIEWS (BEGIN) =====
+// One counted view per pack per BROWSER PROFILE, ever. There is no expiry and no size cap on the markers.
+// Storage, best first: IndexedDB (atomic across tabs) -> localStorage -> memory only (this page visit).
+// A marker is written only after the SERVER says it counted the view ("recorded"); a failed or de-duplicated
+// request leaves no permanent marker, so it can be retried later. Limits (also documented on the website):
+// clearing site data, private/incognito windows, another browser or another device look like a new viewer, and
+// when no storage works the page can only remember views until it is closed (the server's 30-minute
+// protection still applies). This is a count of browser profiles, not of people.
+const NovaViews = (() => {
+  const DB_NAME = 'nova-views', STORE = 'viewed', LS_KEY = 'nova_viewed_v2', OLD_LS_KEY = 'nova_viewed_packs';
+  const PENDING_TTL_MS = 2 * 60 * 1000;      // a claim left by a tab that died mid-request is retried after this
+  const DEDUPED_RETRY_MS = 30 * 60 * 1000;   // the server's own window: asking again sooner can only be refused again
+  const FAILED_RETRY_MS = 60 * 1000;         // don't hammer a failing server
+  const counted = new Set();                 // ids known to be counted in this browser (memory mirror)
+  const inflight = new Map();                // id -> Promise: same-page duplicate requests share one request
+  const retryAt = new Map();                 // id -> earliest time another request is worthwhile (this page only)
+  const state = { backend: null, degraded: false };
+  let backendPromise = null;
+
+  const lsRead = () => { try { const o = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch { return {}; } };
+  const lsWrite = o => { try { localStorage.setItem(LS_KEY, JSON.stringify(o)); return true; } catch { return false; } };
+
+  function openIdb() {
+    return new Promise((resolve, reject) => {
+      let settled = false; const done = (fn, v) => { if (!settled) { settled = true; fn(v); } };
+      try {
+        if (typeof indexedDB === 'undefined' || !indexedDB) return done(reject, new Error('indexedDB unavailable'));
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = () => { const db = req.result; if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath: 'id' }); };
+        req.onsuccess = () => done(resolve, req.result);
+        req.onerror = () => done(reject, req.error || new Error('indexedDB open failed'));
+        req.onblocked = () => done(reject, new Error('indexedDB blocked'));
+        setTimeout(() => done(reject, new Error('indexedDB open timeout')), 4000);   // some private modes never answer
+      } catch (e) { done(reject, e); }
+    });
+  }
+  // Runs fn(store, setResult) in ONE transaction and resolves with the result once it has committed.
+  function idbTx(db, mode, fn) {
+    return new Promise((resolve, reject) => {
+      let result; let t;
+      try { t = db.transaction(STORE, mode); } catch (e) { return reject(e); }
+      t.oncomplete = () => resolve(result);
+      t.onerror = () => reject(t.error || new Error('transaction failed'));
+      t.onabort = () => reject(t.error || new Error('transaction aborted'));
+      try { fn(t.objectStore(STORE), v => { result = v; }); } catch (e) { reject(e); }
+    });
+  }
+  const isFresh = (rec, now) => rec && (rec.state === 'counted' || (rec.state === 'pending' && now - rec.t < PENDING_TTL_MS));
+
+  function idbBackend(db) {
+    return {
+      name: 'indexeddb',
+      // get + put in ONE readwrite transaction = atomic across tabs: only one tab can win the claim.
+      claim: (id, now) => idbTx(db, 'readwrite', (store, out) => {
+        const g = store.get(id);
+        g.onsuccess = () => {
+          const rec = g.result;
+          if (isFresh(rec, now)) { out(rec.state === 'counted' ? 'counted' : 'busy'); return; }
+          store.put({ id, state: 'pending', t: now }); out('claimed');
+        };
+      }),
+      commit: (id, now) => idbTx(db, 'readwrite', store => { store.put({ id, state: 'counted', t: now }); }),
+      release: id => idbTx(db, 'readwrite', store => {
+        const g = store.get(id);
+        g.onsuccess = () => { if (g.result && g.result.state === 'pending') store.delete(id); };
+      }),
+      importMany: (ids, now) => idbTx(db, 'readwrite', store => { ids.forEach(id => store.put({ id, state: 'counted', t: now })); })
+    };
+  }
+  function localBackend(persist) {   // persist=false -> memory only
+    const map = persist ? lsRead() : {}; const pending = new Map();
+    return {
+      name: persist ? 'localstorage' : 'memory',
+      claim: async (id, now) => {
+        if (map[id]) return 'counted';
+        const p = pending.get(id); if (p && now - p < PENDING_TTL_MS) return 'busy';
+        pending.set(id, now); return 'claimed';
+      },
+      commit: async (id, now) => { pending.delete(id); map[id] = now; if (persist && !lsWrite(map)) throw new Error('localStorage full or blocked'); },
+      release: async id => { pending.delete(id); },
+      importMany: async (ids, now) => { ids.forEach(id => { map[id] = now; }); if (persist) lsWrite(map); }
+    };
+  }
+
+  async function init() {
+    let backend;
+    try { backend = idbBackend(await openIdb()); }
+    catch { backend = null; }
+    if (!backend) {
+      let ok = false;
+      try { localStorage.setItem('nova_probe', '1'); localStorage.removeItem('nova_probe'); ok = true; } catch { ok = false; }
+      backend = localBackend(ok);
+    }
+    // Markers written by the old 6-hour logic count as views already made; carry them over, then drop that key.
+    try {
+      const old = JSON.parse(localStorage.getItem(OLD_LS_KEY) || '{}');
+      const ids = old && typeof old === 'object' ? Object.keys(old) : [];
+      if (ids.length) await backend.importMany(ids, Date.now());
+      if (ids.length || localStorage.getItem(OLD_LS_KEY) !== null) localStorage.removeItem(OLD_LS_KEY);
+    } catch { /* nothing to migrate */ }
+    // Markers that had to fall back to localStorage because an IndexedDB write failed earlier: one read, kept in memory.
+    if (backend.name === 'indexeddb') Object.keys(lsRead()).forEach(id => counted.add(id));
+    state.backend = backend.name;
+    return backend;
+  }
+  const getBackend = () => backendPromise || (backendPromise = init());
+
+  // send(): Promise<{ok, recorded, view_count}|null>. Resolves {status:'already'|'busy'|'skipped'|'recorded'|'deduped'|'failed', ...}
+  function record(id, send) {
+    id = String(id);
+    if (counted.has(id)) return Promise.resolve({ status: 'already' });
+    if (inflight.has(id)) return inflight.get(id);
+    if ((retryAt.get(id) || 0) > Date.now()) return Promise.resolve({ status: 'skipped' });
+    const p = (async () => {
+      const b = await getBackend();
+      if (counted.has(id)) return { status: 'already' };   // markers restored by init() (e.g. localStorage fallback)
+      let claim;
+      try { claim = await b.claim(id, Date.now()); } catch { state.degraded = true; claim = 'claimed'; }
+      if (claim === 'counted') { counted.add(id); return { status: 'already' }; }
+      if (claim === 'busy') return { status: 'busy' };
+      let res = null;
+      try { res = await send(); } catch { res = null; }
+      if (res && res.ok === true && res.recorded === true) {
+        counted.add(id);
+        try { await b.commit(id, Date.now()); }
+        catch {
+          state.degraded = true;   // quota/blocked: remembered for this visit only, and the server's window still applies
+          if (b.name === 'indexeddb') { const m = lsRead(); m[id] = Date.now(); lsWrite(m); }
+        }
+        return { status: 'recorded', ...res };
+      }
+      try { await b.release(id); } catch { /* the stale claim expires by itself */ }
+      if (res && res.ok === true) { retryAt.set(id, Date.now() + DEDUPED_RETRY_MS); return { status: 'deduped', ...res }; }
+      retryAt.set(id, Date.now() + FAILED_RETRY_MS);
+      return { status: 'failed' };
+    })().finally(() => inflight.delete(id));
+    inflight.set(id, p);
+    return p;
+  }
+  return { record, state };
+})();
+// ===== NOVA UNIQUE VIEWS (END) =====
+
+// The displayed number is the SERVER's number. Nothing is added locally unless an older server build says
+// "recorded" without sending a total (then +1 is exactly what that acceptance means).
+function showViewCount(pack, id, total) {
+  pack.view_count = total;
+  const cardEl = document.querySelector(`.pack-card[data-packid="${CSS.escape(id)}"]`);
+  if (cardEl) { const viewSpan = cardEl.querySelector('.view-line'); if (viewSpan) viewSpan.textContent = `◉ ${total}`; }
+  const modalViews = document.getElementById('mViews');
+  if (currentModalPack === pack && modalViews) modalViews.textContent = total;
+}
 async function pingPackView(pack) {
   try {
     if (!pack || (!pack.id && !pack.name)) return;
     const id = String(pack.id || pack.name);
-    const key = 'nova_viewed_packs';
-    const viewed = safeJsonParse(localStorage.getItem(key) || '{}', {});
-    const now = Date.now();
-    const cooldown = 6 * 60 * 60 * 1000;
-    Object.keys(viewed).forEach(k => { if (!Number.isFinite(viewed[k]) || now - viewed[k] > cooldown) delete viewed[k]; });
-    if (viewed[id] && now - viewed[id] < cooldown) return;
-    if (window.novaRecordView) await window.novaRecordView(pack);
-    viewed[id] = now;
-    localStorage.setItem(key, JSON.stringify(viewed));
-    pack.view_count = (Number(pack.view_count) || 0) + 1;
-    const cardEl = document.querySelector(`.pack-card[data-packid="${CSS.escape(id)}"]`);
-    if (cardEl) { const viewSpan = cardEl.querySelector('.view-line'); if (viewSpan) viewSpan.textContent = `◉ ${pack.view_count}`; }
-    const modalViews = document.getElementById('mViews');
-    if (currentModalPack === pack && modalViews) modalViews.textContent = pack.view_count;
+    const r = await NovaViews.record(id, () => (window.novaRecordView ? window.novaRecordView(pack) : null));
+    if (r.status !== 'recorded' && r.status !== 'deduped') return;   // already counted / busy / failed: show nothing new
+    const total = Number(r.view_count);
+    if (r.view_count !== undefined && r.view_count !== null && Number.isFinite(total)) showViewCount(pack, id, total);
+    else if (r.status === 'recorded') showViewCount(pack, id, (Number(pack.view_count) || 0) + 1);
   } catch (err) { console.warn('[NOVA view]', err); }
 }
 
@@ -1950,7 +2099,7 @@ function appendCards(slice) {
 
           <div class="card-meta">
             <span class="dev-line"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>
-            <span class="view-line" title="Unique views"><i class="fa-solid fa-eye"></i> ${viewCount}</span>
+            <span class="view-line" title="Unique views (one per browser)"><i class="fa-solid fa-eye"></i> ${viewCount}</span>
           </div>
           ${imgCreditLine}
           <div class="card-footer">
