@@ -1662,13 +1662,10 @@ function fvModalChannel(container, p) {
 }
 
 // ===== NOVA UNIQUE VIEWS (BEGIN) =====
-// One counted view per pack per BROWSER PROFILE, ever. There is no expiry and no size cap on the markers.
+// One counted view per pack per BROWSER PROFILE, ever (no expiry, no size cap on the markers).
 // Storage, best first: IndexedDB (atomic across tabs) -> localStorage -> memory only (this page visit).
 // A marker is written only after the SERVER says it counted the view ("recorded"); a failed or de-duplicated
-// request leaves no permanent marker, so it can be retried later. Limits (also documented on the website):
-// clearing site data, private/incognito windows, another browser or another device look like a new viewer, and
-// when no storage works the page can only remember views until it is closed (the server's 30-minute
-// protection still applies). This is a count of browser profiles, not of people.
+// request leaves no permanent marker, so it can be retried later. This is a count of browser profiles, not of people.
 const NovaViews = (() => {
   const DB_NAME = 'nova-views', STORE = 'viewed', LS_KEY = 'nova_viewed_v2', OLD_LS_KEY = 'nova_viewed_packs';
   const PENDING_TTL_MS = 2 * 60 * 1000;      // a claim left by a tab that died mid-request is retried after this
@@ -1693,7 +1690,7 @@ const NovaViews = (() => {
         req.onsuccess = () => done(resolve, req.result);
         req.onerror = () => done(reject, req.error || new Error('indexedDB open failed'));
         req.onblocked = () => done(reject, new Error('indexedDB blocked'));
-        setTimeout(() => done(reject, new Error('indexedDB open timeout')), 4000);   // some private modes never answer
+        setTimeout(() => done(reject, new Error('indexedDB open timeout')), 4000);   // some browsers never answer
       } catch (e) { done(reject, e); }
     });
   }
@@ -2099,7 +2096,7 @@ function appendCards(slice) {
 
           <div class="card-meta">
             <span class="dev-line"><i class="fa-solid fa-palette"></i> Devs: ${esc(p.credits || 'Unknown')}</span>
-            <span class="view-line" title="Unique views (one per browser)"><i class="fa-solid fa-eye"></i> ${viewCount}</span>
+            <span class="view-line" title="Unique views"><i class="fa-solid fa-eye"></i> ${viewCount}</span>
           </div>
           ${imgCreditLine}
           <div class="card-footer">
