@@ -5432,5 +5432,43 @@
     "view_count": 0,
     "video_link": "",
     "last_updated": ""
+  },
+  {
+    "id": 304,
+    "name": "Nebux Visuals[Render Dragon Support]",
+    "link": "https://mcpedl.com/nebuxv/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Shader",
+    "secondary_tag": "Texture Pack",
+    "credits": "AyamPok",
+    "description": "A Lightweight Non-patch shader that adds plant animations and cool fogs, recommended for pvp and low-end devices",
+    "image": "https://i.ibb.co/0j3FszGC/623986647696.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-10-13",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": "",
+    "last_updated": ""
+  },
+  {
+    "id": 303,
+    "name": "GRTC - Gibonz Railway Train Controller",
+    "link": "https://mcpedl.com/grtc/",
+    "support_link": "",
+    "archive_link": "",
+    "category": "Vehicle",
+    "secondary_tag": "Addon",
+    "credits": "Hyperest Studios",
+    "description": "GRTC or Gibonz Railway Train Controller is a train controller for Minecraft Bedrock.",
+    "image": "https://i.ibb.co/dw3sCgXB/d217970e8afc.png",
+    "image_credit": "",
+    "added_by": "xameraman5022",
+    "date_added": "2026-10-13",
+    "last_viewed": "",
+    "view_count": 0,
+    "video_link": "https://youtu.be/0jpZ47hkiUg?si=jEFBdB9O34ZDvFRx",
+    "last_updated": ""
   }
 ]
