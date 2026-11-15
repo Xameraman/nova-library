@@ -1,0 +1,1235 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>NOVA — Minecraft Bedrock Pack Library</title>
+<meta name="description" content="NOVA is a searchable library of Minecraft Bedrock texture packs, addons, worlds, skins and scripts, with multi-pack combos and guides.">
+<meta name="theme-color" content="#0f1117" id="metaTheme">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+/* ============ NOVA Library — inline styles (matches the single-file site layout) ============ */
+:root{
+  --bg:#0f1117; --bg2:#14161f; --panel:#171a23; --panel2:#1d2130;
+  --text:#e7eaf2; --muted:#98a0b3; --line:#262b3a;
+  --accent:#f97316; --accent2:#e11d48; --accent3:#7c3aed;
+  --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+  --grad:linear-gradient(100deg,var(--accent),var(--accent2) 55%,var(--accent3));
+  --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+  --header-h:64px; --loadbar-h:3px;
+}
+html[data-theme="light"]{
+  --bg:#f7f8fb; --bg2:#eef0f6; --panel:#ffffff; --panel2:#f3f5fa;
+  --text:#181b25; --muted:#5b6376; --line:#e2e6ef;
+  --shadow:0 10px 26px rgba(23,26,37,.12);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(var(--header-h) + var(--loadbar-h) + 16px)}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* load bar */
+#loadbar{position:fixed;top:0;left:0;height:var(--loadbar-h);width:0;background:var(--grad);z-index:200;transition:width .3s ease,opacity .4s ease;opacity:0}
+#loadbar.on{opacity:1}
+#loadbar.done{width:100%;opacity:0}
+
+/* header */
+.site-header{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.header-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:0 20px;height:var(--header-h)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.5px;color:var(--text)}
+.brand:hover{text-decoration:none}
+.brand img{width:34px;height:34px;border-radius:9px}
+.brand-sub{font-weight:600;color:var(--muted);font-size:13px;margin-left:-4px}
+.site-nav{display:flex;gap:6px;margin-left:auto;align-items:center}
+.site-nav a{color:var(--muted);font-weight:600;font-size:14.5px;padding:8px 12px;border-radius:9px}
+.site-nav a:hover,.site-nav a[aria-current="page"]{color:var(--text);background:var(--panel2);text-decoration:none}
+#themeToggle{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+#themeToggle:hover{background:var(--panel2)}
+#themeToggle svg{width:19px;height:19px}
+html[data-theme="dark"] #themeToggle .icon-sun{display:block}
+html[data-theme="dark"] #themeToggle .icon-moon{display:none}
+html[data-theme="light"] #themeToggle .icon-sun{display:none}
+html[data-theme="light"] #themeToggle .icon-moon{display:block}
+
+main{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* hero */
+.hero{padding:44px 0 26px;text-align:center;position:relative}
+.hero h1{font-size:clamp(30px,5vw,46px);margin:0 0 8px;letter-spacing:-.5px}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{color:var(--muted);max-width:640px;margin:0 auto 22px;font-size:16.5px}
+.search-wrap{max-width:620px;margin:0 auto;position:relative}
+#q{width:100%;padding:15px 116px 15px 46px;font-size:16.8px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);transition:transform .15s ease,border-color .15s ease}
+#q::placeholder{color:var(--muted)}
+.search-wrap:focus-within #q{transform:translateY(-2px);border-color:var(--accent)}
+.search-wrap::before{content:"";position:absolute;left:17px;top:50%;width:17px;height:17px;transform:translateY(-50%);background:var(--muted);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7' fill='none' stroke='black' stroke-width='2.4'/%3E%3Cpath d='M16.5 16.5 L21 21' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7' fill='none' stroke='black' stroke-width='2.4'/%3E%3Cpath d='M16.5 16.5 L21 21' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+.kbd-hint{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;gap:4px;pointer-events:none}
+.kbd-hint kbd{font:600 11.5px/1 system-ui;padding:5px 7px;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;background:var(--panel2);color:var(--muted)}
+.stats{display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;margin-top:22px;color:var(--muted);font-size:14.5px}
+.stats b{color:var(--text);font-size:16px;margin-right:5px}
+.recent-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;min-height:0}
+.recent-chip{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.recent-chip:hover{color:var(--text);border-color:var(--accent)}
+
+/* sections */
+.section{padding:26px 0 8px}
+.section-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.section-head h2{font-size:23px;margin:0;letter-spacing:-.3px}
+.section-sub{color:var(--muted);font-size:14.5px;margin:0}
+.card-strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(248px,1fr);gap:14px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}
+.card-strip .pack-card{min-width:0}
+@media (max-width:720px){.card-strip{grid-auto-flow:row;grid-auto-columns:auto}}
+
+/* pack cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:16px}
+.pack-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,border-color .15s ease;position:relative}
+.pack-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.pack-thumb{aspect-ratio:8/5;object-fit:cover;width:100%;background:var(--panel2);cursor:pointer}
+.pack-body{padding:12px 14px 13px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pack-name{font-weight:700;font-size:15.5px;line-height:1.35;cursor:pointer;margin:0}
+.pack-credits{color:var(--muted);font-size:13px;margin:0}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chip{font-size:11.5px;font-weight:700;padding:3.5px 9px;border-radius:999px;letter-spacing:.2px}
+.chip.cat{background:color-mix(in srgb,var(--accent3) 22%,transparent);color:color-mix(in srgb,var(--accent3) 72%,var(--text))}
+.chip.type{background:var(--panel2);color:var(--muted);border:1px solid var(--line)}
+.pack-meta{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px}
+.fav-btn{margin-left:auto;display:flex;align-items:center;gap:5px;background:none;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;color:var(--muted);cursor:pointer}
+.fav-btn:hover{border-color:var(--warn);color:var(--warn)}
+.fav-btn.active{color:var(--warn);border-color:var(--warn);background:color-mix(in srgb,var(--warn) 12%,transparent)}
+.video-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.62);color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:7px;display:flex;gap:5px;align-items:center}
+.video-badge svg{width:11px;height:11px}
+
+/* library tools */
+.lib-tools{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.chips-scroller{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.cat-chip{flex:0 0 auto;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.cat-chip .n{opacity:.65;font-weight:500;margin-left:4px;font-size:12px}
+.cat-chip:hover{color:var(--text);border-color:var(--accent)}
+.cat-chip.active{background:var(--grad);color:#fff;border-color:transparent}
+.lib-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.lib-controls select{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600}
+.toggle{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);font-weight:600;cursor:pointer;user-select:none}
+.toggle input{width:17px;height:17px;accent-color:var(--accent)}
+.lib-count{color:var(--muted);font-size:13.5px;margin:0 0 12px}
+.pager{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:18px 0 8px}
+.pager button{min-width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:700;cursor:pointer;font-size:14px}
+.pager button:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
+.pager button.active{background:var(--grad);color:#fff;border-color:transparent}
+.pager button:disabled{opacity:.4;cursor:default}
+.empty-state{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 12px}
+.empty-state .big{font-size:40px;margin-bottom:8px}
+.error-box{background:color-mix(in srgb,var(--bad) 10%,var(--panel));border:1px solid color-mix(in srgb,var(--bad) 45%,var(--line));border-radius:var(--radius);padding:22px;text-align:center;margin:30px auto;max-width:560px}
+.error-box button{margin-top:12px;background:var(--grad);color:#fff;border:0;border-radius:10px;padding:10px 20px;font-weight:700;cursor:pointer}
+
+/* overlay panels (pack record + combo) */
+.overlay{position:fixed;inset:0;z-index:150;background:rgba(5,6,10,.66);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:calc(var(--header-h) + 22px) 16px 40px}
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:18px;max-width:860px;width:100%;box-shadow:var(--shadow);position:relative}
+.panel-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.panel-close:hover{background:var(--panel2)}
+.panel-close svg{width:16px;height:16px}
+.record-hero{display:grid;grid-template-columns:280px 1fr;gap:20px;padding:22px 22px 8px}
+@media (max-width:680px){.record-hero{grid-template-columns:1fr}}
+.record-hero img{border-radius:12px;border:1px solid var(--line);width:100%;aspect-ratio:8/5;object-fit:cover}
+.record-main h2{margin:0 0 4px;font-size:24px;letter-spacing:-.3px;line-height:1.25;padding-right:44px}
+.record-credits{color:var(--muted);font-weight:600;font-size:14px;margin:0 0 10px}
+.record-desc{color:var(--text);opacity:.92;font-size:15px;margin:0 0 12px}
+.panel-section{padding:6px 22px 4px}
+.panel-section h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.req-list,.req-controls{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.req-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px 13px;cursor:pointer}
+.req-item:hover{border-color:var(--accent)}
+.req-item .req-name{font-weight:700;font-size:14.5px}
+.req-item .req-by{color:var(--muted);font-size:12.5px}
+.req-item .arrow{margin-left:auto;color:var(--accent);font-weight:800}
+.req-line{display:flex;gap:8px;align-items:baseline;font-size:14.5px;padding:2px 0}
+.req-line .bullet{color:var(--accent);font-weight:800}
+.req-missing,.req-loading{color:var(--muted);font-size:14.5px;font-style:italic}
+.req-missing{color:var(--warn)}
+.link-btn{background:none;border:0;padding:0;color:var(--accent);font-weight:600;font-size:14.5px;cursor:pointer;text-align:left}
+.link-btn:hover{text-decoration:underline}
+.panel-actions{display:flex;flex-wrap:wrap;gap:10px;padding:16px 22px 8px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:11px;padding:11px 18px;font-weight:700;font-size:14.5px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--text);text-decoration:none}
+.btn:hover{text-decoration:none;border-color:var(--accent)}
+.btn.primary{background:var(--grad);color:#fff;border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.external svg{width:13px;height:13px;opacity:.7}
+.back-bar{padding:14px 22px 0}
+.back-link{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-weight:600;font-size:13.5px;background:none;border:0;cursor:pointer;padding:0}
+.back-link:hover{color:var(--text)}
+.record-meta-row{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:13px;padding:0 22px 10px}
+
+/* combo panel */
+.combo-head{padding:24px 22px 10px}
+.combo-head h2{margin:0 0 6px;font-size:26px;letter-spacing:-.3px;padding-right:44px}
+.combo-by{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;color:var(--muted);font-size:14.5px;margin:0 0 8px}
+.combo-by a{font-weight:700}
+.combo-note{color:var(--text);opacity:.9;font-size:14.5px;margin:0 0 8px;font-style:italic}
+.combo-items{display:flex;flex-direction:column;gap:14px;padding:8px 22px 8px}
+.combo-item{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:172px 1fr;gap:16px}
+@media (max-width:640px){.combo-item{grid-template-columns:1fr}}
+.combo-item .thumb{border-radius:10px;border:1px solid var(--line);width:100%;aspect-ratio:8/5;object-fit:cover;cursor:pointer}
+.ci-pos{position:absolute;font-size:11px;font-weight:800;background:var(--grad);color:#fff;border-radius:7px;padding:3px 8px;margin:8px 0 0 8px}
+.ci-main h4{margin:0 0 2px;font-size:17px;cursor:pointer;display:inline}
+.ci-main h4:hover{color:var(--accent)}
+.ci-by{color:var(--muted);font-size:13px;margin:0 0 8px}
+.ci-groups{display:flex;flex-direction:column;gap:6px}
+.ci-group b{font-size:12px;letter-spacing:.8px;text-transform:uppercase}
+.ci-group.reqg b{color:var(--accent2)}
+.ci-group.recg b{color:var(--ok)}
+.ci-group.optg b{color:var(--muted)}
+.previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.previews img{width:118px;aspect-ratio:8/5;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:zoom-in}
+.preview-warn{width:100%;font-size:12px;color:var(--muted);font-style:italic;margin:2px 0 0}
+.ci-actions{margin-top:12px}
+.pack-gone{background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--muted)}
+.pack-gone .big{font-size:26px;margin-bottom:6px}
+.pack-gone p{margin:0;font-size:14.5px}
+.loading-ph{background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--muted);font-size:14px}
+
+/* AI widget */
+#nova-fab{position:fixed;left:24px;bottom:24px;z-index:120;display:flex;align-items:center;gap:9px;background:var(--grad);color:#fff;border:0;border-radius:999px;padding:12px 20px;font-weight:800;font-size:14.5px;cursor:pointer;box-shadow:var(--shadow)}
+#nova-fab svg{width:17px;height:17px}
+#nova-widget-panel{position:fixed;bottom:94px;left:24px;width:340px;max-width:calc(100vw - 32px);max-height:520px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);z-index:130;display:none;flex-direction:column;overflow:hidden}
+#nova-widget-panel.open{display:flex}
+.nw-head{display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid var(--line);background:var(--panel)}
+.nw-head .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.nw-head b{font-size:14.5px}
+.nw-head small{color:var(--muted);margin-left:auto;font-size:11.5px}
+.nw-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:330px;scrollbar-width:thin}
+.nw-msg{max-width:86%;padding:9px 13px;border-radius:13px;font-size:13.8px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.nw-msg.user{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:4px}
+.nw-msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:4px}
+.nw-msg.typing{color:var(--muted);font-style:italic}
+.nw-suggest{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
+.nw-suggest button{font-size:11.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.nw-suggest button:hover{color:var(--text);border-color:var(--accent)}
+.nw-inputrow{display:flex;gap:8px;padding:11px 12px;border-top:1px solid var(--line);background:var(--panel)}
+#nova-input{flex:1;resize:none;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);padding:9px 11px;font:13.5px/1.45 system-ui;max-height:96px}
+.nw-send{width:40px;height:40px;border-radius:10px;border:0;background:var(--grad);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.nw-send svg{width:16px;height:16px}
+.nw-send:disabled{opacity:.5;cursor:default}
+@media (max-width:600px){#nova-widget-panel{left:12px;right:12px;width:auto;bottom:88px}#nova-fab{left:12px;bottom:16px}}
+
+/* footer */
+.site-footer{margin-top:44px;border-top:1px solid var(--line);background:var(--bg2)}
+.footer-inner{max-width:1180px;margin:0 auto;padding:26px 20px;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:flex-start}
+.footer-inner p{margin:0;color:var(--muted);font-size:13.5px;max-width:420px}
+.footer-links{display:flex;flex-direction:column;gap:6px}
+.footer-links a{color:var(--muted);font-size:13.5px;font-weight:600}
+.footer-links a:hover{color:var(--text)}
+.footer-badge{margin-left:auto;align-self:center;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--panel)}
+
+/* scroll-to-top */
+#toTop{position:fixed;right:20px;bottom:24px;z-index:110;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;display:none;align-items:center;justify-content:center}
+#toTop.show{display:flex}
+#toTop svg{width:17px;height:17px}
+
+/* mobile search-bar visibility fix (plan Sec. 7.8) — touch devices only */
+@media (pointer:coarse){.g-search,#g-filter{font-size:16px}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div id="loadbar" role="progressbar" aria-label="Loading library" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="./" aria-label="NOVA Library home">
+      <img src="assets/logo.svg" alt="" width="34" height="34">
+      NOVA <span class="brand-sub">Library</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="./" aria-current="page">Library</a>
+      <a href="guides.html">Guides</a>
+      <button id="themeToggle" type="button" aria-label="Switch color theme" title="Switch theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="top">
+    <h1>Every <span class="grad">Bedrock pack</span> you need, in one place</h1>
+    <p class="tagline">NOVA is a searchable library of Minecraft texture packs, addons, worlds, skins and scripts — curated in Discord, published here, with multi-pack <b>combos</b> and honest requirements.</p>
+    <div class="search-wrap" role="search">
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search packs…" aria-label="Search the NOVA library">
+      <span class="kbd-hint" aria-hidden="true"><kbd>/</kbd><kbd>Ctrl K</kbd></span>
+    </div>
+    <div class="stats" id="stats" aria-live="polite">
+      <span><b id="statPacks">…</b> packs</span>
+      <span><b id="statCats">21</b> categories</span>
+      <span><b id="statCombos">…</b> combos</span>
+      <span><b id="statViews">…</b> views</span>
+    </div>
+    <div class="recent-row" id="recentRow" aria-label="Recently viewed packs"></div>
+  </section>
+
+  <section id="featured" class="section" hidden>
+    <div class="section-head">
+      <h2>Featured Videos</h2>
+      <p class="section-sub">Packs with a showcase video</p>
+    </div>
+    <div class="card-strip" id="fvList"></div>
+  </section>
+
+  <section id="combos-section" class="section" hidden>
+    <div class="section-head">
+      <h2>Combos</h2>
+      <p class="section-sub">Multi-pack showcases — curated sets that work together</p>
+    </div>
+    <div class="card-strip" id="comboList"></div>
+  </section>
+
+  <section id="library" class="section" aria-label="Pack library">
+    <div class="lib-tools">
+      <div class="chips-scroller" id="catChips" role="group" aria-label="Filter by category"></div>
+      <div class="lib-controls">
+        <label class="sr-only" for="tagFilter">Filter by type</label>
+        <select id="tagFilter">
+          <option value="All">All types</option>
+          <option>Texture Pack</option><option>Addon</option><option>World</option>
+          <option>Skins</option><option>Scripts</option>
+        </select>
+        <label class="sr-only" for="sortSel">Sort</label>
+        <select id="sortSel" aria-label="Sort results">
+          <option value="new">Newest first</option>
+          <option value="views">Most viewed</option>
+          <option value="name">Name A-Z</option>
+        </select>
+        <label class="toggle"><input type="checkbox" id="infiniteToggle"> Infinite scroll</label>
+        <button class="cat-chip" id="favFilter" type="button" aria-pressed="false">★ Favorites</button>
+      </div>
+    </div>
+    <p class="lib-count" id="libCount"></p>
+    <div id="results" class="grid" aria-live="polite"></div>
+    <nav id="pager" class="pager" aria-label="Pages"></nav>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <a class="brand" href="./" style="margin-bottom:8px"><img src="assets/logo.svg" alt="" width="28" height="28"> NOVA</a>
+      <p>A community library of Minecraft Bedrock content. Managed in Discord, published automatically, one commit at a time.</p>
+    </div>
+    <div class="footer-links">
+      <a href="guides.html">Guides &amp; help</a>
+      <a href="guides.html#share">Share your pack</a>
+      <a href="guides.html#combos-guide">About combos</a>
+    </div>
+    <span class="footer-badge" id="dataBadge">sample data</span>
+  </div>
+</footer>
+
+<!-- pack record panel -->
+<div id="recordPanel" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="recordTitle">
+  <article class="panel">
+    <button class="panel-close" id="recordClose" aria-label="Close pack details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <div class="back-bar" id="recordBackBar" hidden></div>
+    <div class="record-hero">
+      <img id="recordImage" src="assets/logo.svg" alt="">
+      <div class="record-main">
+        <h2 id="recordTitle"></h2>
+        <p class="record-credits" id="recordCredits"></p>
+        <p class="record-desc" id="recordDesc"></p>
+        <div class="chip-row" id="recordChips"></div>
+      </div>
+    </div>
+    <div class="panel-section" id="recordRequiredSection" hidden>
+      <h3>This Pack Requires</h3>
+      <div class="req-list" id="recordRequiredList"></div>
+    </div>
+    <div class="panel-actions" id="recordActions"></div>
+    <div class="record-meta-row" id="recordMeta"></div>
+  </article>
+</div>
+
+<!-- combo panel -->
+<div id="comboPanel" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="comboTitle">
+  <article class="panel">
+    <button class="panel-close" id="comboClose" aria-label="Close combo details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <div class="combo-head">
+      <h2 id="comboTitle"></h2>
+      <p class="combo-by" id="comboBy"></p>
+      <p class="combo-note" id="comboNote"></p>
+    </div>
+    <div class="panel-actions" id="comboActions" style="padding-top:0"></div>
+    <div class="combo-items" id="comboItems"></div>
+  </article>
+</div>
+
+<!-- AI chat widget (NOVA assistant) -->
+<button id="nova-fab" type="button" aria-expanded="false" aria-controls="nova-widget-panel">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.9 5.1L19 9l-5.1 1.9L12 16l-1.9-5.1L5 9l5.1-1.9z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8z"/></svg>
+  Ask NOVA
+</button>
+<div id="nova-widget-panel" role="dialog" aria-label="NOVA AI assistant">
+  <div class="nw-head"><span class="dot" aria-hidden="true"></span><b>NOVA Assistant</b><small>AI answers</small></div>
+  <div class="nw-messages" id="nwMessages"></div>
+  <div class="nw-suggest" id="nwSuggest">
+    <button type="button">What is NOVA?</button>
+    <button type="button">How do I share a pack?</button>
+    <button type="button">What are combos?</button>
+  </div>
+  <div class="nw-inputrow">
+    <textarea id="nova-input" rows="1" placeholder="Ask about NOVA…" aria-label="Message the NOVA assistant" maxlength="500"></textarea>
+    <button class="nw-send" id="nwSend" type="button" aria-label="Send message">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+    </button>
+  </div>
+</div>
+
+<button id="toTop" type="button" aria-label="Scroll back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></span>
+<script src="nova-themes.js"></script>
+<script>
+/* ============ NOVA Library — app logic ============ */
+(function () {
+'use strict';
+
+/* ---------- shared category definition (P1 parity, order fixed) ---------- */
+var CATEGORIES = ["PvP","Utility","Furniture","Horror","Anime","Shader","Structure","Weapon","Bosses","Vehicle","Visual","Survival","Client","GUI & UI","Adventure","Minigame","Food","Environment","Animation","Fps Booster","Others"];
+var TYPE_TAGS = ["Texture Pack","Addon","World","Skins","Scripts"];
+var PREVIEW_WARNING = "Preview images may be outdated and might not reflect the latest version of the pack.";
+var PAGE_SIZE = 12;
+
+var NOVA_API = { chat: "/api/nova/chat", view: "/api/nova/view" };
+var $ = function (id) { return document.getElementById(id); };
+
+/*PURE-START*/
+/* Pure helpers — extracted by the P0 harness (tests/test_searchbar_helper.js, tests/test_site_search.js).
+   Keep dependency-free and deterministic. */
+var CAT_DISPLAY = { "GUI & UI": "Gui & Ui" }; /* stored `GUI & UI`, shown "Gui & Ui" everywhere */
+function normalizeTitle(s) {
+  if (typeof s !== "string") return "";
+  var collapsed = s.replace(/\s+/g, " ").trim();
+  try { collapsed = collapsed.normalize("NFC"); } catch (e) { /* older engines */ }
+  return collapsed.toLowerCase();
+}
+function catDisplay(cat) { return CAT_DISPLAY[cat] || cat; }
+function searchMatches(pack, query) {
+  if (!query) return true;
+  var q = normalizeTitle(query);
+  var tokens = q.split(" ").filter(Boolean);
+  if (!tokens.length) return true;
+  var hay = normalizeTitle([pack.name, pack.description, pack.credits, pack.category, pack.tag].join(" \u0001 "));
+  return tokens.every(function (t) { return hay.indexOf(t) !== -1; });
+}
+/* Scroll delta (px) to add to window.scrollY so a field sits fully inside the
+   visual viewport below the sticky header. 0 when already visible. */
+function computeScrollAdjust(fieldTop, fieldBottom, vvTop, vvHeight, headerH) {
+  if (typeof fieldTop !== "number" || typeof fieldBottom !== "number" ||
+      typeof vvTop !== "number" || typeof vvHeight !== "number" || typeof headerH !== "number") return 0;
+  var visibleTop = vvTop + headerH;
+  var visibleBottom = vvTop + vvHeight;
+  if (visibleBottom <= visibleTop) return 0;
+  if (fieldTop < visibleTop) return Math.round(fieldTop - visibleTop);
+  if (fieldBottom > visibleBottom) return Math.round(fieldBottom - visibleBottom);
+  return 0;
+}
+function requirementLineView(line, resolveByTitle) {
+  /* Returns {kind:"pack"|"external"|"text", text, url, pack} for one requirement line. */
+  if (typeof line !== "string" || !line.trim()) return { kind: "text", text: "" };
+  var trimmed = line.trim();
+  var pack = resolveByTitle ? resolveByTitle(trimmed) : null;
+  if (pack) return { kind: "pack", text: trimmed, pack: pack };
+  var m = trimmed.match(/https:\/\/[^\s)>\]]+/);
+  if (m) {
+    var url = m[0];
+    var text = trimmed.replace(url, "").replace(/[(){}\[\]]/g, "").replace(/\s{2,}/g, " ").trim() || url;
+    return { kind: "external", text: text, url: url };
+  }
+  return { kind: "text", text: trimmed };
+}
+/*PURE-END*/
+
+/* ---------- state ---------- */
+var allPacks = [];
+var packsById = {};
+var combosData = null;
+var requiredData = null;         /* null = not loaded, false = failed/missing */
+var requiredPromise = null;
+var view = { page: 1, query: "", cat: "All", tag: "All", sort: "new", favOnly: false, infinite: false };
+var dataSignature = "";
+var pingedViews = {};
+var favs = loadStore("nova-favs", []);
+var recents = loadStore("nova-recent", []);
+
+function loadStore(key, fallback) {
+  try { var v = JSON.parse(localStorage.getItem(key) || "null"); return Array.isArray(v) ? v : fallback; }
+  catch (e) { return fallback; }
+}
+function saveStore(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+function packKey(p) { return p && (p.id || p.name) !== undefined ? String(p.id || p.name) : ""; }
+
+/* ---------- data loading ---------- */
+function loadbar(on) { var lb = $("loadbar"); lb.classList.toggle("on", on); if (on) lb.style.width = "12%"; }
+function loadbarProgress(p) { $("loadbar").style.width = p + "%"; }
+function loadbarDone() { var lb = $("loadbar"); lb.classList.add("done"); lb.style.width = "100%"; setTimeout(function () { lb.classList.remove("on", "done"); lb.style.width = "0"; }, 450); }
+
+function fetchJSON(url, opts) {
+  return fetch(url, opts || {}).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status + " for " + url);
+    return r.json();
+  });
+}
+
+function loadLibrary() {
+  loadbar(true);
+  return fetchJSON("packs_index.json").then(function (index) {
+    if (!index || index.v !== 1 || !Array.isArray(index.chunks) || !index.chunks.length) {
+      throw new Error("Invalid packs_index.json");
+    }
+    loadbarProgress(35);
+    return Promise.all(index.chunks.map(function (c) { return fetchJSON(c); }));
+  }).then(function (chunks) {
+    allPacks = [];
+    chunks.forEach(function (chunk) {
+      if (!Array.isArray(chunk)) throw new Error("Invalid chunk");
+      chunk.forEach(function (p) {
+        if (p && typeof p === "object" && p.name) {
+          allPacks.push(normalizePack(p));
+        }
+      });
+    });
+    if (!allPacks.length) throw new Error("Library is empty");
+    allPacks.forEach(function (p) { packsById[String(p.id)] = p; });
+    dataSignature = allPacks.length + ":" + (allPacks[0] ? allPacks[0].id : "") + ":" + (allPacks[allPacks.length - 1] ? allPacks[allPacks.length - 1].id : "");
+    loadbarProgress(80);
+    return loadCombos();
+  }).then(function () {
+    loadbarDone();
+    onDataReady();
+  }).catch(function (err) {
+    loadbarDone();
+    console.error("[NOVA] library load failed:", err);
+    showError(err && err.message ? err.message : "unknown error");
+  });
+}
+
+function normalizePack(p) {
+  /* canonical readable field names; accepts legacy aliases on input */
+  var out = {
+    id: p.id, name: p.name || "", description: p.description || "",
+    link: p.link || "", tag: p.tag || p.secondary_tag || p.type || "",
+    category: p.category || "", credits: p.credits || "",
+    image: p.image || p.photo || "", image_credit: p.image_credit || "",
+    video: p.video || p.video_link || "", support: p.support || p.support_link || "",
+    archive: p.archive || "", date_added: p.date_added || "", views: p.views || 0
+  };
+  if (TYPE_TAGS.indexOf(out.tag) === -1) out.tag = "Others" === out.tag ? "" : out.tag; /* keep unknown as typed */
+  return out;
+}
+
+function loadCombos() {
+  /* combos.json is optional: a 404 or invalid file just hides the section silently */
+  return fetchJSON("combos.json").then(function (data) {
+    if (!data || data.v !== 1 || !Array.isArray(data.combos)) throw new Error("invalid");
+    combosData = data;
+  }).catch(function () { combosData = null; });
+}
+
+function loadRequired() {
+  /* lazy, once; 404/invalid → false (blocks hidden, library unaffected) */
+  if (requiredPromise) return requiredPromise;
+  requiredPromise = fetchJSON("required.json").then(function (data) {
+    if (!data || data.v !== 1 || !data.requires || typeof data.requires !== "object") throw new Error("invalid");
+    requiredData = data;
+    return data;
+  }).catch(function () { requiredData = false; return false; });
+  return requiredPromise;
+}
+
+/* ---------- render on data ready ---------- */
+function onDataReady() {
+  renderStats();
+  renderFeatured();
+  renderCombos();
+  renderChips();
+  renderRecent();
+  renderResults();
+}
+
+function renderStats() {
+  $("statPacks").textContent = allPacks.length;
+  var cats = {}; allPacks.forEach(function (p) { if (p.category) cats[p.category] = 1; });
+  $("statCats").textContent = Math.max(Object.keys(cats).length, 1);
+  $("statCombos").textContent = combosData ? combosData.combos.filter(function (c) { return c.status === "published"; }).length : 0;
+  var views = 0; allPacks.forEach(function (p) { views += Number(p.views) || 0; });
+  $("statViews").textContent = views >= 1000 ? (views >= 1000000 ? (views / 1000000).toFixed(1) + "M" : (views / 1000).toFixed(1) + "k") : views;
+}
+
+function renderFeatured() {
+  var section = $("featured"), list = $("fvList");
+  var withVideo = allPacks.filter(function (p) { return !!p.video; });
+  /* signature guard: re-render only when the data actually changed */
+  var sig = dataSignature + ":fv:" + withVideo.length;
+  if (section.dataset.sig === sig) return;
+  section.dataset.sig = sig;
+  if (!withVideo.length) { section.hidden = true; return; }
+  section.hidden = false;
+  list.innerHTML = "";
+  withVideo.slice(0, 10).forEach(function (p) {
+    list.appendChild(packCard(p, { video: true }));
+  });
+}
+
+function renderCombos() {
+  var section = $("combos-section"), list = $("comboList");
+  if (!combosData) { section.hidden = true; return; }
+  var published = combosData.combos.filter(function (c) { return c.status === "published"; });
+  if (!published.length) { section.hidden = true; return; }
+  section.hidden = false;
+  list.innerHTML = "";
+  published.forEach(function (combo) {
+    var card = document.createElement("article");
+    card.className = "pack-card";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", combo.title + " combo, " + combo.items.length + " packs, showcased by " + combo.creator);
+    var firstResolved = null;
+    for (var i = 0; i < combo.items.length; i++) {
+      var pk = packsById[String(combo.items[i].pack_id)];
+      if (pk) { firstResolved = pk; break; }
+    }
+    card.innerHTML =
+      '<div class="video-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>' + combo.items.length + ' packs</div>' +
+      '<img class="pack-thumb" loading="lazy" alt="" src="' + (firstResolved ? firstResolved.image : "assets/logo.svg") + '">' +
+      '<div class="pack-body"><h3 class="pack-name"></h3>' +
+      '<p class="pack-credits">Showcased by ' + escapeHTML(combo.creator) + "</p>" +
+      '<div class="chip-row"><span class="chip cat">Combo</span><span class="chip type">Multi-pack</span></div></div>';
+    card.querySelector("h3").textContent = combo.title;
+    var open = function () { openCombo(combo); };
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    list.appendChild(card);
+  });
+}
+
+function renderChips() {
+  var wrap = $("catChips");
+  wrap.innerHTML = "";
+  var counts = {}; allPacks.forEach(function (p) { counts[p.category] = (counts[p.category] || 0) + 1; });
+  var mk = function (label, value, n) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "cat-chip" + (view.cat === value ? " active" : "");
+    b.innerHTML = escapeHTML(label) + (typeof n === "number" ? ' <span class="n">' + n + "</span>" : "");
+    b.setAttribute("aria-pressed", view.cat === value ? "true" : "false");
+    b.addEventListener("click", function () { view.cat = value; view.page = 1; renderChips(); renderResults(); });
+    wrap.appendChild(b);
+  };
+  mk("All", "All", allPacks.length);
+  CATEGORIES.forEach(function (cat) { mk(catDisplay(cat), cat, counts[cat] || 0); });
+}
+
+function renderRecent() {
+  var row = $("recentRow");
+  var items = recents.map(function (k) { return packsById[String(k)]; }).filter(Boolean).slice(0, 5);
+  if (!items.length) { row.innerHTML = ""; return; }
+  row.innerHTML = '<span style="color:var(--muted);font-size:12.5px;align-self:center">Recent:</span>';
+  items.forEach(function (p) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "recent-chip"; b.textContent = p.name;
+    b.addEventListener("click", function () { openRecord(p); });
+    row.appendChild(b);
+  });
+}
+
+/* ---------- results / pagination ---------- */
+function filteredPacks() {
+  var list = allPacks.filter(function (p) {
+    if (view.cat !== "All" && p.category !== view.cat) return false;
+    if (view.tag !== "All" && p.tag !== view.tag) return false;
+    if (view.favOnly && favs.indexOf(packKey(p)) === -1) return false;
+    if (!searchMatches(p, view.query)) return false;
+    return true;
+  });
+  if (view.sort === "new") list.sort(function (a, b) { return (b.date_added || "").localeCompare(a.date_added || "") || (b.id - a.id); });
+  else if (view.sort === "views") list.sort(function (a, b) { return (Number(b.views) || 0) - (Number(a.views) || 0); });
+  else list.sort(function (a, b) { return a.name.localeCompare(b.name); });
+  return list;
+}
+
+function renderResults(appendMode) {
+  var list = filteredPacks();
+  var pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if (view.page > pages) view.page = pages;
+  var slice = list.slice((view.page - 1) * PAGE_SIZE, view.page * PAGE_SIZE);
+
+  var grid = $("results");
+  if (!appendMode) grid.innerHTML = "";
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="big">🧭</div><b>No packs found</b><br>Try another search, or clear the filters.</div>';
+  } else {
+    slice.forEach(function (p) { grid.appendChild(packCard(p)); });
+  }
+  $("libCount").textContent = list.length + (list.length === 1 ? " pack" : " packs") +
+    (view.query ? ' matching "' + view.query + '"' : "") + " — page " + view.page + " of " + pages;
+
+  var pager = $("pager");
+  pager.innerHTML = "";
+  if (pages <= 1) { return; }
+  var mkPage = function (label, page, opts) {
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = label;
+    if (opts && opts.active) b.className = "active";
+    if (opts && opts.disabled) b.disabled = true;
+    b.addEventListener("click", function () { go(page); });
+    pager.appendChild(b);
+  };
+  mkPage("‹", view.page - 1, { disabled: view.page === 1 });
+  var from = Math.max(1, view.page - 2), to = Math.min(pages, view.page + 2);
+  if (from > 1) { mkPage("1", 1); if (from > 2) pager.appendChild(document.createTextNode("…")); }
+  for (var i = from; i <= to; i++) mkPage(String(i), i, { active: i === view.page });
+  if (to < pages) { if (to < pages - 1) pager.appendChild(document.createTextNode("…")); mkPage(String(pages), pages); }
+  mkPage("›", view.page + 1, { disabled: view.page === pages });
+}
+
+function go(page) {
+  view.page = page;
+  renderResults();
+  /* page change scrolls to the top of the library, below the sticky header (scroll-padding-top) */
+  var lib = $("library");
+  if (lib && lib.scrollIntoView) lib.scrollIntoView({ block: "start", behavior: prefersReducedMotion() ? "auto" : "smooth" });
+}
+
+/* ---------- pack card ---------- */
+function packCard(p, opts) {
+  opts = opts || {};
+  var card = document.createElement("article");
+  card.className = "pack-card";
+  var isFav = favs.indexOf(packKey(p)) !== -1;
+  card.innerHTML =
+    (opts.video && p.video ? '<div class="video-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>video</div>' : "") +
+    '<img class="pack-thumb" loading="lazy" alt="Cover image for ' + escapeHTML(p.name) + '" src="' + escapeHTML(p.image || "assets/logo.svg") + '">' +
+    '<div class="pack-body">' +
+    '<h3 class="pack-name"></h3>' +
+    '<p class="pack-credits"></p>' +
+    '<div class="chip-row"><span class="chip cat"></span><span class="chip type"></span></div>' +
+    '<div class="pack-meta"><span>👁 ' + fmtViews(p.views) + "</span><span>" + escapeHTML((p.date_added || "").slice(0, 10)) + "</span>" +
+    '<button class="fav-btn' + (isFav ? " active" : "") + '" type="button" aria-label="Toggle favorite">★</button></div></div>';
+  card.querySelector("h3").textContent = p.name;
+  card.querySelector(".pack-credits").textContent = "by " + p.credits;
+  card.querySelector(".chip.cat").textContent = catDisplay(p.category || "Others");
+  card.querySelector(".chip.type").textContent = p.tag || "";
+  card.querySelector(".pack-thumb").addEventListener("click", function () { openRecord(p); });
+  card.querySelector("h3").addEventListener("click", function () { openRecord(p); });
+  card.querySelector(".fav-btn").addEventListener("click", function (e) { e.stopPropagation(); toggleFav(p, this); });
+  return card;
+}
+
+function toggleFav(p, btn) {
+  var k = packKey(p);
+  var i = favs.indexOf(k);
+  if (i === -1) { favs.push(k); if (btn) btn.classList.add("active"); }
+  else { favs.splice(i, 1); if (btn) btn.classList.remove("active"); }
+  saveStore("nova-favs", favs);
+  if (view.favOnly) renderResults();
+}
+
+function fmtViews(v) {
+  v = Number(v) || 0;
+  if (v >= 1000000) return (v / 1000000).toFixed(1) + "M";
+  if (v >= 1000) return (v / 1000).toFixed(1) + "k";
+  return String(v);
+}
+
+/* ---------- pack record panel (openModalDirect pattern) ---------- */
+var lastFocus = null;
+var recordReturnTo = null; /* {type:"pack"|"combo", ref} for the Back control */
+
+function openRecord(p, returnTo) {
+  lastFocus = document.activeElement;
+  recordReturnTo = returnTo || null;
+  var panel = $("recordPanel");
+  $("recordTitle").textContent = p.name;
+  $("recordCredits").textContent = "by " + p.credits + (p.image_credit ? " — " + p.image_credit : "");
+  $("recordDesc").textContent = p.description || "No description provided.";
+  var img = $("recordImage");
+  img.src = p.image || "assets/logo.svg";
+  img.alt = "Cover image for " + p.name;
+  var chips = $("recordChips");
+  chips.innerHTML = "";
+  chips.appendChild(chipEl("chip cat", catDisplay(p.category || "Others")));
+  if (p.tag) chips.appendChild(chipEl("chip type", p.tag));
+
+  renderRequiredBlock(p);
+
+  var actions = $("recordActions");
+  actions.innerHTML = "";
+  if (p.link) actions.appendChild(linkBtn(p.link, "⬇ Download", "primary", true));
+  if (p.video) actions.appendChild(linkBtn(p.video, "▶ Watch video", "", true));
+  if (p.support) actions.appendChild(linkBtn(p.support, "♥ Support " + p.credits, "ghost", true));
+  if (p.archive) actions.appendChild(linkBtn(p.archive, "🗄 Archive / older versions", "ghost", true));
+
+  var favB = document.createElement("button");
+  favB.type = "button"; favB.className = "btn" + (favs.indexOf(packKey(p)) !== -1 ? " primary" : "");
+  favB.textContent = favs.indexOf(packKey(p)) !== -1 ? "★ Favorited" : "☆ Favorite";
+  favB.addEventListener("click", function () { toggleFav(p); openRecord(p, recordReturnTo); });
+  actions.appendChild(favB);
+
+  $("recordMeta").innerHTML =
+    "<span>Added " + escapeHTML((p.date_added || "").slice(0, 10)) + "</span>" +
+    "<span>👁 " + fmtViews(p.views) + " views</span>" +
+    "<span>ID " + escapeHTML(String(p.id)) + "</span>";
+
+  var backBar = $("recordBackBar");
+  if (recordReturnTo && recordReturnTo.type === "pack" && recordReturnTo.ref) {
+    backBar.hidden = false;
+    backBar.innerHTML = "";
+    var bl = document.createElement("button");
+    bl.type = "button"; bl.className = "back-link"; bl.textContent = "← Back to " + recordReturnTo.ref.name;
+    bl.addEventListener("click", function () { openRecord(recordReturnTo.ref); });
+    backBar.appendChild(bl);
+  } else if (recordReturnTo && recordReturnTo.type === "combo" && recordReturnTo.ref) {
+    backBar.hidden = false;
+    backBar.innerHTML = "";
+    var bl2 = document.createElement("button");
+    bl2.type = "button"; bl2.className = "back-link"; bl2.textContent = "← Back to " + recordReturnTo.ref.title;
+    bl2.addEventListener("click", function () { openCombo(recordReturnTo.ref); });
+    backBar.appendChild(bl2);
+  } else {
+    backBar.hidden = true;
+  }
+
+  panel.hidden = false;
+  document.body.style.overflow = "hidden";
+  panel.scrollTop = 0;
+  $("recordClose").focus();
+
+  pingPackView(p);
+  addRecent(p);
+}
+
+function closeRecord() {
+  $("recordPanel").hidden = true;
+  document.body.style.overflow = "";
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+/* "This Pack Requires" — plan Sec. 7.7: after tags, before download actions */
+function renderRequiredBlock(p) {
+  var section = $("recordRequiredSection"), list = $("recordRequiredList");
+  section.hidden = true; list.innerHTML = "";
+  loadRequired().then(function (data) {
+    if ($("recordTitle").textContent !== p.name) return; /* panel changed meanwhile */
+    if (!data) return;                                    /* missing/invalid file: hide silently */
+    var ids = data.requires[String(p.id)];
+    if (!ids || !ids.length) return;                      /* no requirements: no block */
+    section.hidden = false;
+    list.innerHTML = "";
+    ids.forEach(function (rid) {
+      var req = packsById[String(rid)];
+      var li = document.createElement("div");
+      if (req) {
+        li.className = "req-item";
+        li.setAttribute("role", "button"); li.tabIndex = 0;
+        li.innerHTML = '<span class="req-name"></span><span class="req-by"></span><span class="arrow" aria-hidden="true">→</span>';
+        li.querySelector(".req-name").textContent = req.name;
+        li.querySelector(".req-by").textContent = "Pack by " + req.credits;
+        var open = function () { openRecord(req, { type: "pack", ref: p }); };
+        li.addEventListener("click", open);
+        li.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      } else if (!allPacks.length) {
+        li.className = "req-loading"; li.textContent = "Loading required packs…";
+      } else {
+        li.className = "req-missing"; li.textContent = "A required pack is no longer available.";
+      }
+      list.appendChild(li);
+    });
+  });
+}
+
+function pingPackView(p) {
+  var key = packKey(p);
+  if (pingedViews[key]) return;
+  pingedViews[key] = true;
+  p.views = (Number(p.views) || 0) + 1;
+  try {
+    fetch(NOVA_API.view, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: p.id, name: p.name })
+    }).catch(function () { /* view ping is best-effort */ });
+  } catch (e) { /* ignore */ }
+}
+
+function addRecent(p) {
+  var key = packKey(p);
+  var i = recents.indexOf(key);
+  if (i !== -1) recents.splice(i, 1);
+  recents.unshift(key);
+  recents = recents.slice(0, 6);
+  saveStore("nova-recent", recents);
+  renderRecent();
+}
+
+/* ---------- combo panel (plan Sec. 7.6 item 8: display only, no deep links) ---------- */
+function openCombo(combo) {
+  lastFocus = document.activeElement;
+  var panel = $("comboPanel");
+  $("comboTitle").textContent = combo.title;
+  $("comboBy").innerHTML = "";
+  var by = document.createElement("span");
+  by.textContent = "Showcased by ";
+  $("comboBy").appendChild(by);
+  if (combo.creator_link) {
+    var a = document.createElement("a");
+    a.href = combo.creator_link; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = combo.creator;
+    $("comboBy").appendChild(a);
+  } else {
+    var b = document.createElement("b"); b.textContent = combo.creator; $("comboBy").appendChild(b);
+  }
+  $("comboBy").appendChild(document.createTextNode(" — " + combo.items.length + " packs"));
+  $("comboNote").textContent = combo.note || "";
+  $("comboNote").hidden = !combo.note;
+
+  var actions = $("comboActions");
+  actions.innerHTML = "";
+  if (combo.video) actions.appendChild(linkBtn(combo.video, "▶ Watch the showcase", "", true));
+
+  var wrap = $("comboItems");
+  wrap.innerHTML = "";
+  combo.items.forEach(function (item, idx) {
+    wrap.appendChild(comboItemEl(combo, item, idx));
+  });
+
+  panel.hidden = false;
+  document.body.style.overflow = "hidden";
+  panel.scrollTop = 0;
+  $("comboClose").focus();
+}
+
+function closeCombo() {
+  $("comboPanel").hidden = true;
+  document.body.style.overflow = "";
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+function comboItemEl(combo, item, idx) {
+  var pack = packsById[String(item.pack_id)];
+  if (!pack && allPacks.length) {
+    /* Approved Q3: generic placeholder, no restricted pack details, no download */
+    var gone = document.createElement("div");
+    gone.className = "pack-gone";
+    gone.innerHTML = '<div class="big">🕳</div><p><b>Pack ' + (idx + 1) + " is no longer available</b></p>";
+    return gone;
+  }
+  if (!pack) {
+    var loading = document.createElement("div");
+    loading.className = "loading-ph";
+    loading.textContent = "Loading pack " + (idx + 1) + "…";
+    return loading;
+  }
+  var el = document.createElement("div");
+  el.className = "combo-item";
+  el.innerHTML =
+    '<div style="position:relative"><span class="ci-pos">' + (idx + 1) + "</span>" +
+    '<img class="thumb" loading="lazy" alt="Cover image for ' + escapeHTML(pack.name) + '" src="' + escapeHTML(pack.image || "assets/logo.svg") + '"></div>' +
+    '<div class="ci-main"><h4></h4><p class="ci-by"></p><div class="chip-row"></div>' +
+    '<div class="ci-groups"></div><div class="previews"></div><div class="ci-actions"></div></div>';
+  el.querySelector("h4").textContent = pack.name;
+  el.querySelector(".ci-by").textContent = "Pack by " + pack.credits;
+  var chips = el.querySelector(".chip-row");
+  chips.appendChild(chipEl("chip cat", catDisplay(pack.category || "Others")));
+  if (pack.tag) chips.appendChild(chipEl("chip type", pack.tag));
+  el.querySelector("h4").addEventListener("click", function () { openRecord(pack, { type: "combo", ref: combo }); });
+  el.querySelector(".thumb").addEventListener("click", function () { openRecord(pack, { type: "combo", ref: combo }); });
+
+  /* three requirement groups: a line that exactly matches a NOVA title links to
+     that pack; other links open in a new tab with rel="noopener noreferrer" */
+  var groupsWrap = el.querySelector(".ci-groups");
+  [["reqg", "Required", item.required], ["recg", "Recommended", item.recommended], ["optg", "Optional", item.optional]].forEach(function (g) {
+    var lines = g[2] || [];
+    if (!lines.length) return;
+    var group = document.createElement("div");
+    group.className = "ci-group " + g[0];
+    var label = document.createElement("b"); label.textContent = g[1]; group.appendChild(label);
+    var ul = document.createElement("ul");
+    ul.style.margin = "2px 0 0"; ul.style.padding = "0"; ul.style.listStyle = "none";
+    lines.forEach(function (line) {
+      var v = requirementLineView(line, resolveByTitle);
+      var li = document.createElement("li"); li.className = "req-line";
+      var bullet = document.createElement("span"); bullet.className = "bullet"; bullet.textContent = "•";
+      li.appendChild(bullet);
+      if (v.kind === "pack") {
+        var btn = document.createElement("button");
+        btn.type = "button"; btn.className = "link-btn";
+        btn.textContent = v.text + " (NOVA pack)";
+        btn.addEventListener("click", function () { openRecord(v.pack, { type: "combo", ref: combo }); });
+        li.appendChild(btn);
+      } else if (v.kind === "external") {
+        var a = document.createElement("a");
+        a.href = v.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+        a.textContent = v.text;
+        li.appendChild(a);
+      } else if (v.text) {
+        var span = document.createElement("span");
+        span.textContent = v.text;
+        li.appendChild(span);
+      }
+      ul.appendChild(li);
+    });
+    group.appendChild(ul);
+    groupsWrap.appendChild(group);
+  });
+
+  /* up to 5 preview images with the standing warning */
+  var previews = (item.previews || []).slice(0, 5);
+  var prevWrap = el.querySelector(".previews");
+  if (previews.length) {
+    previews.forEach(function (src) {
+      var img = document.createElement("img");
+      img.loading = "lazy"; img.src = src; img.alt = "Preview image";
+      prevWrap.appendChild(img);
+    });
+    var warn = document.createElement("p");
+    warn.className = "preview-warn"; warn.textContent = PREVIEW_WARNING;
+    prevWrap.appendChild(warn);
+  }
+
+  var dl = document.createElement("button");
+  dl.type = "button"; dl.className = "btn primary";
+  dl.textContent = "⬇ Download Pack " + (idx + 1);
+  dl.addEventListener("click", function () { openRecord(pack, { type: "combo", ref: combo }); });
+  el.querySelector(".ci-actions").appendChild(dl);
+  return el;
+}
+
+function resolveByTitle(line) {
+  var n = normalizeTitle(line);
+  if (!n) return null;
+  var hits = allPacks.filter(function (p) { return normalizeTitle(p.name) === n; });
+  return hits.length === 1 ? hits[0] : null; /* exact match only; ambiguity is not guessed */
+}
+
+/* ---------- small DOM helpers ---------- */
+function chipEl(cls, text) { var s = document.createElement("span"); s.className = cls; s.textContent = text; return s; }
+function linkBtn(href, label, cls, external) {
+  var a = document.createElement("a");
+  a.href = href; a.className = "btn " + (cls || ""); a.textContent = label;
+  if (external) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+  return a;
+}
+function escapeHTML(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function prefersReducedMotion() {
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/* ---------- search + placeholder animation ---------- */
+var searchTimer = null;
+function onSearchInput() {
+  if (searchTimer) clearTimeout(searchTimer);
+  searchTimer = setTimeout(function () {
+    view.query = $("q").value.trim();
+    view.page = 1;
+    renderResults();
+  }, 350); /* 350 ms debounce */
+}
+
+var PLACEHOLDERS = [
+  "Search packs… try: shaders",
+  "Search packs… try: PvP",
+  "Search packs… try: furniture",
+  "Search packs… try: anime",
+  "Search packs… try: FPS booster",
+  "Search packs… try: horror world"
+];
+var phIndex = 0, phPos = 0, phTimer = null, phDeleting = false;
+function placeholderTick() {
+  if (phTimer) clearTimeout(phTimer);
+  var reduced = prefersReducedMotion();
+  var q = $("q");
+  if (reduced || document.activeElement === q || q.value) {
+    q.placeholder = "Search packs…";
+    phTimer = setTimeout(placeholderTick, 1500);
+    return;
+  }
+  var text = PLACEHOLDERS[phIndex];
+  if (!phDeleting) {
+    phPos++;
+    if (phPos >= text.length) { phDeleting = true; phTimer = setTimeout(placeholderTick, 1800); q.placeholder = text; return; }
+  } else {
+    phPos--;
+    if (phPos <= 12) { phDeleting = false; phIndex = (phIndex + 1) % PLACEHOLDERS.length; }
+  }
+  q.placeholder = text.slice(0, Math.max(12, phPos));
+  phTimer = setTimeout(placeholderTick, phDeleting ? 18 : 55);
+}
+
+/* ---------- mobile search-bar visibility helper (plan Sec. 7.8) ---------- */
+/* Touch devices only; no new file, request, timer or dependency. Listeners live
+   only while the field is focused and are removed on blur. */
+function installSearchbarHelper() {
+  var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+  if (!coarse) return; /* desktop unchanged: no scroll, no layout change (SB-4) */
+  ["q", "g-filter"].forEach(function (id) {
+    var field = $(id);
+    if (!field) return;
+    var vv = window.visualViewport;
+    var cleanup = function () {
+      if (vv) { vv.removeEventListener("resize", onVV); vv.removeEventListener("scroll", onVV); }
+    };
+    var apply = function () {
+      var rect = field.getBoundingClientRect();
+      var delta = computeScrollAdjust(rect.top, rect.bottom, vv ? vv.offsetTop : 0, vv ? vv.height : window.innerHeight, 82);
+      if (delta) window.scrollBy({ top: delta, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    };
+    var onVV = function () { apply(); };
+    field.addEventListener("focus", function () {
+      /* wait for the keyboard: first visualViewport resize within ~600 ms, else a 350 ms fallback */
+      if (vv) {
+        var waited = false;
+        var once = function () { waited = true; vv.removeEventListener("resize", once); apply(); vv.addEventListener("resize", onVV); vv.addEventListener("scroll", onVV); };
+        vv.addEventListener("resize", once);
+        setTimeout(function () {
+          if (!waited) { vv.removeEventListener("resize", once); apply(); vv.addEventListener("resize", onVV); vv.addEventListener("scroll", onVV); }
+        }, 600);
+      } else {
+        setTimeout(apply, 350);
+      }
+    });
+    field.addEventListener("blur", cleanup);
+  });
+}
+
+/* ---------- AI chat widget ---------- */
+var nwBusy = false;
+function nwAdd(text, who) {
+  var d = document.createElement("div");
+  d.className = "nw-msg " + who;
+  d.textContent = text;
+  $("nwMessages").appendChild(d);
+  $("nwMessages").scrollTop = $("nwMessages").scrollHeight;
+  return d;
+}
+function nwSend() {
+  var input = $("nova-input");
+  var text = input.value.trim();
+  if (!text || nwBusy) return;
+  input.value = "";
+  nwAdd(text, "user");
+  nwBusy = true;
+  $("nwSend").disabled = true;
+  var typing = nwAdd("NOVA is typing…", "bot typing");
+  fetch(NOVA_API.chat, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
+  }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function (data) { typing.textContent = (data && data.reply) || "(no answer)"; })
+    .catch(function () { typing.textContent = "The assistant is offline right now. Try the Guides page meanwhile."; })
+    .then(function () {
+      nwBusy = false; $("nwSend").disabled = false;
+      $("nwMessages").scrollTop = $("nwMessages").scrollHeight;
+      input.focus();
+    });
+}
+function initWidget() {
+  $("nova-fab").addEventListener("click", function () {
+    var panel = $("nova-widget-panel"), open = panel.classList.toggle("open");
+    this.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open && !$("nwMessages").children.length) {
+      nwAdd("Hi! I'm the NOVA assistant. Ask me about packs, categories, sharing your content or combos. I don't search the library — use the search bar above or the #search channel in Discord for that.", "bot");
+    }
+    if (open) $("nova-input").focus();
+  });
+  $("nwSend").addEventListener("click", nwSend);
+  $("nova-input").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); nwSend(); }
+  });
+  $("nwSuggest").addEventListener("click", function (e) {
+    if (e.target && e.target.tagName === "BUTTON") { $("nova-input").value = e.target.textContent; nwSend(); }
+  });
+}
+
+/* ---------- error state ---------- */
+function showError(msg) {
+  var main = document.querySelector("main");
+  main.innerHTML = '<div class="error-box"><div style="font-size:38px">⚠️</div>' +
+    "<b>The library could not be loaded</b><p>" + escapeHTML(msg) + "</p>" +
+    '<button type="button" onclick="location.reload()">Retry</button></div>';
+}
+
+/* ---------- wire up ---------- */
+function init() {
+  if (window.NOVAThemes && window.NOVAThemes.init) window.NOVAThemes.init();
+
+  $("q").addEventListener("input", onSearchInput);
+  $("q").addEventListener("focus", function () { /* animation pauses on focus */ });
+  $("tagFilter").addEventListener("change", function () { view.tag = this.value; view.page = 1; renderResults(); });
+  $("sortSel").addEventListener("change", function () { view.sort = this.value; view.page = 1; renderResults(); });
+  $("infiniteToggle").addEventListener("change", function () { view.infinite = this.checked; if (view.infinite) $("pager").hidden = true; else { $("pager").hidden = false; renderResults(); } });
+  $("favFilter").addEventListener("click", function () {
+    view.favOnly = !view.favOnly;
+    this.setAttribute("aria-pressed", view.favOnly ? "true" : "false");
+    this.classList.toggle("active", view.favOnly);
+    view.page = 1; renderResults();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName || "");
+    if (e.key === "/" && !typing) { e.preventDefault(); $("q").focus(); }
+    if ((e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K")) { e.preventDefault(); $("q").focus(); }
+    if (e.key === "Escape") {
+      if (!$("recordPanel").hidden) closeRecord();
+      else if (!$("comboPanel").hidden) closeCombo();
+      else $("nova-widget-panel").classList.remove("open");
+    }
+  });
+
+  $("recordClose").addEventListener("click", closeRecord);
+  $("comboClose").addEventListener("click", closeCombo);
+  $("recordPanel").addEventListener("click", function (e) { if (e.target === this) closeRecord(); });
+  $("comboPanel").addEventListener("click", function (e) { if (e.target === this) closeCombo(); });
+
+  /* infinite scroll */
+  window.addEventListener("scroll", function () {
+    var t = $("toTop");
+    t.classList.toggle("show", window.scrollY > 600);
+    if (!view.infinite) return;
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+      var pages = Math.max(1, Math.ceil(filteredPacks().length / PAGE_SIZE));
+      if (view.page < pages) { view.page++; renderResults(true); }
+    }
+  }, { passive: true });
+  $("toTop").addEventListener("click", function () { window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" }); });
+
+  initWidget();
+  installSearchbarHelper();
+  placeholderTick();
+
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    navigator.serviceWorker.register("sw.js").catch(function () { /* SW is an enhancement */ });
+  }
+
+  loadLibrary();
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+})();
+</script>
+</body>
+</html>
