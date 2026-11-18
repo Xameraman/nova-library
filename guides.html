@@ -522,6 +522,7 @@
   .g-toc { display:flex; gap:8px; overflow-x:auto; padding:8px 2px 12px; margin:6px 0 0; -webkit-overflow-scrolling:touch; scrollbar-width:thin; }
   .g-toc a { flex:0 0 auto; padding:9px 14px; border:1px solid var(--border); border-radius:999px; background:var(--bg-surface); color:var(--text-muted); font-size:.82rem; font-weight:700; text-decoration:none; white-space:nowrap; }
   .g-toc a:hover, .g-toc a:focus-visible { border-color:var(--cyan); color:var(--text-main); outline:none; }
+  html { scroll-padding-top: 96px; }   /* WR1: focus scrolls land below the sticky header */
   .g-section { margin-top:36px; scroll-margin-top:96px; }
   .g-section > h2 { font-size:1.3rem; font-weight:800; color:var(--text-main); padding-bottom:8px; margin-bottom:12px; border-bottom:1px solid var(--border); }
   .g-section h3 { font-size:1rem; font-weight:800; color:var(--cyan); margin:20px 0 8px; }
@@ -558,6 +559,7 @@
   .g-section > .g-note.warn { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.3); }
   .g-tools { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; }
   .g-search { flex:1 1 220px; min-width:0; padding:11px 14px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-main); font:inherit; font-size:.9rem; }
+  @media (pointer: coarse) { .g-search { font-size:16px; } }   /* WR1: iOS focus-zoom guard (14.4px -> 16px on touch) */
   .g-search:focus-visible, .g-btn:focus-visible, .guide-acc summary:focus-visible, .g-top a:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
   .g-btn { padding:11px 14px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-muted); font:inherit; font-size:.85rem; font-weight:700; cursor:pointer; }
   .g-btn:hover { border-color:var(--cyan); color:var(--text-main); }
@@ -730,6 +732,7 @@ Optional parameters:
   category:
   image_credit:
   video_link:</code></pre>
+  <div class="g-note"><strong>Required packs (optional section).</strong> If the command shows <code>required_pack_1</code> to <code>required_pack_10</code> fields, use them to tell staff which other packs yours needs. <code>required_pack_1</code> is mandatory: give an <strong>MCPEDL or CurseForge link</strong> of the pack yours depends on, or type <code>None</code> if it needs no other pack. <code>required_pack_2</code> to <code>required_pack_10</code> are optional further links. Every link you give is a <strong>required prerequisite</strong> &mdash; a pack that must be installed for yours to work &mdash; not a recommendation. Staff match each link to an existing NOVA pack before it appears on the website, so the dependency shows on your pack&rsquo;s page as &ldquo;This Pack Requires&rdquo;. There is no Bedrock/Java restriction for CurseForge links. Type <code>None</code> exactly (not <code>n/a</code> or <code>no</code>).</div>
   <pre class="g-cmd" tabindex="0"><code>/nova-share
   name:
   link:
@@ -757,6 +760,7 @@ Optional parameters:
   category:
   image_credit:
   video_link:</code></pre>
+  <div class="g-note"><strong>Required packs (optional section).</strong> If the command shows <code>required_pack_1</code> to <code>required_pack_10</code> fields, use them to tell staff which other packs yours needs. <code>required_pack_1</code> is mandatory: give an <strong>MCPEDL or CurseForge link</strong> of the pack yours depends on, or type <code>None</code> if it needs no other pack. <code>required_pack_2</code> to <code>required_pack_10</code> are optional further links. Every link you give is a <strong>required prerequisite</strong> &mdash; a pack that must be installed for yours to work &mdash; not a recommendation. Staff match each link to an existing NOVA pack before it appears on the website, so the dependency shows on your pack&rsquo;s page as &ldquo;This Pack Requires&rdquo;. There is no Bedrock/Java restriction for CurseForge links. Type <code>None</code> exactly (not <code>n/a</code> or <code>no</code>).</div>
   <div class="g-table-wrap"><table class="g-table"><caption class="sr-only">What to enter in each parameter</caption>
   <thead><tr><th scope="col">Parameter</th><th scope="col">Used in</th><th scope="col">What to enter</th></tr></thead><tbody>
   <tr><th scope="row"><code>name</code></th><td>all three</td><td>The pack name.</td></tr>
@@ -773,6 +777,8 @@ Optional parameters:
   <tr><th scope="row"><code>category</code></th><td>all three (optional)</td><td>A category, or leave it out and it becomes Others.</td></tr>
   <tr><th scope="row"><code>image_credit</code></th><td>all three (optional)</td><td>Credit for the image.</td></tr>
   <tr><th scope="row"><code>video_link</code></th><td>all three (optional)</td><td>A YouTube video link.</td></tr>
+  <tr><th scope="row"><code>required_pack_1</code></th><td>/share-with-nova (required, when shown)</td><td>An MCPEDL or CurseForge link of a pack yours requires, or <code>None</code> if there is none.</td></tr>
+  <tr><th scope="row"><code>required_pack_2</code>&ndash;<code>required_pack_10</code></th><td>/share-with-nova (optional, when shown)</td><td>Further MCPEDL or CurseForge links of required packs (each one is a required prerequisite).</td></tr>
   </tbody></table></div>
   <div class="g-note "><strong>The archive rule.</strong> The <code>archive</code> parameter must be filled in, but a valid archive URL is not always required. If there is no archive link, or you are not permitted to use one, enter a placeholder such as <code>.</code> or other appropriate text. Enter a URL only if it is a valid archive link. In <code>/share-with-nova</code> the field hint reads &ldquo;YES / NO / or your own archive link&rdquo;: YES / NO is a permission request &mdash; <strong>YES</strong> means you want NOVA to create an archive of your pack, <strong>NO</strong> means you do not &mdash; or you can enter your own valid archive link. For <code>/nova-feature</code> the hint is &ldquo;Gofile.io mirror or none&rdquo;. A packmaker may supply their own valid archive link; Proton Drive, MediaFire and MEGA are supported archive options and do not replace the preferred MCPEDL and CurseForge sources.</div>
   <h3>Announcements are automatic</h3>
@@ -840,6 +846,37 @@ Optional parameters:
 (function () {
   var acc = Array.prototype.slice.call(document.querySelectorAll('details.guide-acc'));
   var box = document.getElementById('g-filter'), empty = document.getElementById('g-empty');
+  // ── WR1 (Sec. 7.8): touch-only search-field visibility, attached to
+  // #g-filter ONLY (never to #nova-input — SB-9). Listeners exist only while
+  // the field is focused; no dependency, request or timer.
+  (function attachFieldVisibility(field) {
+    if (!field || !window.matchMedia || !matchMedia('(pointer: coarse)').matches) return;
+    var HEADER_PX = 96, KEYBOARD_WAIT_MS = 600, FALLBACK_MS = 350;
+    function bringIntoView() {
+      try { field.scrollIntoView({ block: 'center', behavior: 'auto' }); } catch (e) {}
+    }
+    function onFocus() {
+      var timer = setTimeout(bringIntoView, window.visualViewport ? KEYBOARD_WAIT_MS : FALLBACK_MS);
+      var vv = window.visualViewport;
+      function onEarly() { clearTimeout(timer); bringIntoView(); }
+      if (vv) vv.addEventListener('resize', onEarly, { once: true });
+      function onVv() {
+        var r = field.getBoundingClientRect();
+        var vvTop = vv ? vv.offsetTop : 0;
+        var vvBottom = vv ? vvTop + vv.height : document.documentElement.clientHeight;
+        if (r.top < vvTop + HEADER_PX) window.scrollBy({ top: vvTop + HEADER_PX - r.top, behavior: 'auto' });
+        else if (r.bottom > vvBottom) window.scrollBy({ top: r.bottom - vvBottom, behavior: 'auto' });
+      }
+      if (vv) { vv.addEventListener('resize', onVv); vv.addEventListener('scroll', onVv); }
+      function onBlur() {
+        clearTimeout(timer);
+        if (vv) { vv.removeEventListener('resize', onVv); vv.removeEventListener('scroll', onVv); vv.removeEventListener('resize', onEarly); }
+        field.removeEventListener('blur', onBlur);
+      }
+      field.addEventListener('blur', onBlur);
+    }
+    field.addEventListener('focus', onFocus);
+  })(box);
   var snapshot = null;
   function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
   function applyFilter() {
@@ -1236,6 +1273,28 @@ window.NovaPerformance = {
   }
   window.onTurnstileLoaded = renderTurnstileIfNeeded;
 
+  // ── WR2: the ONLY code that may focus #nova-input (focusChatInput) ──────────
+  // Replaces the two raw input.focus() calls (after the Turnstile proof
+  // exchange and after every reply/error). Focuses ONLY when the chat panel is
+  // open, the input is not disabled, the page is visible, and no other
+  // editable element or control holds focus; otherwise it does nothing and
+  // never queues a retry (CF-1..CF-6).
+  const chatFocusDecision = ({ isOpen, inputDisabled, pageVisible, activeIsForeign }) =>
+    isOpen && !inputDisabled && pageVisible && !activeIsForeign;
+  const chatUiOwnsFocus = el => {
+    if (!el || el === document.body) return true;
+    if (panel && (panel === el || panel.contains(el))) return true;
+    return !!(btn && (btn === el || (btn.contains && btn.contains(el))));
+  };
+  window.novaChatFocusDecision = chatFocusDecision;
+  function focusChatInput(reason) {
+    if (!input) return;
+    const active = document.activeElement;
+    const tag = active && active.tagName;
+    const activeIsForeign = !!(active && (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'A' || active.isContentEditable) && !chatUiOwnsFocus(active));
+    if (chatFocusDecision({ isOpen, inputDisabled: input.disabled === true, pageVisible: document.visibilityState === 'visible', activeIsForeign })) input.focus();
+  }
+
   window.onCaptchaSuccess = async function(cfToken) {
     captchaToken = cfToken;
     // The raw Cloudflare token isn't sent to the backend directly anymore --
@@ -1254,7 +1313,7 @@ window.NovaPerformance = {
       verificationProof = data.proof;
       captchaVerified = true;
       updateCaptchaState();
-      if (input) input.focus();
+      focusChatInput('turnstile-success');
     } catch (e) {
       console.error('[NOVA Turnstile] proof exchange failed', e);
       captchaToken = null;
@@ -1448,7 +1507,7 @@ window.NovaPerformance = {
       verificationProof = null;
       updateCaptchaState();
     } catch (err) { typing.remove(); addMessage('bot', err.message === 'Verification required' ? '🔒 Please complete the human verification to continue.' : '⚠️ Something went wrong. Please try again in a moment.'); console.error('[NOVA Widget]', err); }
-    finally { setLoading(false); input.focus(); }
+    finally { setLoading(false); focusChatInput('reply-finished'); }   // WR2: guarded
   }
 
   function repairMojibake(value) {
@@ -1512,26 +1571,29 @@ const cardObserver = new IntersectionObserver((entries) => {
 const CATEGORIES = [
   { val: '', label: 'All' },
   { val: '__featured__', label: 'Nova\'s Packmakers' },
-  { val: 'PvP', label: 'PvP' },
-  { val: 'Utility', label: 'Utility' },
-  { val: 'Furniture', label: 'Furniture' },
-  { val: 'Horror', label: 'Horror' },
-  { val: 'Anime', label: 'Anime' },
-  { val: 'Shader', label: 'Shader' },
-  { val: 'Structure', label: 'Structure' },
-  { val: 'Weapon', label: 'Weapon' },
-  { val: 'Bosses', label: 'Bosses' },
-  { val: 'Vehicle', label: 'Vehicle' },
-  { val: 'Visual', label: 'Visual' },
-  { val: 'Survival', label: 'Survival' },
-  { val: 'Client', label: 'Client' },
-  { val: 'GUI & UI', label: 'GUI & UI' },
-  { val: 'Adventure', label: 'Adventure' },
-  { val: 'Minigame', label: 'Minigame' },
-  { val: 'Food', label: 'Food' },
-  { val: 'Environment', label: 'Environment' },
-  { val: 'Animation', label: 'Animation' },
-  { val: 'Fps Booster', label: 'Fps Booster' },
+  // NOVA_CATEGORIES:BEGIN
+    // GENERATED from shared/categories.json (rev 1, sha256 77dc8ad2bbf64b23…). DO NOT EDIT BY HAND — regenerate with: node scripts/generate_categories.js
+    { val: 'PvP', label: 'PvP' },
+    { val: 'Utility', label: 'Utility' },
+    { val: 'Furniture', label: 'Furniture' },
+    { val: 'Horror', label: 'Horror' },
+    { val: 'Anime', label: 'Anime' },
+    { val: 'Shader', label: 'Shader' },
+    { val: 'Structure', label: 'Structure' },
+    { val: 'Weapon', label: 'Weapon' },
+    { val: 'Bosses', label: 'Bosses' },
+    { val: 'Vehicle', label: 'Vehicle' },
+    { val: 'Visual', label: 'Visual' },
+    { val: 'Survival', label: 'Survival' },
+    { val: 'Client', label: 'Client' },
+    { val: 'GUI & UI', label: 'Gui & Ui' },
+    { val: 'Adventure', label: 'Adventure' },
+    { val: 'Minigame', label: 'Minigame' },
+    { val: 'Food', label: 'Food' },
+    { val: 'Environment', label: 'Environment' },
+    { val: 'Animation', label: 'Animation' },
+    { val: 'Fps Booster', label: 'Fps Booster' },
+  // NOVA_CATEGORIES:END
   { val: 'Others', label: 'Others' }          // no-fit fallback category
 ];
 
