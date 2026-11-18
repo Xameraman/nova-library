@@ -1,5 +1,8 @@
 /* Nova Library service worker — cache-first static assets, NETWORK-FIRST library data (the cache is only an offline/slow-network fallback). */
-const VERSION = 'v4.5';
+/* VERSION v5.0 — one coordinated website release (WR1 search-bar visibility + WR2 chat-focus guard +
+   WR3 combos/required data). Both pages changed together and sw.js treats combos.json and
+   required.json as network-first data like the packs files. */
+const VERSION = 'v5.0';
 const STATIC_CACHE = `nova-static-${VERSION}`;
 const DATA_CACHE = `nova-data-${VERSION}`;
 const IMAGE_CACHE = `nova-images-${VERSION}`;
@@ -64,7 +67,7 @@ self.addEventListener('fetch', event => {
   }
 
   const isNavigation = request.mode === 'navigate';
-  const isData = /\/packs(?:_\d+)?\.json$/i.test(url.pathname) || /\/packs_index\.json$/i.test(url.pathname);
+  const isData = /\/packs(?:_\d+)?\.json$/i.test(url.pathname) || /\/packs_index\.json$/i.test(url.pathname) || /\/(combos|required)\.json$/i.test(url.pathname);
   const isImage = /\.(?:png|jpe?g|webp|gif|avif|svg)$/i.test(url.pathname);
 
   if (isData) {
