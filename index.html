@@ -91,6 +91,8 @@
 
     button:active:not(:disabled), .cat-pill:active { transform: scale(0.96); }
 
+    html { scroll-padding-top: 96px; }   /* WR1: native + scripted focus scrolls land below the sticky header (header ~72px + 3px load bar + margin) */
+
     header {
       background: rgba(9, 9, 11, 0.65); 
       backdrop-filter: blur(24px); 
@@ -199,6 +201,34 @@
     /* ── Featured videos ── */
     .fv { max-width: 900px; margin: 0 auto 24px; text-align: left; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px; }
     .fv[hidden] { display: none !important; }
+    /* ── Combos (WR3: in-page section + panel, like Featured Videos; no URL routing) ── */
+    #combosSection { max-width: 900px; margin: 0 auto 24px; text-align: left; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px; }
+    #combosSection[hidden] { display: none !important; }
+    .combo-card { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 10px 8px; color: inherit; font: inherit; cursor: pointer; border-bottom: 1px solid var(--border); }
+    .combo-card:last-child { border-bottom: 0; }
+    .combo-card:hover { background: var(--bg-surface-hover); }
+    .combo-card:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+    .combo-title { font-weight: 800; font-size: 1rem; }
+    .combo-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .combo-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 12px; text-align: left; }
+    .combo-item-top { display: flex; gap: 12px; align-items: flex-start; }
+    .combo-item-num { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--cyan); color: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .combo-item img.combo-thumb { width: 96px; height: 54px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0; }
+    .combo-req-group { margin: 8px 0 0; font-size: 0.85rem; }
+    .combo-req-group b { color: var(--cyan); }
+    .combo-req-line { margin: 2px 0 0 14px; }
+    .combo-req-line a { color: var(--cyan); text-decoration: none; }
+    .combo-req-line a:hover { text-decoration: underline; }
+    .combo-previews { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .combo-previews img { width: 84px; height: 84px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); }
+    .combo-warn { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+    .combo-placeholder { color: var(--text-muted); font-style: italic; padding: 8px; }
+    .mRequires { margin: 10px 0 0; padding: 10px; border: 1px dashed var(--cyan); border-radius: var(--radius-md); }
+    .mRequires h4 { margin: 0 0 6px; font-size: 0.85rem; color: var(--cyan); }
+    .mRequires button.req-pack { display: block; width: 100%; text-align: left; background: none; border: 0; color: var(--text-main); padding: 6px 8px; border-radius: var(--radius-md); cursor: pointer; font: inherit; }
+    .mRequires button.req-pack:hover { background: var(--bg-surface-hover); }
+    .mRequires button.req-pack:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+    .mRequires .req-pack small { color: var(--text-muted); }
     .fv-hero { display: flex; gap: 14px; width: 100%; text-align: left; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; font: inherit; align-items: stretch; }
     .fv-thumb { position: relative; flex: 0 0 46%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; background: #000; }
     .fv-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
@@ -567,6 +597,14 @@
       <div class="fv-strip" id="fvStrip"></div>
       <button type="button" class="fv-arrow" data-fv-dir="1" aria-label="Next videos"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
+  </section>
+
+  <!-- Combos (WR3): public display of saved multi-pack combos. Loads combos.json
+       through the existing cache helper; a 404, an invalid file or an unsupported
+       schema hides only this section and never affects the library. -->
+  <section id="combosSection" aria-label="NOVA combos" hidden>
+    <h2 style="font-size:1.05rem; font-weight:800; margin:4px 8px 10px;">🧩 NOVA Combos</h2>
+    <div id="combosList"></div>
   </section>
 
   <div class="search-container">
@@ -1076,6 +1114,36 @@ window.NovaPerformance = {
   }
   window.onTurnstileLoaded = renderTurnstileIfNeeded;
 
+  // ── WR2: the ONLY code that may focus #nova-input ─────────────────────────
+  // focusChatInput(reason) replaces the two raw input.focus() calls (after the
+  // Turnstile proof exchange and after every reply/error). The decision is a
+  // pure function of four facts, so it can be unit tested: it focuses ONLY
+  // when the chat panel is open, the input is not disabled, the page is
+  // visible, and no other editable element or control holds focus (the active
+  // element is the body, the chat input itself, or part of the chat UI).
+  // Otherwise it does nothing and never queues a retry (CF-1..CF-6).
+  const chatFocusDecision = ({ isOpen, inputDisabled, pageVisible, activeIsForeign }) =>
+    isOpen && !inputDisabled && pageVisible && !activeIsForeign;
+  const chatUiOwnsFocus = el => {
+    if (!el || el === document.body) return true;
+    if (panel && (panel === el || panel.contains(el))) return true;
+    return !!(btn && (btn === el || (btn.contains && btn.contains(el))));
+  };
+  window.novaChatFocusDecision = chatFocusDecision;   // exposed for the static checks/tests
+  function focusChatInput(reason) {
+    if (!input) return;
+    const active = document.activeElement;
+    const tag = active && active.tagName;
+    const activeIsForeign = !!(active && (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'A' || active.isContentEditable) && !chatUiOwnsFocus(active));
+    const decide = chatFocusDecision({
+      isOpen,
+      inputDisabled: input.disabled === true,
+      pageVisible: document.visibilityState === 'visible',
+      activeIsForeign
+    });
+    if (decide) input.focus();
+  }
+
   window.onCaptchaSuccess = async function(cfToken) {
     captchaToken = cfToken;
     // The raw Cloudflare token isn't sent to the backend directly anymore --
@@ -1094,7 +1162,7 @@ window.NovaPerformance = {
       verificationProof = data.proof;
       captchaVerified = true;
       updateCaptchaState();
-      if (input) input.focus();
+      focusChatInput('turnstile-success');
     } catch (e) {
       console.error('[NOVA Turnstile] proof exchange failed', e);
       captchaToken = null;
@@ -1288,7 +1356,7 @@ window.NovaPerformance = {
       verificationProof = null;
       updateCaptchaState();
     } catch (err) { typing.remove(); addMessage('bot', err.message === 'Verification required' ? '🔒 Please complete the human verification to continue.' : '⚠️ Something went wrong. Please try again in a moment.'); console.error('[NOVA Widget]', err); }
-    finally { setLoading(false); input.focus(); }
+    finally { setLoading(false); focusChatInput('reply-finished'); }   // WR2: guarded — never steals focus from another field or a closed chat
   }
 
   function repairMojibake(value) {
@@ -1358,31 +1426,42 @@ const cardObserver = new IntersectionObserver((entries) => {
 const CATEGORIES = [
   { val: '', label: 'All' },
   { val: '__featured__', label: 'Nova\'s Packmakers' },
-  { val: 'PvP', label: 'PvP' },
-  { val: 'Utility', label: 'Utility' },
-  { val: 'Furniture', label: 'Furniture' },
-  { val: 'Horror', label: 'Horror' },
-  { val: 'Anime', label: 'Anime' },
-  { val: 'Shader', label: 'Shader' },
-  { val: 'Structure', label: 'Structure' },
-  { val: 'Weapon', label: 'Weapon' },
-  { val: 'Bosses', label: 'Bosses' },
-  { val: 'Vehicle', label: 'Vehicle' },
-  { val: 'Visual', label: 'Visual' },
-  { val: 'Survival', label: 'Survival' },
-  { val: 'Client', label: 'Client' },
-  { val: 'GUI & UI', label: 'GUI & UI' },
-  { val: 'Adventure', label: 'Adventure' },
-  { val: 'Minigame', label: 'Minigame' },
-  { val: 'Food', label: 'Food' },
-  { val: 'Environment', label: 'Environment' },
-  { val: 'Animation', label: 'Animation' },
-  { val: 'Fps Booster', label: 'Fps Booster' },
+  // NOVA_CATEGORIES:BEGIN
+    // GENERATED from shared/categories.json (rev 1, sha256 77dc8ad2bbf64b23…). DO NOT EDIT BY HAND — regenerate with: node scripts/generate_categories.js
+    { val: 'PvP', label: 'PvP' },
+    { val: 'Utility', label: 'Utility' },
+    { val: 'Furniture', label: 'Furniture' },
+    { val: 'Horror', label: 'Horror' },
+    { val: 'Anime', label: 'Anime' },
+    { val: 'Shader', label: 'Shader' },
+    { val: 'Structure', label: 'Structure' },
+    { val: 'Weapon', label: 'Weapon' },
+    { val: 'Bosses', label: 'Bosses' },
+    { val: 'Vehicle', label: 'Vehicle' },
+    { val: 'Visual', label: 'Visual' },
+    { val: 'Survival', label: 'Survival' },
+    { val: 'Client', label: 'Client' },
+    { val: 'GUI & UI', label: 'Gui & Ui' },
+    { val: 'Adventure', label: 'Adventure' },
+    { val: 'Minigame', label: 'Minigame' },
+    { val: 'Food', label: 'Food' },
+    { val: 'Environment', label: 'Environment' },
+    { val: 'Animation', label: 'Animation' },
+    { val: 'Fps Booster', label: 'Fps Booster' },
+  // NOVA_CATEGORIES:END
   { val: 'Others', label: 'Others' }          // no-fit fallback category
 ];  // content types (Texture Pack, Addon, World, Skins, Scripts) are Secondary Tags, not categories
 
 // Secondary Tag is a comma-separated list (REQUIRED); Category is optional ('Others' when nothing fits).
 function packTags(p) { return String(p.secondary_tag || '').split(',').map(t => t.trim()).filter(Boolean); }
+
+// ── Verified ImgBB image hosts (shared with the bot; see shared/image_hosts.json) ──
+// NOVA_IMG_HOSTS:BEGIN
+  // GENERATED from shared/image_hosts.json (rev 1, sha256 fdff55bb04c8d182…). DO NOT EDIT BY HAND — regenerate with: node scripts/generate_shared.js
+  const NOVA_IMGBB_HOSTS = Object.freeze(["i.ibb.co"]);
+  // Render-time check: EXACT hostname match only (no subdomains, no lookalikes).
+  const novaImgHostAllowed = (u) => { try { return NOVA_IMGBB_HOSTS.includes(new URL(u).hostname.toLowerCase()); } catch { return false; } };
+// NOVA_IMG_HOSTS:END
 
 // ── Classification model ───────────────────────
 // Mirror of classification.js (bot) / CLASSIFICATION (Apps Script) -- keep the three in sync.
@@ -1457,6 +1536,63 @@ function resumeTyping() {
 
 document.getElementById('q').addEventListener('focus', () => { pauseTyping(); document.getElementById('q').placeholder = "Search Nova Library"; });
 document.getElementById('q').addEventListener('blur', () => { resumeTyping(); });
+
+// ── WR1: mobile search-bar visibility (Sec. 7.8) ─────────────────────────────
+// A small touch-only helper keeps the search field visible above the virtual
+// keyboard: attached to #q ONLY (never to #nova-input — SB-9), only on touch
+// devices (pointer: coarse), listeners exist only while the field is focused
+// (removed on blur), no new dependency, request or timer. The pure visibility
+// math is exposed for the static checks; the keyboard behavior itself needs
+// the owner's device checklist (DEPLOYMENT.md).
+(() => {
+  const HEADER_PX = 96;                 // sticky header + load bar + margin (matches html scroll-padding-top)
+  const KEYBOARD_WAIT_MS = 600;         // wait for the first visualViewport resize after focus
+  const FALLBACK_MS = 350;              // when the visualViewport API is missing
+  // Pure math: does the field rect sit fully inside the visual viewport,
+  // below the sticky header? (unit-testable with numbers)
+  window.novaFieldVisible = ({ top, bottom, vvTop, vvBottom, headerPx = HEADER_PX }) =>
+    top >= vvTop + headerPx && bottom <= vvBottom;
+  window.novaScrollDelta = ({ top, bottom, vvTop, vvBottom, headerPx = HEADER_PX }) =>
+    Math.max(0, vvTop + headerPx - top) || Math.max(0, bottom - vvBottom);
+
+  function attachFieldVisibility(field) {
+    if (!field || !window.matchMedia || !matchMedia('(pointer: coarse)').matches) return;  // touch devices only
+    let detach = null;
+    const bringIntoView = () => {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      try { field.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'auto' }); } catch {}
+    };
+    const checkVisibility = () => {
+      // While the field stays focused: re-check on viewport changes (rotation,
+      // keyboard height) and scroll by the difference if it is hidden.
+      const r = field.getBoundingClientRect();
+      const vv = window.visualViewport;
+      const vvTop = vv ? vv.offsetTop : 0;
+      const vvBottom = vv ? vvTop + vv.height : document.documentElement.clientHeight;
+      if (!window.novaFieldVisible({ top: r.top, bottom: r.bottom, vvTop, vvBottom })) {
+        const delta = window.novaScrollDelta({ top: r.top, bottom: r.bottom, vvTop, vvBottom });
+        if (delta > 0) window.scrollBy({ top: delta, behavior: 'auto' });
+      }
+    };
+    const onFocus = () => {
+      let cleaned = false;
+      const clean = () => { if (cleaned) return; cleaned = true; clearTimeout(timer); vv && vv.removeEventListener('resize', onVv); vv && vv.removeEventListener('scroll', onVv); window.removeEventListener('resize', onVv); };
+      const onVv = () => { checkVisibility(); };
+      const timer = setTimeout(() => { bringIntoView(); vv && vv.addEventListener('resize', onVv); vv && vv.addEventListener('scroll', onVv); window.addEventListener('resize', onVv); },
+        window.visualViewport ? KEYBOARD_WAIT_MS : FALLBACK_MS);
+      // If a visualViewport resize arrives inside the wait window, the keyboard
+      // opened: act at once and start the continuous checks.
+      const onEarlyResize = () => { clearTimeout(timer); bringIntoView(); vv && vv.addEventListener('resize', onVv); vv && vv.addEventListener('scroll', onVv); window.addEventListener('resize', onVv); };
+      const vv = window.visualViewport;
+      if (vv) vv.addEventListener('resize', onEarlyResize, { once: true });
+      detach = () => { clean(); vv && vv.removeEventListener('resize', onEarlyResize); };
+    };
+    const onBlur = () => { if (detach) { detach(); detach = null; } };
+    field.addEventListener('focus', onFocus);
+    field.addEventListener('blur', onBlur);
+  }
+  attachFieldVisibility(document.getElementById('q'));
+})();
 
 const savedInfinite = localStorage.getItem('nova_infinite');
 if (savedInfinite === 'true') infiniteMode = true;
@@ -1907,14 +2043,183 @@ async function loadAllPacks() {
         if (document.getElementById('q').value.trim() === '') applyFilters(false);
       }
       if (cursor <= pages) setTimeout(loadBatch, NOVA_NETWORK.slow ? 1200 : 120);
+      else {
+        // All chunks have loaded: combo/required placeholders can resolve now.
+        allPacksLoaded = true;
+        openComboPanels.forEach(i => renderComboPanel(i));
+        if (currentModalPack) attachRequiresBlock(currentModalPack);
+      }
     };
     setTimeout(loadBatch, NOVA_NETWORK.slow ? 900 : 120);
+  } else {
+    allPacksLoaded = true;
   }
 
   setBar(100); setTimeout(() => setBar(0), 600);
   startTypingAnimation();
   return true;
 }
+
+// ── WR3: combos (combos.json) + "This Pack Requires" (required.json) ─────────
+// Both files are read-only data for the website: a missing, invalid or
+// unsupported `schema` hides ONLY the affected section (the combos section, or
+// the required blocks) and never affects the library. No deep links in
+// release 1: combo items open pack records through the existing opener.
+let allPacksLoaded = false;    // set once every chunk has loaded (placeholder logic)
+let combosData = null;        // { schema, combos: [...] } | null
+let requiredData = null;      // { schema, requires: { mainId: [ids] } } | null
+const COMBOS_SCHEMA = 1, REQUIRED_SCHEMA = 1;
+const openComboPanels = new Set();
+
+function normalizeSiteTitle(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+
+async function loadCombos() {
+  try {
+    const data = await loadJsonWithCache(BASE_URL + 'combos.json', 'combos');
+    if (!data || typeof data !== 'object' || Array.isArray(data)) { hideCombosSection(); return; }
+    if (data.schema !== COMBOS_SCHEMA) { hideCombosSection('unsupported schema'); return; }
+    if (!Array.isArray(data.combos)) { hideCombosSection('invalid file'); return; }
+    combosData = data;
+    renderCombosSection();
+  } catch { hideCombosSection(); }
+}
+function hideCombosSection(why) {
+  combosData = null;
+  const sec = document.getElementById('combosSection');
+  if (sec) sec.hidden = true;
+  if (why) console.info('[combos] section hidden:', why);
+}
+
+async function loadRequired() {
+  try {
+    const data = await loadJsonWithCache(BASE_URL + 'required.json', 'required');
+    if (!data || typeof data !== 'object' || Array.isArray(data) || data.schema !== REQUIRED_SCHEMA
+      || !data.requires || typeof data.requires !== 'object') {
+      requiredData = null;   // blocks hidden; library unaffected
+      return;
+    }
+    requiredData = data;
+  } catch { requiredData = null; }
+}
+
+function renderCombosSection() {
+  const sec = document.getElementById('combosSection');
+  const list = document.getElementById('combosList');
+  if (!sec || !list || !combosData || !combosData.combos.length) { if (sec) sec.hidden = true; return; }
+  sec.hidden = false;
+  list.innerHTML = '';
+  combosData.combos.forEach((c, i) => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'combo-card';
+    card.dataset.comboIndex = String(i);
+    card.setAttribute('aria-expanded', openComboPanels.has(i) ? 'true' : 'false');
+    card.innerHTML = `<div class="combo-title">${esc(c.title || 'Unnamed combo')}</div>
+      <div class="combo-meta">Showcased by ${esc(c.creator || 'Unknown')} · ${c.items ? c.items.length : 0} pack(s)</div>`;
+    card.addEventListener('click', () => toggleComboPanel(i));
+    list.appendChild(card);
+    const panel = document.createElement('div');
+    panel.className = 'combo-panel';
+    panel.dataset.comboPanel = String(i);
+    panel.hidden = !openComboPanels.has(i);
+    list.appendChild(panel);
+  });
+}
+
+function toggleComboPanel(index) {
+  if (openComboPanels.has(index)) openComboPanels.delete(index); else openComboPanels.add(index);
+  renderCombosSection();
+  renderComboPanel(index);
+}
+
+// A requirement line that exactly matches a NOVA title (normalized) links to
+// that pack's record; external links open in a new tab with noopener.
+function comboReqLineHTML(line) {
+  const text = String(line || '');
+  const ext = text.match(/https?:\/\/\S+/);
+  if (ext) {
+    const url = esc(ext[0]);
+    const label = esc(text.replace(ext[0], '').trim() || ext[0]);
+    return `<div class="combo-req-line">🔗 <a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a></div>`;
+  }
+  if (allPacksLoaded) {
+    const target = normalizeSiteTitle(text);
+    const pack = allPacks.find(p => normalizeSiteTitle(p.name) === target);
+    if (pack) return `<div class="combo-req-line">📦 <a href="#" data-open-pack="${esc(pack.id)}">${esc(text)}</a></div>`;
+  }
+  return `<div class="combo-req-line">• ${esc(text)}</div>`;
+}
+
+function renderComboPanel(index) {
+  const panel = document.querySelector(`[data-combo-panel="${index}"]`);
+  if (!panel || !combosData || !combosData.combos[index]) return;
+  const c = combosData.combos[index];
+  panel.hidden = !openComboPanels.has(index);
+  if (panel.hidden) { panel.innerHTML = ''; return; }
+  const items = (c.items || []).map((it, i) => {
+    const pack = allPacksLoaded ? allPacks.find(p => String(p.id) === String(it.pack_id)) : null;
+    if (!allPacksLoaded) {
+      return `<div class="combo-item"><div class="combo-item-top"><div class="combo-item-num">${i + 1}</div><div class="combo-placeholder">Loading pack ${i + 1}…</div></div></div>`;
+    }
+    if (!pack) {
+      // Q3: a removed pack shows a generic placeholder — no name, credits,
+      // image, requirement lines, previews or download.
+      return `<div class="combo-item"><div class="combo-item-top"><div class="combo-item-num">${i + 1}</div><div class="combo-placeholder">Pack ${i + 1} is no longer available.</div></div></div>`;
+    }
+    const previews = (it.previews || []).filter(u => novaImgHostAllowed(u)).slice(0, 5);   // render-time exact-host check (Q4/C1)
+    const groups = [
+      ['Required', it.required], ['Recommended', it.recommended], ['Optional', it.optional]
+    ].filter(([, lines]) => lines && lines.length);
+    return `<div class="combo-item">
+      <div class="combo-item-top">
+        <div class="combo-item-num">${i + 1}</div>
+        ${pack.image ? `<img class="combo-thumb" src="${esc(pack.image)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ''}
+        <div style="min-width:0">
+          <div style="font-weight:800">${esc(pack.name)}</div>
+          <div class="combo-meta">Pack by ${esc(pack.credits || 'Unknown')} · ${esc(pack.secondary_tag || '')}${pack.category ? ` · ${esc(pack.category)}` : ''}</div>
+        </div>
+      </div>
+      ${groups.length ? `<div class="combo-req-group">${groups.map(([label, lines]) => `<b>${esc(label)}:</b>${lines.map(comboReqLineHTML).join('')}`).join('')}</div>` : ''}
+      ${previews.length ? `<div class="combo-previews">${previews.map(u => `<img src="${esc(u)}" alt="" loading="lazy" decoding="async">`).join('')}</div>
+        <div class="combo-warn">Preview images may be outdated and might not reflect the latest version of the pack.</div>` : ''}
+      <div style="margin-top:10px"><button type="button" class="btn-card" data-open-pack="${esc(pack.id)}" style="border-color: var(--cyan); color: var(--cyan);">⬇ Download Pack ${i + 1}</button></div>
+    </div>`;
+  }).join('');
+  const creatorHTML = c.creator_link && /^https:\/\//.test(c.creator_link)
+    ? `<a href="${esc(c.creator_link)}" target="_blank" rel="noopener noreferrer" style="color: var(--cyan); text-decoration: none;">${esc(c.creator || 'Unknown')}</a>`
+    : esc(c.creator || 'Unknown');
+  const videoHTML = c.video_link && /^https:\/\//.test(c.video_link)
+    ? `<div class="combo-meta" style="margin-top:4px;"><a href="${esc(c.video_link)}" target="_blank" rel="noopener noreferrer" style="color: var(--cyan); text-decoration: none;">🎬 Showcase video</a></div>` : '';
+  panel.innerHTML = `<div style="padding:6px 8px 2px;">
+      <h3 style="margin:6px 0 2px; font-size:1.1rem;">${esc(c.title || 'Unnamed combo')}</h3>
+      <div class="combo-meta">Showcased by ${creatorHTML}</div>
+      ${videoHTML}
+    </div>${items}`;
+  panel.querySelectorAll('[data-open-pack]').forEach(btn => btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const id = btn.dataset.openPack;
+    const pack = allPacks.find(p => String(p.id) === String(id));
+    if (pack) openModalDirect(pack);   // the existing opener: records a view + recent entry
+  }));
+}
+
+// "This Pack Requires" block in the pack record panel (Sec. 7.7): after the
+// tags, before the download buttons. Each required pack is a keyboard-focusable
+// control that opens that pack's own record. A pack with no requirements shows
+// no block; a missing pack shows the notice and never a broken link.
+function renderRequiresBlock(pack) {
+  if (!requiredData || !requiredData.requires || !pack || pack.id === undefined || pack.id === null) return '';
+  const ids = requiredData.requires[String(pack.id)];
+  if (!Array.isArray(ids) || !ids.length) return '';
+  const rows = ids.map((rid, i) => {
+    if (!allPacksLoaded) return `<button type="button" class="req-pack" data-open-pack="" disabled>Loading required pack…</button>`;
+    const rp = allPacks.find(p => String(p.id) === String(rid));
+    if (!rp) return `<div class="req-pack" style="cursor:default;">A required pack is no longer available.</div>`;
+    return `<button type="button" class="req-pack" data-open-pack="${esc(rp.id)}">📦 ${esc(rp.name)} <small>· Pack by ${esc(rp.credits || 'Unknown')}</small></button>`;
+  }).join('');
+  return `<div class="mRequires" id="mRequires"><h4>🔩 This Pack Requires</h4>${rows}</div>`;
+}
+
 function updateGlobalStats() {
   if (!allPacks.length) return;
   const dates = allPacks.map(p => p.date_added).filter(Boolean);
@@ -2203,6 +2508,27 @@ function getYouTubeEmbedUrl(url) {
   return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
 }
 
+// "This Pack Requires" block (Sec. 7.7): the rendered block attaches right
+// after the tags. A pack with no requirements shows no block. Opening a
+// required pack goes through the EXISTING opener (records a view + recent).
+function attachRequiresBlock(pack) {
+  const host = document.getElementById('mTags');
+  if (!host) return;
+  const old = document.getElementById('mRequires');
+  if (old) old.remove();
+  const html = renderRequiresBlock(pack);
+  if (!html) return;
+  host.insertAdjacentHTML('afterend', html);
+  const block = document.getElementById('mRequires');
+  if (!block) return;
+  block.querySelectorAll('[data-open-pack]').forEach(btn => btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const id = btn.dataset.openPack;
+    const rp = allPacks.find(p2 => String(p2.id) === String(id));
+    if (rp) openModalDirect(rp);   // the existing opener
+  }));
+}
+
 function openModalDirect(p, opts = {}) {
   if (!p) return;
   // Clear previous video and stop it
@@ -2223,6 +2549,10 @@ function openModalDirect(p, opts = {}) {
   }
 
   document.getElementById('mTags').innerHTML = tagsHTML;
+
+  // WR3: the "This Pack Requires" block renders AFTER the tags, BEFORE the
+  // video/download area, so the prerequisite is seen before downloading.
+  attachRequiresBlock(p);
 
   if (videoContainer) {
     if (videoLink && isValidLink(videoLink)) {
@@ -2389,9 +2719,13 @@ async function init() {
   renderTagBar();
   document.getElementById('infiniteToggle').checked = infiniteMode;
   renderRecent();
-  
+
   const ok = await loadAllPacks();
   if (ok) applyFilters();
+  // WR3: the combos section and the required blocks load lazily, after the
+  // library itself; neither can affect the library.
+  loadCombos();
+  loadRequired().then(() => { if (currentModalPack) attachRequiresBlock(currentModalPack); });
 }
 init();
 </script>
